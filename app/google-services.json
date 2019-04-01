@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "589865651765",
+    "firebase_url": "https://cukcuklite-38fc6.firebaseio.com",
+    "project_id": "cukcuklite-38fc6",
+    "storage_bucket": "cukcuklite-38fc6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:589865651765:android:69e1e79b5ba20655",
+        "android_client_info": {
+          "package_name": "vn.com.misa.cukcuklite"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "589865651765-kg0qru79hch0f0caromi2kaamrrtfgpi.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "vn.com.misa.cukcuklite",
+            "certificate_hash": "93367522111beaa3da8c23979ec1d675b4aab4bd"
+          }
+        },
+        {
+          "client_id": "589865651765-at7t3r3akb2jt4sj4o0pqvq2m0741rdd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBS2S9J7o1hb3z9ur3Tu15TetCJgn6Mh4g"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "589865651765-at7t3r3akb2jt4sj4o0pqvq2m0741rdd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
