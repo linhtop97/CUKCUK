@@ -12,30 +12,21 @@
         <item name="fontPath">@string/nunito.bold</item>
     </style>
 
-    <style name="TextViewNormal">
-        <item name="android:textSize">@dimen/text_size_normal</item>
-    </style>
 
     <style name="TextViewNormalGray">
         <item name="android:textSize">@dimen/text_size_normal</item>
     </style>
+
     <style name="TextViewNormalBlack">
         <item name="android:textSize">@dimen/text_size_normal</item>
         <item name="android:textColor">@android:color/black</item>
     </style>
+
     <style name="TextViewSmallGray">
         <item name="android:textSize">@dimen/text_size_small</item>
+        <item name="android:textColor">@color/colorTextDarkGray</item>
     </style>
 
-    <style name="TextViewNormalWhite">
-        <item name="android:textSize">@dimen/text_size_normal</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
-
-    <style name="TextViewTitleWhite">
-        <item name="android:textSize">@dimen/text_size_title</item>
-        <item name="android:textColor">@android:color/white</item>
-    </style>
 
     <style name="EditTextLogin">
         <item name="android:textSize">@dimen/text_size_normal</item>
@@ -48,11 +39,35 @@
         <item name="android:textColor">@android:color/white</item>
         <item name="fontPath">@string/nunito.bold</item>
     </style>
-dfd
+    dfd
+
     <style name="ButtonCalculator">
         <item name="android:textColor">@android:color/black</item>
         <item name="android:textSize">@dimen/text_size_title</item>
         <item name="android:textAllCaps">false</item>
 
+    </style>
+
+    <style name="TextViewTitleWhite" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_title</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextViewNormal" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextDarkGray</item>
+    </style>
+
+    <style name="TextViewNormalWhite" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textColor">@android:color/white</item>
+    </style>
+
+    <style name="TextViewIntro" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorTextDarkGray</item>
+        <item name="android:gravity">center</item>
     </style>
 </resources>

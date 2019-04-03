@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">MISA.ALL</string>
-    <string name="empty" />
+    <string name="image_description" />
     <string name="password">password</string>
     <string name="username">username</string>
     <string name="signin">Login</string>
@@ -12,7 +12,7 @@
     <string name="password_not_allow_empty">Password not allow empty</string>
     <string name="account_invalidate">Account invalidate!</string>
     <string name="you_are_sign_in_success">You are sign in success</string>
-    <string name="register">REGISTER</string>
+    <string name="register">Đăng ký</string>
     <string name="confirm_password">confirm password</string>
     <string name="something_went_wrong">Something when wrong!</string>
     <string name="account_is_exists">Account is exists, please choose others user name!</string>
@@ -68,4 +68,26 @@
     <string name="comma">,</string>
     <string name="equal_done">=</string>
     <string name="unit_name_is_used">Tên đơn vị đã được sử dụng, bạn không thể xóa</string>
+
+    <string name="facebook_app_id">337217350241234</string>
+    <string name="fb_login_protocol_scheme">fb337217350241234</string>
+    <string name="skip">Bỏ qua</string>
+    <string name="next">Tiếp theo</string>
+    <string name="login">Đăng nhập</string>
+    <string name="you_have_account">Bạn đã có tài khoản?</string>
+    <string name="you_have_not_account">Bạn chưa có tài khoản</string>
+    <string name="_continue">TIẾP TỤC</string>
+    <string name="intro_msg_1">Ứng dụng &lt;font color=#0973b9>MIỄN PHÍ&lt;/font> để bán hàng và thống kê doanh thu dành cho các quán nhỏ và quầy di động phục vụ ăn uống.</string>
+    <string name="intro_msg_2">Chọn loại quán để lấy thực đơn có sẵn hoặc tự thêm món dễ dàng.</string>
+    <string name="intro_msg_3">Ghi lại nhanh các món khách đã gọi.</string>
+    <string name="intro_msg_4">Thu tiền và trả tiền thừa cho khách đơn giản, chính xác.</string>
+    <string name="intro_msg_5">Xem báo cáo doanh thu, báo cáo theo mặt hàng vào cuối ngày, cuối tháng…</string>
+    <string name="choose_restaurant_type_title">Chọn loại quán</string>
+    <string name="msg_continue">Tiếp tục</string>
+    <string name="restaurant_type">Loại nhà hàng</string>
+    <string name="touch_here_to_retry">Bấm vào đây để thử lại.</string>
+    <string name="login_via_facebook">Đăng nhập bằng Facebook</string>
+    <string name="login_via_google">Đăng nhập bằng Google</string>
+    <string name="login_via_email_telephone">Số điện thoại hoặc email</string>
+    <string name="login_via">Đăng nhập bằng</string>
 </resources>

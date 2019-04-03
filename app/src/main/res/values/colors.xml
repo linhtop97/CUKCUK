@@ -7,15 +7,32 @@
     <color name="colorGray">#E0DDDD</color>
     <color name="colorGrayLight">#EDEDED</color>
     <color name="colorBlueDark">#003A5F</color>
-    <color name="colorBlueLight">#0973B9</color>
     <color name="colorBlueHighLight">#178CCF</color>
     <color name="colorBlueSelector">#FF9DC7E3</color>
 
-    <color name="colorTextGrayDark">#555555</color>
+    <color name="colorTextDarkGray">#ff373737</color>
     <color name="colorTextGray">#9B9B9B</color>
 
     <color name="colorRedDark">#C62C2C</color>
     <color name="colorRedLight">#FF3B30</color>
     <color name="colorRedHighLight">#CCFF3B30</color>
 
+    <color name="colorBluePrimary">#ff0973b9</color>
+    <color name="colorBluePrimaryLight">#ff0199fc</color>
+    <color name="colorBlueLight">#ffb1d0ef</color>
+
+    <color name="colorBlueFooter">#ff2b9de3</color>
+    <color name="dividerColorGray">#ffc7c6bd</color>
+
+    <!--facebook-->
+    <color name="colorBlueFaceBookLight">#ff0d47a1</color>
+    <color name="colorBlueFaceBookDark">#ff063987</color>
+
+    <!--google-->
+    <color name="colorRedGoogleLight">#ffdc4c4c</color>
+    <color name="colorRedGoogleDark">#ffc43030</color>
+
+    <!--email - phone-->
+    <color name="colorGreenEmailLight">#ff14c094</color>
+    <color name="colorGreenEmailDark">#ff0eb48c</color>
 </resources>

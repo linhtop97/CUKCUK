@@ -14,4 +14,5 @@ public final class AppConstants {
     public static final String ARG_DISH_NAME = "ARG_DISH_NAME";
     public static final String ARG_UNIT_NAME = "ARG_UNIT_NAME";
     public static final String ARG_UNIT = "ARG_UNIT";
+    public static final String FIREBASE_ID = "id";
 }
