@@ -13,6 +13,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Patterns;
+import android.view.Gravity;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -302,8 +303,9 @@ public class Navigator {
      * @param stringId - id của string resource
      */
     public void showToast(@StringRes int stringId) {
-        Toast.makeText(mActivity, mActivity.getString(stringId) + "", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity, stringId, Toast.LENGTH_SHORT).show();
     }
+
 
     /**
      * Phương thức hiển thị thông báo
@@ -315,6 +317,19 @@ public class Navigator {
         if (message != null) {
             Toast.makeText(mActivity, message, Toast.LENGTH_SHORT).show();
         }
+    }
+
+    /**
+     * Phương thức hiển thị thông báo
+     * Created_by Nguyễn Bá Linh on 20/03/2019
+     *
+     * @param stringId - id của string resource
+     */
+    public void showToastOnTopScreen(@StringRes int stringId) {
+        Toast toast = Toast.makeText(mActivity,
+                stringId, Toast.LENGTH_SHORT);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
+        toast.show();
     }
 
     /**
@@ -331,6 +346,10 @@ public class Navigator {
     }
 
 
+    /**
+     * Định nghĩa kiểu cho animation dành cho fragment
+     * Created_by Nguyễn Bá Linh on 03/04/2019
+     */
     @IntDef({
             NavigateAnim.RIGHT_LEFT, NavigateAnim.BOTTOM_UP, NavigateAnim.FADED, NavigateAnim.NONE,
             NavigateAnim.LEFT_RIGHT
@@ -343,6 +362,10 @@ public class Navigator {
         int LEFT_RIGHT = 0x04;
     }
 
+    /**
+     * Định nghĩa kiểu cho animation dành cho activity
+     * Created_by Nguyễn Bá Linh on 03/04/2019
+     */
     @IntDef({ActivityTransition.NONE, ActivityTransition.START, ActivityTransition.FINISH})
     public @interface ActivityTransition {
         int NONE = 0x00;

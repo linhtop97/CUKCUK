@@ -53,7 +53,7 @@
         android:id="@+id/rvRestaurantType"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@id/btnContinue"
+        android:layout_above="@id/llContinue"
         android:layout_below="@id/clActionbar"
         android:layout_marginTop="0dp"
         android:layout_marginBottom="8dp"
@@ -93,7 +93,7 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/btnContinue"
+        android:id="@+id/llContinue"
         style="@style/TextViewTitleWhite"
         android:layout_width="match_parent"
         android:layout_height="@dimen/action_button_height"

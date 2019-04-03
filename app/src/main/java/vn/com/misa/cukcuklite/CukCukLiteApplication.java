@@ -1,6 +1,7 @@
 package vn.com.misa.cukcuklite;
 
 import android.app.Application;
+import android.support.v7.app.AppCompatDelegate;
 
 import java.io.File;
 
@@ -16,6 +17,8 @@ public class CukCukLiteApplication extends Application {
         super.onCreate();
         try {
             initDatabaseStructure();
+            //cho phép đặt nguồn ảnh là vector
+            AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
             //đặt font chữ mặc định cho thư viện
             CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
                     .setDefaultFontPath(getString(R.string.nunito_regular))

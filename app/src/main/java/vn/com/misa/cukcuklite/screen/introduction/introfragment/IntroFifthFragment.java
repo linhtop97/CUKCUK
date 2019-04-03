@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.screen.splash;
+package vn.com.misa.cukcuklite.screen.introduction.introfragment;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,15 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import vn.com.misa.cukcuklite.R;
+
 /**
- * Màn hình khởi tạo/tải dữ liệu cho ứng dụng
- * Created_by Nguyễn Bá Linh on 01/04/2019
+ * Màn hình giới thiệu thứ năm
+ * Created_by Nguyễn Bá Linh on 03/04/2019
  */
-public class SplashFragment extends Fragment {
+public class IntroFifthFragment extends Fragment {
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return super.onCreateView(inflater, container, savedInstanceState);
+        return inflater.inflate(R.layout.fragment_intro_fifth, container, false);
     }
 }
