@@ -30,5 +30,21 @@ public class SharedPrefersManager {
         return sInstance;
     }
 
+    /**
+     * Phương thức câp nhật trạng thái đăng nhập của ứng dụng
+     * Created_by Nguyễn Bá Linh on 04/04/2019
+     *
+     * @param isLoginSuccess - trạng thái đăng nhập
+     */
+    public void setIsLoginSuccess(Boolean isLoginSuccess) {
+        mSharedPrefsHelper.put(SharedPrefsKey.PREF_IS_LOGIN_SUCCESS, isLoginSuccess);
+    }
 
+    /**
+     * Phương thức kiểm tra trạng thái đăng nhập của ứng dụng
+     * Created_by Nguyễn Bá Linh on 04/04/2019
+     */
+    public boolean getIsLoginSuccess() {
+       return mSharedPrefsHelper.get(SharedPrefsKey.PREF_IS_LOGIN_SUCCESS, Boolean.class);
+    }
 }

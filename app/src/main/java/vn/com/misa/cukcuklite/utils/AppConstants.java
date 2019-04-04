@@ -15,4 +15,10 @@ public final class AppConstants {
     public static final String ARG_UNIT_NAME = "ARG_UNIT_NAME";
     public static final String ARG_UNIT = "ARG_UNIT";
     public static final String FIREBASE_ID = "id";
+
+
+    //các đường dẫn, hằng dành cho cloud fire store
+    public static final String USER_COLLECTION = "users";
+
+    public static final String EXTRA_LOGIN_SUCCESS = "EXTRA_LOGIN_SUCCESS" ;
 }

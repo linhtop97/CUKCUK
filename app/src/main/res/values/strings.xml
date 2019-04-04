@@ -90,4 +90,5 @@
     <string name="login_via_google">Đăng nhập bằng Google</string>
     <string name="login_via_email_telephone">Số điện thoại hoặc email</string>
     <string name="login_via">Đăng nhập bằng</string>
+    <string name="login_in_process">Đang đang nhập…</string>
 </resources>
