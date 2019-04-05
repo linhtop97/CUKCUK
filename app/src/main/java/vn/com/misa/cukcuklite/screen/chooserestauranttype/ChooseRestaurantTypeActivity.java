@@ -11,11 +11,14 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
+import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 /**
@@ -32,11 +35,14 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
     private RecyclerView rvRestaurantType;
     private RestaurantTypeAdapter mRestaurantTypeAdapter;
     private ProgressDialog mDialog;
+    private SharedPrefersManager mSharedPrefersManager;
+    private int mRestaurantTypeDifferent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_restaurant_type);
+        mSharedPrefersManager = SharedPrefersManager.getInstance(this);
         mPresenter = new ChooseRestaurantTypePresenter(this);
         mPresenter.setView(this);
         initViews();
@@ -105,11 +111,39 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
         }
     }
 
+    /**
+     * Phương thức hiển thị danh sách quán ăn/nhà hàng
+     * Created_by Nguyễn Bá Linh on 08/04/2019
+     *
+     * @param restaurantTypeList - danh sách quán ăn/nhà hàng
+     */
     @Override
     public void showListRestaurantType(List<RestaurantType> restaurantTypeList) {
-        mRestaurantTypeAdapter.setListData(restaurantTypeList);
+        try {
+            if (restaurantTypeList != null) {
+                mRestaurantTypeDifferent = restaurantTypeList.get(restaurantTypeList.size() - 1).getRestaurantTypeId();
+                mRestaurantTypeAdapter.setListData(restaurantTypeList);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Phương thức khởi chạy main activity
+     * Created_by Nguyễn Bá Linh on 08/04/2019
+     */
+    @Override
+    public void startMainActivity() {
+        startActivity(new Intent(this, MainActivity.class));
+    }
+
+    /**
+     * Phương thức nhận 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 08/04/2019
+     *
+     * @param message - thông điệp được nhận
+     */
     @Override
     public void receiveMessage(int message) {
 
@@ -161,12 +195,33 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
             case R.id.btnContinue:
             case R.id.tvContinue:
                 try {
+                    mSharedPrefersManager.setAlreadyHasData(true);
                     //bắt đầu main activity
-                    int restaurantTypeId = mRestaurantTypeAdapter.getRestaurantTypeIdSelected();
+                    RestaurantType restaurantType = mRestaurantTypeAdapter.getRestaurantTypeIdSelected();
+                    //khởi động màn hình chọn món ăn hoặc main;
+                    startMainApp(restaurantType);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
                 break;
+        }
+    }
+
+    /**
+     * Phương thức khởi động màn hình chính hoặc màn hình chọn/chỉnh sửa món ăn cho quán ăn
+     * Created_by Nguyễn Bá Linh on 08/04/2019
+     *
+     * @param restaurantType - loại quán ăn
+     */
+    private void startMainApp(RestaurantType restaurantType) {
+        if (restaurantType != null) {
+            //nếu mà id của nhà hàng trùng với loại nhà hàng đặc biệt thì sẽ vào luôn màn hình chính ừng dụng
+            if (restaurantType.getRestaurantTypeId() == mRestaurantTypeDifferent) {
+                //hiển thị màn hình chính
+                mPresenter.insertAllData(restaurantType);
+            } else {//ngược lại thì sẽ điều hướng người dùng tới màn hình chọn món ăn có sẵn của loại nhà hàng
+                Toast.makeText(this, "Ahihihihihi", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

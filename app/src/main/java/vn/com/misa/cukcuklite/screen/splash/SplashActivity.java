@@ -10,6 +10,7 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
 import vn.com.misa.cukcuklite.screen.introduction.IntroductionActivity;
+import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -37,22 +38,46 @@ public class SplashActivity extends AppCompatActivity {
     private void startMainScreen() {
         try {
             final boolean isLoginBefore = SharedPrefersManager.getInstance(this).getIsLoginSuccess();
+            final boolean isAlreadyHasData = SharedPrefersManager.getInstance(this).getIsAlreadyHasData();
             int SPLASH_DISPLAY_LENGTH = 1500;
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    //kiểm tra user dã đăng nhập trước đó hay chưa, nếu chưa thì hiển thị màn hình
-                    //giới thiệu, rồi thì lấy thông tin đăng nhập
-                    if (!isLoginBefore) {
+                    //kiểm tra user chưa đăng nhập và chưa chọn loại nhà hàng(chưa có dữ liệu gì cả)
+                    //thì hiển thị màn hình giới thiệu
+                    if (!isLoginBefore && !isAlreadyHasData) {
                         mNavigator.startActivity(IntroductionActivity.class, Navigator.ActivityTransition.NONE);
-                    } else {
+                        finish();
+                    }
+                    //kiểm tra user chưa đăng nhập và và đã chọn loại nhà hàng
+                    //thì hiển thị màn hình chính của ứng dụng
+                    if (!isLoginBefore && isAlreadyHasData) {
+                        Intent intent = new Intent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setClass(getApplicationContext(), MainActivity.class);
+                        mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+                        finish();
+                    }
+
+                    //kiểm tra user đã đăng nhập và chưa chọn loại nhà hàng(chưa có dữ liệu gì cả)
+                    //thì hiển thị màn hình chọn loại nhà hàng
+                    if (isLoginBefore && !isAlreadyHasData) {
                         Intent intent = new Intent();
                         intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setClass(getApplicationContext(), ChooseRestaurantTypeActivity.class);
                         intent.putExtra(AppConstants.EXTRA_LOGIN_SUCCESS, true);
                         mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+                        finish();
                     }
-                    finish();
+                    //kiểm tra user đã đăng nhập và đã chọn loại nhà hàng
+                    //hiển thị màn hình chính của ứng dụng
+                    if (isLoginBefore && isAlreadyHasData) {
+                        Intent intent = new Intent();
+                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                        intent.setClass(getApplicationContext(), MainActivity.class);
+                        mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+                        finish();
+                    }
                 }
             }, SPLASH_DISPLAY_LENGTH);
         } catch (Exception e) {

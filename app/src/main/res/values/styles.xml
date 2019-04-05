@@ -9,7 +9,7 @@
     </style>
 
     <style name="TextAppearance">
-        <item name="fontPath">@string/nunito.bold</item>
+        <item name="fontPath">@string/nunito_bold</item>
     </style>
 
 
@@ -37,7 +37,7 @@
     <style name="TextViewLogo">
         <item name="android:textSize">@dimen/text_size_logo</item>
         <item name="android:textColor">@android:color/white</item>
-        <item name="fontPath">@string/nunito.bold</item>
+        <item name="fontPath">@string/nunito_bold</item>
     </style>
     dfd
 
@@ -69,5 +69,10 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorTextDarkGray</item>
         <item name="android:gravity">center</item>
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
     </style>
 </resources>

@@ -68,4 +68,16 @@
     <dimen name="action_bar_size">48dp</dimen>
     <dimen name="item_restaurant_type_height">48dp</dimen>
     <dimen name="diliver_height">0.6dp</dimen>
+
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="nav_header_vertical_spacing">8dp</dimen>
+    <dimen name="nav_header_height">176dp</dimen>
+    <dimen name="img_foward_witdh">40dp</dimen>
+    <dimen name="img_require_width">6dp</dimen>
+
+
+    <dimen name="close_button_height">32dp</dimen>
+    <dimen name="close_button_width">32dp</dimen>
 </resources>

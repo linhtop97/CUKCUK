@@ -1,115 +1,130 @@
 package vn.com.misa.cukcuklite.screen.main;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.widget.Toast;
-
-import com.facebook.AccessToken;
-import com.facebook.CallbackManager;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthCredential;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.FacebookAuthProvider;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.screen.menu.MenuFragment;
+import vn.com.misa.cukcuklite.screen.sale.SaleFragment;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
  * Màn hình khởi động ứng dụng có chức năng giới thiệu ứng dụng, tải dữ liệu, thông tin cho ứng dụng
  * Created_by Nguyễn Bá Linh on 01/04/2019
  */
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private Navigator mNavigator;
-    private CallbackManager callbackManager;
-    private FirebaseAuth mAuth;
-
+    private DrawerLayout drawerLayout;
+    private NavigationView navView;
+    private ActionBarDrawerToggle drawerToggle;
+    private Toolbar mToolbar;
+    private TextView tvTitle;
+    private ImageView btnAdd;
+    private boolean mIsSale;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mNavigator = new Navigator(this);
-        //    callbackManager = CallbackManager.Factory.create();
-        //LoginManager loginManager = LoginManager.getInstance();
-
-// ...
-// Initialize Firebase Auth
-//        mAuth = FirebaseAuth.getInstance();
-//        LoginButton loginButton;
-//        loginButton = (LoginButton) findViewById(R.id.btnFacebookLogin);
-//        loginButton.setReadPermissions("email");
-//        // If using in a fragment
-//        // loginButton.setFragment(this);
-//
-//        // Callback registration
-//        loginButton.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
-//            @Override
-//            public void onSuccess(LoginResult loginResult) {
-//                // App code
-//                Log.d(TAG, "onSuccess: ");
-//                handleFacebookAccessToken(loginResult.getAccessToken());
-//            }
-//
-//            @Override
-//            public void onCancel() {
-//                // App code'
-//                Log.d(TAG, "onCancel: ");
-//            }
-//
-//            @Override
-//            public void onError(FacebookException exception) {
-//                // App code
-//                Log.d(TAG, "onError: ");
-//            }
-//        });
+        initViews();
+        initEvents();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        //   callbackManager.onActivityResult(requestCode, resultCode, data);
-        super.onActivityResult(requestCode, resultCode, data);
-    }
+    /**
+     * Phương thức gắn sự kiện cho view
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     */
+    private void initEvents() {
+        btnAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if (mIsSale) {
+                        //thêm oder
+                    } else {
+                        //thêm món ăn
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        //updateUI(currentUser);
-    }
-
-    private void handleFacebookAccessToken(AccessToken token) {
-        Log.d(TAG, "handleFacebookAccessToken:" + token);
-
-        AuthCredential credential = FacebookAuthProvider.getCredential(token.getToken());
-        mAuth.signInWithCredential(credential)
-                .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            // updateUI(user);
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            // updateUI(null);
-                        }
-
-                        // ...
                     }
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
+
+    /**
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     */
+    private void initViews() {
+        tvTitle = findViewById(R.id.tvTitle);
+        btnAdd = findViewById(R.id.btnAdd);
+        mToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mToolbar);
+        drawerLayout = findViewById(R.id.drawerLayout);
+        drawerToggle = new ActionBarDrawerToggle(
+                this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        drawerLayout.addDrawerListener(drawerToggle);
+        drawerToggle.syncState();
+        navView = findViewById(R.id.navView);
+        navView.setNavigationItemSelectedListener(this);
+        mIsSale = true;
+        mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+        tvTitle.setText(R.string.sale);
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        //nếu ấn nút back của thiết bị thì sẽ kiểm tra nếu dang mở thì sẽ đóng Nav lại
+        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+            drawerLayout.closeDrawer(GravityCompat.START);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
+    @Override
+    public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.navSale:
+                try {
+                    tvTitle.setText(R.string.sale);
+                    mIsSale = true;
+                    mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.navMenu:
+                try {
+                    tvTitle.setText(R.string.menu_title);
+                    mIsSale = false;
+                    mNavigator.addFragment(R.id.flMainContainer, MenuFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            default:
+                break;
+        }
+        drawerLayout.closeDrawer(GravityCompat.START);
+        return true;
+    }
+
 
 }

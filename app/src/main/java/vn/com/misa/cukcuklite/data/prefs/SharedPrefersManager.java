@@ -31,6 +31,14 @@ public class SharedPrefersManager {
     }
 
     /**
+     * Phương thức kiểm tra trạng thái đăng nhập của ứng dụng
+     * Created_by Nguyễn Bá Linh on 04/04/2019
+     */
+    public boolean getIsLoginSuccess() {
+        return mSharedPrefsHelper.get(SharedPrefsKey.PREF_IS_LOGIN_SUCCESS, Boolean.class);
+    }
+
+    /**
      * Phương thức câp nhật trạng thái đăng nhập của ứng dụng
      * Created_by Nguyễn Bá Linh on 04/04/2019
      *
@@ -41,10 +49,20 @@ public class SharedPrefersManager {
     }
 
     /**
-     * Phương thức kiểm tra trạng thái đăng nhập của ứng dụng
+     * Phương thức câp nhật user đã có dữ liệu hay chưa
+     * Created_by Nguyễn Bá Linh on 04/04/2019
+     *
+     * @param isAlreadyData - user đã có dữ liệu hay chưa
+     */
+    public void setAlreadyHasData(boolean isAlreadyData) {
+        mSharedPrefsHelper.put(SharedPrefsKey.PREF_IS_ALREADY_HAS_DATA, isAlreadyData);
+    }
+
+    /**
+     * Phương thức kiểm tra người dùng đã có dữ liệu hay chưa
      * Created_by Nguyễn Bá Linh on 04/04/2019
      */
-    public boolean getIsLoginSuccess() {
-       return mSharedPrefsHelper.get(SharedPrefsKey.PREF_IS_LOGIN_SUCCESS, Boolean.class);
+    public boolean getIsAlreadyHasData() {
+        return mSharedPrefsHelper.get(SharedPrefsKey.PREF_IS_ALREADY_HAS_DATA, Boolean.class);
     }
 }

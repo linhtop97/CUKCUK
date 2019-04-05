@@ -23,17 +23,17 @@ public class RestaurantTypeAdapter extends ListAdapter<RestaurantType> {
      *
      * @param context là được truyền tới từ context nơi khởi tạo thể hiện của lớp
      */
-    public RestaurantTypeAdapter(Context context) {
+    RestaurantTypeAdapter(Context context) {
         super(context);
     }
 
-    public int getRestaurantTypeIdSelected() {
+    RestaurantType getRestaurantTypeIdSelected() {
         try {
-            return mListData.get(mLastPositionSelected).getRestaurantTypeId();
+            return mListData.get(mLastPositionSelected);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return 0;
+        return null;
     }
 
     @NonNull
@@ -96,7 +96,7 @@ public class RestaurantTypeAdapter extends ListAdapter<RestaurantType> {
                 if (restaurantType == null) {
                     return;
                 }
-                tvRestaurantType.setText(restaurantType.getRestaurantTypeName());
+                tvRestaurantType.setText(restaurantType.getRestaurantName());
             } catch (Exception e) {
                 e.printStackTrace();
             }

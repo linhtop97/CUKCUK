@@ -1,25 +1,30 @@
 package vn.com.misa.cukcuklite.screen.chooserestauranttype;
 
 import android.content.Context;
-import android.database.Cursor;
 
-import java.util.ArrayList;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.database.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
+import vn.com.misa.cukcuklite.data.models.Unit;
+import vn.com.misa.cukcuklite.utils.CommonsUtils;
 
-public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContract.IPresenter, IDBUtils.ITableRestaurantTypeUtils {
+public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContract.IPresenter {
 
     private IChooseRestaurantTypeContract.IView mView;
     private Context mContext;
     private SQLiteDBManager mSQLiteDBManager;
+    private UnitDataSource mUnitDataSource;
 
-
-    public ChooseRestaurantTypePresenter(Context context) {
+    ChooseRestaurantTypePresenter(Context context) {
         mContext = context;
-        mSQLiteDBManager = SQLiteDBManager.getInstance();
+        mUnitDataSource = new UnitDataSource();
     }
 
     @Override
@@ -35,17 +40,8 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
     public void onStart() {
         mView.showLoading();
         //lấy danh sách loại quán ăn/nhà hàng và hiển thị ra màn hình
-        List<RestaurantType> restaurantTypes = new ArrayList<>();
         try {
-            Cursor cursor = mSQLiteDBManager.getRecords("select * from tblRestaurantType", null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                RestaurantType restaurantType = new RestaurantType(cursor.getInt(cursor.getColumnIndex(RESTAURANT_TYPE_ID)),
-                        cursor.getString(cursor.getColumnIndex(RESTAURANT_TYPE_NAME)));
-                restaurantTypes.add(restaurantType);
-                cursor.moveToNext();
-            }
-            cursor.close();
+            List<RestaurantType> restaurantTypes = getListRestaurant();
             mView.hideLoading();
             mView.showListRestaurantType(restaurantTypes);
         } catch (Exception e) {
@@ -56,5 +52,34 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
     @Override
     public void onStop() {
 
+    }
+
+    @Override
+    public void insertAllData(RestaurantType restaurantType) {
+        mView.showLoading();
+        List<Unit> units = restaurantType.getUnits();
+        int unitSize = units.size();
+        for (int i = 0; i < unitSize; i++) {
+            mUnitDataSource.addUnit(units.get(i));
+        }
+        mView.hideLoading();
+        mView.startMainActivity();
+    }
+
+    /**
+     * Phương thức lấy danh sách nhà hàng/quán ăn mặc định cho ứng dụng
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     */
+    private List<RestaurantType> getListRestaurant() {
+        try {
+            String jsonRestaurantType = CommonsUtils.loadJSONFromAsset(mContext, "jsons/restaurant_type.json");
+            Gson gson = new Gson();
+            Type collectionType = new TypeToken<List<RestaurantType>>() {
+            }.getType();
+            return gson.fromJson(jsonRestaurantType, collectionType);
+        } catch (JsonSyntaxException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

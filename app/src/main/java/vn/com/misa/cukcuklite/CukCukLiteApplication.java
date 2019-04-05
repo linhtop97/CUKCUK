@@ -1,6 +1,8 @@
 package vn.com.misa.cukcuklite;
 
 import android.app.Application;
+import android.content.Context;
+import android.support.multidex.MultiDex;
 import android.support.v7.app.AppCompatDelegate;
 
 import java.io.File;
@@ -29,6 +31,11 @@ public class CukCukLiteApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        //gennerate id
+//        for (int i = 0; i < 100; i++) {
+//            System.out.println(""+ UUID.randomUUID().toString());
+//        }
     }
 
     /**
@@ -47,5 +54,12 @@ public class CukCukLiteApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        //Cài mutil dex cho ứng dụng
+        MultiDex.install(this);
     }
 }

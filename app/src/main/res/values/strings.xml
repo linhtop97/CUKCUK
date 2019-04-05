@@ -91,4 +91,63 @@
     <string name="login_via_email_telephone">Số điện thoại hoặc email</string>
     <string name="login_via">Đăng nhập bằng</string>
     <string name="login_in_process">Đang đang nhập…</string>
+    <string name="add">+</string>
+    <string name="title_activity_main2">Main2Activity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="sale_menu_action">Bán hàng</string>
+    <string name="menu_action_menu">Thực đơn</string>
+    <string name="report_menu_action">Báo cáo</string>
+    <string name="submenu_title_settings">Thiết lập</string>
+    <string name="nav_sync_title">Đồng bộ dữ liệu</string>
+    <string name="nav_settting_title">Thiết lập</string>
+    <string name="submenu_title_help">Trợ giúp</string>
+    <string name="nav_notification_title">Thông báo</string>
+    <string name="nav_info_title">Thông tin ứng dụng</string>
+    <string name="nav_rate_title">Đánh giá ứng dụng</string>
+    <string name="nav_share_title">Giới thiệu cho bạn</string>
+    <string name="submenu_title_account">Tài khoản</string>
+    <string name="nav_logout_title">Đăng xuất</string>
+    <string name="sale">Bán hàng</string>
+    <string name="menu_title">Thực đơn</string>
+
+
+    <string-array name="color_list">
+        <item>"#26C6DA"</item>
+        <item>"#0097A7"</item>
+        <item>"#0D47A1"</item>
+        <item>"#1565C0"</item>
+        <item>"#039BE5"</item>
+        <item>"#64B5F6"</item>
+        <item>"#FF6F00"</item>
+        <item>"#FFA000"</item>
+        <item>"#FFB300"</item>
+        <item>"#CF9A0A"</item>
+        <item>"#8D6E63"</item>
+        <item>"#6D4C41"</item>
+        <item>"#D32F2F"</item>
+        <item>"#FF1744"</item>
+        <item>"#F44336"</item>
+        <item>"#EC407A"</item>
+        <item>"#AD1457"</item>
+        <item>"#6A1B9A"</item>
+        <item>"#AB47BC"</item>
+        <item>"#BA68C8"</item>
+        <item>"#00695C"</item>
+        <item>"#00897B"</item>
+        <item>"#4DB6AC"</item>
+        <item>"#2E7D32"</item>
+        <item>"#43A047"</item>
+        <item>"#64DD17"</item>
+        <item>"#212121"</item>
+        <item>"#5F7C8A"</item>
+        <item>"#B0BEC5"</item>
+        <item>"#455A64"</item>
+        <item>"#607D8B"</item>
+        <item>"#90A4AE"</item>
+    </string-array>
 </resources>
