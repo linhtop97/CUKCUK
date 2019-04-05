@@ -6,10 +6,22 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.Type;
+import java.util.List;
+
+import vn.com.misa.cukcuklite.utils.CommonsUtils;
+
+import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableRestaurantTypeUtils.RESTAURANT_TYPE_NAME;
+import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableRestaurantTypeUtils.RESTAURANT_TYPE_TBL_NAME;
+import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableUnitUtils.COLUMN_UNIT_NAME;
+import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableUnitUtils.UNIT_TBL_NAME;
 
 
 /**
@@ -232,5 +244,39 @@ public class SQLiteDBManager extends SQLiteOpenHelper implements IDBUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+
+    /**
+     * Phương thức khởi tạo, gắn các giá trị mặc định cho cơ sở dữ liệu]
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     */
+    public void initDataDefault() {
+        String jsonRestaurantType = CommonsUtils.loadJSONFromAsset(mContext, "jsons/restaurent_type.json");
+        String jsonUnit = CommonsUtils.loadJSONFromAsset(mContext, "jsons/unit_default.json");
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<List<String>>() {
+        }.getType();
+        List<String> listRestaurantType = gson.fromJson(jsonRestaurantType, collectionType);
+        List<String> listUnit = gson.fromJson(jsonUnit, collectionType);
+        int sizeRes, sizeUnit;
+        if (listRestaurantType != null) {
+            sizeRes = listRestaurantType.size();
+
+            for (int i = 0; i < sizeRes; i++) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(RESTAURANT_TYPE_NAME, listRestaurantType.get(i));
+                addNewRecord(RESTAURANT_TYPE_TBL_NAME, contentValues);
+            }
+        }
+        if (listUnit != null) {
+            sizeUnit = listUnit.size();
+            for (int i = 0; i < sizeUnit; i++) {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_UNIT_NAME, listUnit.get(i));
+                addNewRecord(UNIT_TBL_NAME, contentValues);
+            }
+        }
+
     }
 }

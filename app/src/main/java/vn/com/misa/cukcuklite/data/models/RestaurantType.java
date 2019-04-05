@@ -5,7 +5,7 @@ package vn.com.misa.cukcuklite.data.models;
  * Created_by Nguyễn Bá Linh on 04/04/2019
  */
 public class RestaurantType {
-    private String mRestaurantTypeId;
+    private int mRestaurantTypeId;
     private String mRestaurantTypeName;
 
     public RestaurantType() {
@@ -16,16 +16,16 @@ public class RestaurantType {
         mRestaurantTypeName = restaurantTypeName;
     }
 
-    public RestaurantType(String restaurantTypeId, String restaurantTypeName) {
+    public RestaurantType(int restaurantTypeId, String restaurantTypeName) {
         mRestaurantTypeId = restaurantTypeId;
         mRestaurantTypeName = restaurantTypeName;
     }
 
-    public String getRestaurantTypeId() {
+    public int getRestaurantTypeId() {
         return mRestaurantTypeId;
     }
 
-    public void setRestaurantTypeId(String restaurantTypeId) {
+    public void setRestaurantTypeId(int restaurantTypeId) {
         mRestaurantTypeId = restaurantTypeId;
     }
 

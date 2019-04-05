@@ -16,6 +16,7 @@ public class CukCukLiteApplication extends Application {
     public void onCreate() {
         super.onCreate();
         try {
+            SQLiteDBManager.getInstance(this);
             initDatabaseStructure();
             //cho phép đặt nguồn ảnh là vector
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
@@ -38,7 +39,7 @@ public class CukCukLiteApplication extends Application {
         try {
             File file = this.getDatabasePath(DB_NAME);
             if (!file.exists()) {
-                SQLiteDBManager manager = SQLiteDBManager.getInstance(this);
+                SQLiteDBManager manager = SQLiteDBManager.getInstance();
                 manager.getWritableDatabase();
                 manager.close();
                 manager.copyDatabase();

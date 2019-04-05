@@ -8,7 +8,7 @@ public interface IDBUtils {
     String DB_NAME = "cukcuk_lite.db";
     String DB_LOCATION = "/data/data/vn.com.misa.cukcuklite/databases/";
     int DB_VERSION = 1;
-    
+
     String PRIMARY_KEY = "PRIMARY KEY";
     String AUTOINCREMENT = "AUTOINCREMENT";
     String NOT_NULL = "NOT NULL";
@@ -36,7 +36,7 @@ public interface IDBUtils {
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     interface ITableUnitUtils {
-        String UNIT_TBL_NAME = "tblUnit";
+        String UNIT_TBL_NAME = "tblDishUnit";
         String COLUMN_UNIT_ID = "PK_iUnitId";
         String COLUMN_UNIT_NAME = "sUnitName";
     }
@@ -100,4 +100,54 @@ public interface IDBUtils {
         String COLUMN_PRICE = "iPrice";
     }
 
+    /**
+     * Tên bảng, trường của bảng Chi loại quán/nhà hàng
+     * Created_by Nguyễn Bá Linh on 02/04/2019
+     */
+    interface ITableRestaurantTypeUtils {
+        String RESTAURANT_TYPE_TBL_NAME = "tblRestaurantType";
+        String RESTAURANT_TYPE_ID = "PK_iRestaurant";
+        String RESTAURANT_TYPE_NAME = "sRestaurantName";
+    }
+
+    //    insert tbl UnitDefault
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Bao");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Bát");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Cái");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Chai");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Chén");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Cốc");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Đĩa");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Điếu");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Gói");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Lạng");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Lon");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Phần");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Phong");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Quả");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Xuất");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Tô");
+//    INSERT INTO tblUnitDefault(sUnitName) VALUES("Vỉ");
+
+    //insert tblRestaurant type
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Trà đá");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Trà chanh");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bánh mỳ");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Xôi");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Cháo sườn, cháo trai");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bún riêu cua");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bún đậu mắm tôm");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bánh cuốn");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bún chả");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Ốc nóng");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bánh khoai, bánh chuối");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Chè");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Tào phớ");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Hủ tiếu");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Bánh tráng trộn");
+//    INSERT INTO tblRestaurantType(sRestaurantName) VALUES("Khác");
+
+
+    //sql query
+    //select * FROM tblUnitDefault WHERE tblUnitDefault.PK_iUnitId in (select FK_iUnitId from tblRestaurantUnit WHERE tblRestaurantUnit.FK_iRestaurantId = 2)
 }

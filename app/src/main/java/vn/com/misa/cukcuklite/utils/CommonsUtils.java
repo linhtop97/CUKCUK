@@ -1,13 +1,21 @@
 package vn.com.misa.cukcuklite.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.util.Base64;
 import android.util.Log;
 
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Type;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.List;
 
 /**
  * Lớp chứa các phương thức tiện ích cho ứng dụng
@@ -50,5 +58,47 @@ public final class CommonsUtils {
         }
 
         return key;
+    }
+
+    /**
+     * Phương thức lấy json string từ đường dẫn file
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     *
+     * @param context  - context ứng dụng
+     * @param filePath - đường dẫn file
+     * @return - chuỗi json
+     */
+    public static String loadJSONFromAsset(Context context, String filePath) {
+        String json = null;
+        try {
+            InputStream is = context.getAssets().open(filePath);
+            int size = is.available();
+            byte[] buffer = new byte[size];
+            is.read(buffer);
+            is.close();
+            json = new String(buffer, "UTF-8");
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            return null;
+        }
+        return json;
+
+    }
+
+    /**
+     * Phương thức lấy danh sách đối tượng từ chuỗi json
+     * Created_by Nguyễn Bá Linh on 05/04/2019
+     *
+     * @param context - context ứng dụng
+     * @param json    - chuỗi json
+     * @return - danh sách đối tượng
+     */
+    public static List<Object> getListObjectFromJsonString(Context context, String json) {
+        String jsonRestaurantType = CommonsUtils.loadJSONFromAsset(context, json);
+        Gson gson = new Gson();
+        Type collectionType = new TypeToken<List<Object>>() {
+        }.getType();
+        return gson.fromJson(jsonRestaurantType, collectionType);
     }
 }
