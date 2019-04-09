@@ -7,17 +7,18 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.screen.choosedishdefault.ChooseDishDefaultActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
@@ -27,6 +28,7 @@ import vn.com.misa.cukcuklite.utils.AppConstants;
  */
 public class ChooseRestaurantTypeActivity extends AppCompatActivity implements IChooseRestaurantTypeContract.IView, View.OnClickListener {
 
+    private static final String TAG = "ChooseRestaurantTypeAct";
     private ImageButton btnBack;
     private TextView tvContinue;
     private boolean mIsLoginBefore;
@@ -37,6 +39,7 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
     private ProgressDialog mDialog;
     private SharedPrefersManager mSharedPrefersManager;
     private int mRestaurantTypeDifferent;
+    private List<RestaurantType> mRestaurantTypeList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +50,10 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
         mPresenter.setView(this);
         initViews();
         initEvents();
-        mPresenter.onStart();
+        if (mRestaurantTypeList == null) {
+            mPresenter.onStart();
+            Log.d(TAG, "onCreate: ");
+        }
     }
 
 
@@ -103,7 +109,7 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
                     super.onBackPressed();
                 }
             };
-            mDialog.setMessage(getString(R.string.login_in_process));
+            mDialog.setMessage(getString(R.string.init_restaurant_type));
             mDialog.setCancelable(false);
             mDialog.setCanceledOnTouchOutside(false);
         } catch (Exception e) {
@@ -121,6 +127,7 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
     public void showListRestaurantType(List<RestaurantType> restaurantTypeList) {
         try {
             if (restaurantTypeList != null) {
+                mRestaurantTypeList = restaurantTypeList;
                 mRestaurantTypeDifferent = restaurantTypeList.get(restaurantTypeList.size() - 1).getRestaurantTypeId();
                 mRestaurantTypeAdapter.setListData(restaurantTypeList);
             }
@@ -130,12 +137,18 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
     }
 
     /**
-     * Phương thức khởi chạy main activity
-     * Created_by Nguyễn Bá Linh on 08/04/2019
+     * Khởi chạy màn hình chọn món ăn
+     * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     @Override
-    public void startMainActivity() {
-        startActivity(new Intent(this, MainActivity.class));
+    public void showDishDefaultActivity() {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, ChooseDishDefaultActivity.class);
+            startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -195,7 +208,6 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
             case R.id.btnContinue:
             case R.id.tvContinue:
                 try {
-                    mSharedPrefersManager.setAlreadyHasData(true);
                     //bắt đầu main activity
                     RestaurantType restaurantType = mRestaurantTypeAdapter.getRestaurantTypeIdSelected();
                     //khởi động màn hình chọn món ăn hoặc main;
@@ -214,14 +226,23 @@ public class ChooseRestaurantTypeActivity extends AppCompatActivity implements I
      * @param restaurantType - loại quán ăn
      */
     private void startMainApp(RestaurantType restaurantType) {
-        if (restaurantType != null) {
-            //nếu mà id của nhà hàng trùng với loại nhà hàng đặc biệt thì sẽ vào luôn màn hình chính ừng dụng
-            if (restaurantType.getRestaurantTypeId() == mRestaurantTypeDifferent) {
-                //hiển thị màn hình chính
-                mPresenter.insertAllData(restaurantType);
-            } else {//ngược lại thì sẽ điều hướng người dùng tới màn hình chọn món ăn có sẵn của loại nhà hàng
-                Toast.makeText(this, "Ahihihihihi", Toast.LENGTH_SHORT).show();
+        try {
+            if (restaurantType != null) {
+                //chèn toàn bộ Đơn vị vào cơ sở dữ liệu
+                mPresenter.insertAllUnit(restaurantType.getUnits());
+                //nếu mà id của nhà hàng trùng với loại nhà hàng đặc biệt thì sẽ vào luôn màn hình chính ừng dụng
+                if (restaurantType.getRestaurantTypeId() == mRestaurantTypeDifferent) {
+                    mSharedPrefersManager.setAlreadyHasData(true);
+                    //hiển thị màn hình chính
+                    startActivity(new Intent(this, MainActivity.class));
+                } else {
+                    //ngược lại thì sẽ insert toàn bộ món ăn vào cơ sở dữ liệu -> thành công sẽ điều
+                    //hướng tới màn hình chọn món ăn
+                    mPresenter.insertAllDish(restaurantType.getDishes());
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

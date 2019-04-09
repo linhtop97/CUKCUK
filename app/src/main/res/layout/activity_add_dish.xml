@@ -25,18 +25,18 @@
             app:srcCompat="@drawable/ic_back_white" />
 
         <TextView
-            android:id="@+id/tv_title"
+            android:id="@+id/tvTitle"
             style="@style/TextViewTitleWhite"
             android:layout_width="@dimen/dp_0"
             android:layout_height="@dimen/actionbar_height"
             android:gravity="center"
             android:singleLine="true"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
-            app:layout_constraintRight_toLeftOf="@id/tvTake"
+            app:layout_constraintRight_toLeftOf="@id/tvSave"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvTake"
+            android:id="@+id/tvSave"
             style="@style/TextViewNormalWhite"
             android:layout_width="@dimen/actionbar_height"
             android:layout_height="@dimen/actionbar_height"
@@ -133,12 +133,12 @@
                 android:textColor="@android:color/black"
                 android:textColorHint="@color/colorTextGray"
                 app:layout_constraintLeft_toRightOf="@id/tvPriceTitle"
-                app:layout_constraintRight_toLeftOf="@id/btnSelectPrice"
+                app:layout_constraintRight_toLeftOf="@id/ivSelectPrice"
                 app:layout_constraintTop_toBottomOf="@id/tvDishName"
                 tools:ignore="Autofill,LabelFor,RtlCompat" />
 
             <ImageView
-                android:id="@+id/btnSelectPrice"
+                android:id="@+id/ivSelectPrice"
                 android:layout_width="@dimen/img_foward_witdh"
                 android:layout_height="@dimen/item_dish_height"
                 android:contentDescription="@string/image_description"
@@ -186,12 +186,12 @@
                 android:textAlignment="textEnd"
                 android:textColor="@android:color/black"
                 app:layout_constraintLeft_toRightOf="@id/ivRequireUnit"
-                app:layout_constraintRight_toLeftOf="@id/btnSelectPrice"
+                app:layout_constraintRight_toLeftOf="@id/ivSelectPrice"
                 app:layout_constraintTop_toBottomOf="@id/tvPrice"
                 tools:ignore="RtlCompat" />
 
             <ImageView
-                android:id="@+id/btnSelectUnit"
+                android:id="@+id/ivSelectUnit"
                 android:layout_width="40dp"
                 android:layout_height="@dimen/item_dish_height"
                 android:contentDescription="@string/image_description"
@@ -301,10 +301,10 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_chainStyle="spread"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toLeftOf="@+id/btnTake" />
+            app:layout_constraintRight_toLeftOf="@+id/btnSave" />
 
         <Button
-            android:id="@+id/btnTake"
+            android:id="@+id/btnSave"
             style="@style/TextViewTitleWhite"
             android:layout_width="@dimen/dp_0"
             android:layout_height="match_parent"

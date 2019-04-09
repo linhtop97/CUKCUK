@@ -2,7 +2,7 @@ package vn.com.misa.cukcuklite.data.dish;
 
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
 import vn.com.misa.cukcuklite.data.models.Dish;
 
 /**
@@ -16,7 +16,7 @@ public interface IDishDataSource {
 
     EnumResult updateDishToDatabase(Dish dish);
 
-    boolean deleteDishById(int dishId);
+    boolean deleteDishById(String dishId);
 
     boolean updateDish(Dish dish);
 
@@ -25,4 +25,6 @@ public interface IDishDataSource {
     List<Dish> getAllDish();
 
     boolean isDishIfExists(String dishName);
+
+    boolean deleteAllDish();
 }

@@ -208,8 +208,8 @@ public class SQLiteDBManager extends SQLiteOpenHelper implements IDBUtils {
             return mSQLiteDatabase.update(tableName, contentValues, whereClause, whereArgs) > 0;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 
     /**
@@ -223,10 +223,11 @@ public class SQLiteDBManager extends SQLiteOpenHelper implements IDBUtils {
     public boolean deleteRecord(String table, String whereClause, String[] whereArgs) {
         try {
             openDataBase();
-            return mSQLiteDatabase.delete(table, whereClause, whereArgs) > 0;
+            mSQLiteDatabase.delete(table, whereClause, whereArgs);
+            return true;
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
-        return false;
     }
 }

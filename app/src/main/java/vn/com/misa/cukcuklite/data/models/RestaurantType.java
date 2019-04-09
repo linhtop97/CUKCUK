@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.data.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -9,7 +10,7 @@ import java.util.List;
 public class RestaurantType {
     private int RestaurantTypeId;
     private String RestaurantName;
-    private List<Dish> Dishes;
+    private ArrayList<Dish> Dishes;
     private List<Unit> Units;
 
 
@@ -41,7 +42,7 @@ public class RestaurantType {
     }
 
     public RestaurantType setDishes(List<Dish> dishes) {
-        Dishes = dishes;
+        Dishes = (ArrayList<Dish>) dishes;
         return this;
     }
 

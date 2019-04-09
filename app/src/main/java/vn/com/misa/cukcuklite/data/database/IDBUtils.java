@@ -51,8 +51,8 @@ public interface IDBUtils {
         String COLUMN_DISH_NAME = "DishName";
         String COLUMN_PRICE = "Price";
         String COLUMN_UNIT_ID = "UnitId";
-        String COLUMN_COLOR_ID = "ColorCode";
-        String COLUMN_ICON_ID = "IconPath";
+        String COLUMN_COLOR_CODE = "ColorCode";
+        String COLUMN_ICON_PATH = "IconPath";
         String COLUMN_IS_SALE = "IsSale";
     }
 

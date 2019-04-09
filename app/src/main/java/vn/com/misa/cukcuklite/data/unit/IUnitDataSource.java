@@ -1,8 +1,8 @@
-package vn.com.misa.cukcuklite.data.database.unit;
+package vn.com.misa.cukcuklite.data.unit;
 
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
 import vn.com.misa.cukcuklite.data.models.Unit;
 
 /**
@@ -27,4 +27,8 @@ public interface IUnitDataSource {
     boolean isUnitIfExists(String dishName);
 
     Unit getUnitById(String unitId);
+
+    String getUnitNameById(String unitId);
+
+    boolean deleteAllUnit();
 }

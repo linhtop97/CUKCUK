@@ -6,7 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.Dish;
@@ -36,12 +36,13 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     public boolean addDish(Dish dish) {
         try {
             ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_DISH_ID, dish.getDishId());
             contentValues.put(COLUMN_DISH_NAME, dish.getDishName());
             contentValues.put(COLUMN_PRICE, dish.getPrice());
             contentValues.put(COLUMN_UNIT_ID, dish.getUnitId());
-            contentValues.put(COLUMN_COLOR_ID, dish.getColorCode());
-            contentValues.put(COLUMN_ICON_ID, dish.getIconPath());
-            contentValues.put(COLUMN_IS_SALE, 1);
+            contentValues.put(COLUMN_COLOR_CODE, dish.getColorCode());
+            contentValues.put(COLUMN_ICON_PATH, dish.getIconPath());
+            contentValues.put(COLUMN_IS_SALE, dish.isSale() ? 1 : 0);
             return mSQLiteDBManager.addNewRecord(DISH_TBL_NAME, contentValues);
         } catch (Exception e) {
             e.printStackTrace();
@@ -81,22 +82,28 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public EnumResult updateDishToDatabase(Dish dish) {
-        List<Dish> dishes = getAllDish();
-        int size = dishes.size();
-        boolean dishNameIsExists = false;
-        for (int i = 0; i < size; i++) {
-            if (dishes.get(i).getDishName().toLowerCase().equals(dish.getDishName())
-                    && (!dishes.get(i).getDishId().equals(dish.getDishId()))) {
-                dishNameIsExists = true;
-                break;
+        try {
+            List<Dish> dishes = getAllDish();
+            int size = dishes.size();
+            boolean dishNameIsExists = false;
+            for (int i = 0; i < size; i++) {
+                if (dishes.get(i).getDishName().toLowerCase().equals(dish.getDishName())
+                        && (!dishes.get(i).getDishId().equals(dish.getDishId()))) {
+                    dishNameIsExists = true;
+                    break;
+                }
             }
-        }
-        if (dishNameIsExists) {
-            return EnumResult.Exists;
-        } else {
-            if (updateDish(dish)) {
-                return EnumResult.Success;
+            if (dishNameIsExists) {
+                return EnumResult.Exists;
+            } else {
+                if (updateDish(dish)) {
+                    return EnumResult.Success;
+                } else {
+                    return EnumResult.SomethingWentWrong;
+                }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return EnumResult.SomethingWentWrong;
     }
@@ -109,10 +116,10 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      * @return - xóa món ăn thành công hay thất bại
      */
     @Override
-    public boolean deleteDishById(int dishId) {
+    public boolean deleteDishById(String dishId) {
         try {
             return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME,
-                    COLUMN_DISH_ID + "=?", new String[]{String.valueOf(dishId)});
+                    COLUMN_DISH_ID + "=?", new String[]{dishId});
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -133,8 +140,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
             contentValues.put(COLUMN_DISH_NAME, dish.getDishName());
             contentValues.put(COLUMN_PRICE, dish.getPrice());
             contentValues.put(COLUMN_UNIT_ID, dish.getUnitId());
-            contentValues.put(COLUMN_COLOR_ID, dish.getColorCode());
-            contentValues.put(COLUMN_ICON_ID, dish.getColorCode());
+            contentValues.put(COLUMN_COLOR_CODE, dish.getColorCode());
+            contentValues.put(COLUMN_ICON_PATH, dish.getIconPath());
             contentValues.put(COLUMN_IS_SALE, dish.isSale() ? 1 : 0);
             return mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
                     COLUMN_DISH_ID + "=?", new String[]{dish.getDishId()});
@@ -174,8 +181,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                         .setDishName(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)))
                         .setPrice(cursor.getInt((cursor.getColumnIndex(COLUMN_PRICE))))
                         .setUnitId(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)))
-                        .setColorCode(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_ID)))
-                        .setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_ID)))
+                        .setColorCode(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_CODE)))
+                        .setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_PATH)))
                         .setSale(cursor.getInt(cursor.getColumnIndex(COLUMN_IS_SALE)) == 1)
                         .build();
                 dishes.add(dish);
@@ -208,5 +215,19 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
             e.printStackTrace();
         }
         return false;
+    }
+
+    /**
+     * Phương thức xóa toàn bộ danh sách các món ăn có sẵn trong cơ sở dữ liệu
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     */
+    @Override
+    public boolean deleteAllDish() {
+        try {
+            return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }

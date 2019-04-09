@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data;
+package vn.com.misa.cukcuklite.data.cukcukenum;
 
 /**
  * Enum cho thao tác với database

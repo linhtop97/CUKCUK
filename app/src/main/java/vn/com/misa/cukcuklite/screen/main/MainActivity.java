@@ -70,30 +70,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * Created_by Nguyễn Bá Linh on 05/04/2019
      */
     private void initViews() {
-        tvTitle = findViewById(R.id.tvTitle);
-        btnAdd = findViewById(R.id.btnAdd);
-        mToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mToolbar);
-        drawerLayout = findViewById(R.id.drawerLayout);
-        drawerToggle = new ActionBarDrawerToggle(
-                this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(drawerToggle);
-        drawerToggle.syncState();
-        navView = findViewById(R.id.navView);
-        navView.setNavigationItemSelectedListener(this);
-        mIsSale = true;
-        mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
-        tvTitle.setText(R.string.sale);
+        try {
+            tvTitle = findViewById(R.id.tvTitle);
+            btnAdd = findViewById(R.id.btnAdd);
+            mToolbar = findViewById(R.id.toolbar);
+            setSupportActionBar(mToolbar);
+            drawerLayout = findViewById(R.id.drawerLayout);
+            drawerToggle = new ActionBarDrawerToggle(
+                    this, drawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+            drawerLayout.addDrawerListener(drawerToggle);
+            drawerToggle.syncState();
+            navView = findViewById(R.id.navView);
+            navView.setVerticalScrollBarEnabled(false);
+            navView.setNavigationItemSelectedListener(this);
+            mIsSale = true;
+            mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+            tvTitle.setText(R.string.sale);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 
     @Override
     public void onBackPressed() {
         //nếu ấn nút back của thiết bị thì sẽ kiểm tra nếu dang mở thì sẽ đóng Nav lại
-        if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
-            drawerLayout.closeDrawer(GravityCompat.START);
-        } else {
-            super.onBackPressed();
+        try {
+            if (drawerLayout.isDrawerOpen(GravityCompat.START)) {
+                drawerLayout.closeDrawer(GravityCompat.START);
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

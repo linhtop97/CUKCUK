@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.database.unit;
+package vn.com.misa.cukcuklite.data.unit;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.Unit;
@@ -227,5 +227,41 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
             e.printStackTrace();
         }
         return null;
+    }
+
+    /**
+     * Phương thức lấy tên đơn vị qua Id
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     *
+     * @param unitId - id của đơn vị
+     * @return - tên đơn vị
+     */
+    @Override
+    public String getUnitNameById(String unitId) {
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_UNIT_NAME + " from " + UNIT_TBL_NAME + " where " + COLUMN_UNIT_ID + "='" + unitId + "'", null);
+            cursor.moveToFirst();
+            String unitName = cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_NAME));
+            cursor.close();
+            return unitName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Phương thức xóa toàn bộ đơn vị có sẵn trong database
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     */
+    @Override
+    public boolean deleteAllUnit() {
+        boolean deleteSuccess = false;
+        try {
+            deleteSuccess = mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME, null, null);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return deleteSuccess;
     }
 }

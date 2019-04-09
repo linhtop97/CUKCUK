@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 
 import vn.com.misa.cukcuklite.R;
 
+/**
+ * Màn hình thực đơn
+ * Created_by Nguyễn Bá Linh on 09/04/2019
+ */
 public class MenuFragment extends Fragment {
     public static MenuFragment newInstance() {
         return new MenuFragment();

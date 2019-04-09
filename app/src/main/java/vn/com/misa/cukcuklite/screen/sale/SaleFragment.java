@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 
 import vn.com.misa.cukcuklite.R;
 
+/**
+ * Màn hình bán hàng
+ * Created_by Nguyễn Bá Linh on 09/04/2019s
+ */
 public class SaleFragment extends Fragment {
 
     public static SaleFragment newInstance() {

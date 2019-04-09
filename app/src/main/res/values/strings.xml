@@ -14,7 +14,7 @@
     <string name="you_are_sign_in_success">You are sign in success</string>
     <string name="register">Đăng ký</string>
     <string name="confirm_password">confirm password</string>
-    <string name="something_went_wrong">Something when wrong!</string>
+    <string name="something_went_wrong">Có lỗi xảy ra không mong muốn, hãy thử lại!</string>
     <string name="account_is_exists">Account is exists, please choose others user name!</string>
     <string name="you_have_to_confirm_passwod">You have to confirm password!</string>
     <string name="confirm_password_is_incorrect">Confirm password is incorrect</string>
@@ -114,6 +114,7 @@
     <string name="nav_logout_title">Đăng xuất</string>
     <string name="sale">Bán hàng</string>
     <string name="menu_title">Thực đơn</string>
+    <string name="init_restaurant_type">Đang khởi tạo danh sách nhà hàng…</string>
 
 
     <string-array name="color_list">

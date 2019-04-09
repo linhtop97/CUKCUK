@@ -21,4 +21,7 @@ public final class AppConstants {
     public static final String USER_COLLECTION = "users";
 
     public static final String EXTRA_LOGIN_SUCCESS = "EXTRA_LOGIN_SUCCESS" ;
+    public static final String EXTRA_DISH_LIST = "EXTRA_DISH_LIST" ;
+    public static final String EXTRA_DISH = "EXTRA_DISH";
+    public static final String ARG_DISH_COLOR_CODE = "ARG_DISH_COLOR_CODE" ;
 }

@@ -32,11 +32,11 @@
             android:singleLine="true"
             android:text="@string/menu_title"
             app:layout_constraintLeft_toRightOf="@id/btnBack"
-            app:layout_constraintRight_toLeftOf="@id/tvContinue"
+            app:layout_constraintRight_toLeftOf="@id/tvDone"
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/tvContinue"
+            android:id="@+id/tvDone"
             style="@style/TextViewNormalWhite"
             android:layout_width="wrap_content"
             android:layout_height="@dimen/actionbar_height"

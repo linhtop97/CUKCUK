@@ -9,7 +9,7 @@
         "Price": 3000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#26C6DA",
-        "IconPath": "icondefault/_2_tra_da.png",
+        "IconPath": "_2_tra_da.png",
         "IsSale": true
       },
       {
@@ -18,7 +18,7 @@
         "Price": 5000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#039BE5",
-        "IconPath": "icondefault/_2_mia_da.png",
+        "IconPath": "_2_mia_da.png",
         "IsSale": true
       },
       {
@@ -27,7 +27,7 @@
         "Price": 10000,
         "UnitId": "732854ae-8fe5-4eb5-890f-bf98f6fde6ed",
         "ColorCode": "#6D4C41",
-        "IconPath": "icondefault/_7_cocacola.png",
+        "IconPath": "_7_cocacola.png",
         "IsSale": true
       },
       {
@@ -36,7 +36,7 @@
         "Price": 10000,
         "UnitId": "9e213f32-002e-4945-afd9-747587bf4b46",
         "ColorCode": "#00897B",
-        "IconPath": "icondefault/_91_thuoc_la.png",
+        "IconPath": "_91_thuoc_la.png",
         "IsSale": true
       },
       {
@@ -45,7 +45,7 @@
         "Price": 5000,
         "UnitId": "4ca415c5-2fc2-410e-883c-fc568be0e2e2",
         "ColorCode": "#F44336",
-        "IconPath": "icondefault/_991_huong_duong.png",
+        "IconPath": "_991_huong_duong.png",
         "IsSale": true
       }
     ],
@@ -78,7 +78,7 @@
         "Price": 10000,
         "UnitId": "0a1fa5ba-b154-42c5-86e2-a772ff710fe0",
         "ColorCode": "#26C6DA",
-        "IconPath": "icondefault/_8_xoi_xeo.png",
+        "IconPath": "_8_xoi_xeo.png",
         "IsSale": true
       },
       {
@@ -87,7 +87,7 @@
         "Price": 10000,
         "UnitId": "0a1fa5ba-b154-42c5-86e2-a772ff710fe0",
         "ColorCode": "#0D47A1",
-        "IconPath": "icondefault/_8_xoi_gac.png",
+        "IconPath": "_8_xoi_gac.png",
         "IsSale": true
       },
       {
@@ -96,7 +96,7 @@
         "Price": 10000,
         "UnitId": "0a1fa5ba-b154-42c5-86e2-a772ff710fe0",
         "ColorCode": "#43A047",
-        "IconPath": "icondefault/_8_xoi_lac.png",
+        "IconPath": "_8_xoi_lac.png",
         "IsSale": true
       },
       {
@@ -105,7 +105,7 @@
         "Price": 10000,
         "UnitId": "0a1fa5ba-b154-42c5-86e2-a772ff710fe0",
         "ColorCode": "#212121",
-        "IconPath": "icondefault/_8_xoi_thap-cam.png",
+        "IconPath": "_8_xoi_thap-cam.png",
         "IsSale": true
       },
       {
@@ -114,7 +114,7 @@
         "Price": 10000,
         "UnitId": "0a1fa5ba-b154-42c5-86e2-a772ff710fe0",
         "ColorCode": "#8D6E63",
-        "IconPath": "icondefault/_8_xoi_trung.png",
+        "IconPath": "_8_xoi_trung.png",
         "IsSale": true
       }
     ],
@@ -135,7 +135,7 @@
         "Price": 25000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#2E7D32",
-        "IconPath": "icondefault/_9_bun_nam_bo.png",
+        "IconPath": "_9_bun_nam_bo.png",
         "IsSale": true
       },
       {
@@ -144,7 +144,7 @@
         "Price": 25000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#64DD17",
-        "IconPath": "icondefault/_3_bun_rieu_cua.png",
+        "IconPath": "_3_bun_rieu_cua.png",
         "IsSale": true
       },
       {
@@ -153,7 +153,7 @@
         "Price": 25000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#EC407A",
-        "IconPath": "icondefault/_9_bun_dau.png",
+        "IconPath": "_9_bun_dau.png",
         "IsSale": true
       },
       {
@@ -162,7 +162,7 @@
         "Price": 25000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#FFB300",
-        "IconPath": "icondefault/_3_bun_met.png",
+        "IconPath": "_3_bun_met.png",
         "IsSale": true
       },
       {
@@ -171,7 +171,7 @@
         "Price": 25000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#64B5F6",
-        "IconPath": "icondefault/_3_bun_canh.png",
+        "IconPath": "_3_bun_canh.png",
         "IsSale": true
       }
     ],
@@ -192,7 +192,7 @@
         "Price": 10000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#0D47A1",
-        "IconPath": "icondefault/_61_che_dau_xanh.png",
+        "IconPath": "_61_che_dau_xanh.png",
         "IsSale": true
       },
       {
@@ -201,7 +201,7 @@
         "Price": 10000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#6D4C41",
-        "IconPath": "icondefault/_61_che_do_den.png",
+        "IconPath": "_61_che_do_den.png",
         "IsSale": true
       },
       {
@@ -210,7 +210,7 @@
         "Price": 13000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#00897B",
-        "IconPath": "icondefault/_61_che_thai.png",
+        "IconPath": "_61_che_thai.png",
         "IsSale": true
       },
       {
@@ -219,7 +219,7 @@
         "Price": 10000,
         "UnitId": "aa64bf43-9cf1-43d7-b3a8-ea2235441ca5",
         "ColorCode": "#26C6DA",
-        "IconPath": "icondefault/_3_bun_met.png",
+        "IconPath": "_3_bun_met.png",
         "IsSale": true
       },
       {
@@ -228,7 +228,7 @@
         "Price": 10000,
         "UnitId": "88d1ee87-5747-4607-919d-ffaa6090892a",
         "ColorCode": "#5F7C8A",
-        "IconPath": "icondefault/_8_che_hoa_qua.png",
+        "IconPath": "_8_che_hoa_qua.png",
         "IsSale": true
       }
     ],
