@@ -28,31 +28,29 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
      */
     @Override
     public void addDish(Dish dish) {
-//        try {
-//            if (name.equals("")) {
-//                mView.dishNameEmpty();
-//                return;
-//            }
-//            Dish dish = new Dish.Builder().setDishName(name)
-//                    .setPrice(Integer.parseInt(price))
-//                    .setUnitId(unit)
-//                    .setColorCode(background)
-//                    .setIconPath(icon).build();
-//            switch (mDishDataSource.addDishToDatabase(dish)) {
-//                case Exists:
-//                    mView.receiveMessage(R.string.dish_name_is_exists);
-//                    break;
-//                case Success:
-//                    mView.addDishSuccess();
-//                    break;
-//                case SomethingWentWrong:
-//                    mView.receiveMessage(R.string.something_went_wrong);
-//                    break;
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-
+        try {
+            if (dish.getDishName().equals("")) {
+                mView.dishNameEmpty();
+                return;
+            }
+            if (!dish.getDishId().isEmpty() && dish.getDishId() != null) {
+                switch (mDishDataSource.addDishToDatabase(dish)) {
+                    case Exists:
+                        mView.addDishFailed(R.string.dish_name_is_exists);
+                        break;
+                    case Success:
+                        mView.addDishSuccess();
+                        break;
+                    case SomethingWentWrong:
+                        mView.addDishFailed(R.string.something_went_wrong);
+                        break;
+                }
+            } else {
+                mView.addDishFailed(R.string.something_went_wrong);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -68,16 +66,20 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
                 mView.dishNameEmpty();
                 return;
             }
-            switch (mDishDataSource.updateDishToDatabase(dish)) {
-                case Exists:
-                    mView.receiveMessage(R.string.dish_name_is_exists);
-                    break;
-                case Success:
-                    mView.upDateDishSuccess();
-                    break;
-                case SomethingWentWrong:
-                    mView.receiveMessage(R.string.something_went_wrong);
-                    break;
+            if (!dish.getDishId().isEmpty() && dish.getDishId() != null) {
+                switch (mDishDataSource.updateDishToDatabase(dish)) {
+                    case Exists:
+                        mView.receiveMessage(R.string.dish_name_is_exists);
+                        break;
+                    case Success:
+                        mView.upDateDishSuccess();
+                        break;
+                    case SomethingWentWrong:
+                        mView.receiveMessage(R.string.something_went_wrong);
+                        break;
+                }
+            } else {
+                mView.addDishFailed(R.string.something_went_wrong);
             }
         } catch (Exception e) {
             e.printStackTrace();

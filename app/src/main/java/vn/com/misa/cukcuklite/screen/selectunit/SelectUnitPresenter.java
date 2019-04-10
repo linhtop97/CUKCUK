@@ -79,16 +79,20 @@ public class SelectUnitPresenter implements IUnitContract.IPresenter {
                 mView.unitNameEmpty();
                 return;
             }
-            switch (mUnitDataSource.addUnitToDatabase(unit)) {
-                case Exists:
-                    mView.addUnitFailed(R.string.unit_name_is_exists);
-                    break;
-                case Success:
-                    mView.addUnitSuccess(unit.getUnitId());
-                    break;
-                case SomethingWentWrong:
-                    mView.addUnitFailed(R.string.something_went_wrong);
-                    break;
+            if (!unit.getUnitId().isEmpty() && unit.getUnitId() != null) {
+                switch (mUnitDataSource.addUnitToDatabase(unit)) {
+                    case Exists:
+                        mView.addUnitFailed(R.string.unit_name_is_exists);
+                        break;
+                    case Success:
+                        mView.addUnitSuccess(unit.getUnitId());
+                        break;
+                    case SomethingWentWrong:
+                        mView.addUnitFailed(R.string.something_went_wrong);
+                        break;
+                }
+            } else {
+                mView.addUnitFailed(R.string.something_went_wrong);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -108,16 +112,20 @@ public class SelectUnitPresenter implements IUnitContract.IPresenter {
                 mView.unitNameEmpty();
                 return;
             }
-            switch (mUnitDataSource.updateUnitToDatabase(unit)) {
-                case Exists:
-                    mView.receiveMessage(R.string.unit_name_is_exists);
-                    break;
-                case Success:
-                    mView.updateUnitSuccess(unit.getUnitId());
-                    break;
-                case SomethingWentWrong:
-                    mView.receiveMessage(R.string.something_went_wrong);
-                    break;
+            if (!unit.getUnitId().isEmpty() && unit.getUnitId() != null) {
+                switch (mUnitDataSource.updateUnitToDatabase(unit)) {
+                    case Exists:
+                        mView.receiveMessage(R.string.unit_name_is_exists);
+                        break;
+                    case Success:
+                        mView.updateUnitSuccess(unit.getUnitId());
+                        break;
+                    case SomethingWentWrong:
+                        mView.receiveMessage(R.string.something_went_wrong);
+                        break;
+                }
+            } else {
+                mView.addUnitFailed(R.string.something_went_wrong);
             }
         } catch (Exception e) {
             e.printStackTrace();

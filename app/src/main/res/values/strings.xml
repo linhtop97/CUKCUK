@@ -117,6 +117,8 @@
     <string name="menu_title">Thực đơn</string>
     <string name="init_restaurant_type">Đang khởi tạo danh sách nhà hàng…</string>
     <string name="delete_unit">Xóa đơn vị tính</string>
+    <string name="init_dish_list">Khởi tạo danh sách món ăn…</string>
+    <string name="delete_unit_success">Xóa đơn vị thành công</string>
 
 
     <string-array name="color_list">

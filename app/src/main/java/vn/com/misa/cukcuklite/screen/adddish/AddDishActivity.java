@@ -19,6 +19,8 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.UUID;
+
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Dish;
@@ -195,19 +197,33 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         btnDelete.setVisibility(View.GONE);
     }
 
+    /**
+     * Thông báo khi người dùng không nhập tên món ăn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
     @Override
     public void dishNameEmpty() {
-
+        mNavigator.showToastOnTopScreen(R.string.dish_name_not_allow_empty);
+        etDishName.requestFocus();
     }
 
+    /**
+     * Thông báo cho người dùng đã thêm món ăn thành công và quay về màn hình thực đơn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
     @Override
     public void addDishSuccess() {
-
+        try {
+            mNavigator.showToast(R.string.add_dish_success);
+            finishTask();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void addDishFailed(int error) {
-
+        mNavigator.showToastOnTopScreen(error);
     }
 
     /**
@@ -376,6 +392,15 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     private void addDish() {
+        try {
+            mDish.setDishId(UUID.randomUUID().toString());
+            mDish.setDishName(etDishName.getText().toString().trim());
+            mDish.setPrice(Integer.parseInt(tvPrice.getText().toString().trim()));
+            mDish.setSale(!cbState.isChecked());
+            mPresenter.addDish(mDish);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
     }
 
     /**

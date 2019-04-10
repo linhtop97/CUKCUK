@@ -159,7 +159,7 @@ public class SelectUnitActivity extends AppCompatActivity implements IUnitContra
     @Override
     public void deleteUnitSuccess() {
         try {
-            mNavigator.showToastOnTopScreen(R.string.delete_success);
+            mNavigator.showToastOnTopScreen(R.string.delete_unit_success);
             int size = mUnits.size();
             String unitId = mUnit.getUnitId();
             for (int i = 0; i < size; i++) {

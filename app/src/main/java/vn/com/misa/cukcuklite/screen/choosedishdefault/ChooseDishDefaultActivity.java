@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.screen.choosedishdefault;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -39,6 +40,7 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
     private ChooseDishDefaultPresenter mPresenter;
     private Navigator mNavigator;
     private SharedPrefersManager mSharedPrefersManager;
+    private ProgressDialog mDialog;
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -96,6 +98,7 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
         mDishAdapter = new DishAdapter(this);
         mDishAdapter.setItemClickListener(this);
         rvDish.setAdapter(mDishAdapter);
+        initProgressBar();
 
     }
 
@@ -154,13 +157,40 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
         mNavigator.showToastOnTopScreen(message);
     }
 
+
+    /**
+     * Phương thức khởi tạo progressbar
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     */
+    private void initProgressBar() {
+        try {
+            mDialog = new ProgressDialog(this) {
+                @Override
+                public void onBackPressed() {
+                    super.onBackPressed();
+                }
+            };
+            mDialog.setMessage(getString(R.string.init_dish_list));
+            mDialog.setCancelable(false);
+            mDialog.setCanceledOnTouchOutside(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Phương thức hiển thị 1 dialog chờ xử lý tác vụ với 1 thông điệp
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     @Override
     public void showLoading() {
-
+        try {
+            if (mDialog != null && !mDialog.isShowing()) {
+                mDialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -169,7 +199,13 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
      */
     @Override
     public void hideLoading() {
-
+        try {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

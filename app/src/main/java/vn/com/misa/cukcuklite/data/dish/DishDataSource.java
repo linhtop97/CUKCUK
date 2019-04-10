@@ -60,7 +60,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public EnumResult addDishToDatabase(Dish dish) {
         String dishName;
-        if (dish != null) {
+        if (dish != null && !dish.getDishId().isEmpty() && dish.getDishId() != null) {
             dishName = dish.getDishName();
             //kiểm tra tên món ăn đã tồn tại hay chưa
             if (isDishIfExists(dishName)) {

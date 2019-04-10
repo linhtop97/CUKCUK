@@ -32,7 +32,7 @@ public class DishAdapter extends ListAdapter<Dish> {
      *
      * @param context là được truyền tới từ context nơi khởi tạo thể hiện của lớp
      */
-    DishAdapter(Context context) {
+    public DishAdapter(Context context) {
         super(context);
     }
 
@@ -62,7 +62,7 @@ public class DishAdapter extends ListAdapter<Dish> {
      *
      * @param itemClickListener - listener
      */
-    void setItemClickListener(IOnItemClickListener<Dish> itemClickListener) {
+    public void setItemClickListener(IOnItemClickListener<Dish> itemClickListener) {
         mItemClickListener = itemClickListener;
     }
 
