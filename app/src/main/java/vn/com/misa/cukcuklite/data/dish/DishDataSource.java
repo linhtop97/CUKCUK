@@ -110,6 +110,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
 
     /**
      * Phương thức xóa món ăn thông qua Id của món ăn
+     * Nhưng bản chất chỉ thay đổi trạng thái của món ăn. không xóa món ăn
      * Created_by Nguyễn Bá Linh on 27/03/2019
      *
      * @param dishId - id của món ăn
@@ -118,7 +119,9 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteDishById(String dishId) {
         try {
-            return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME,
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_STATE, 0);
+            return mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
                     COLUMN_DISH_ID + "=?", new String[]{dishId});
         } catch (Exception e) {
             e.printStackTrace();
@@ -160,7 +163,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public List<String> getAllDishName() {
         List<String> dishNames = new ArrayList<>();
-        Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_DISH_NAME + " from " + DISH_TBL_NAME, null);
+        Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_DISH_NAME +
+                " from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
         cursor.moveToFirst();
         while (!cursor.isAfterLast()) {
             dishNames.add(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)).toLowerCase());
@@ -174,7 +178,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     public List<Dish> getAllDish() {
         List<Dish> dishes = new ArrayList<>();
         try {
-            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME, null);
+            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Dish dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))

@@ -120,7 +120,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
         int size = units.size();
         boolean unitNameIsExists = false;
         for (int i = 0; i < size; i++) {
-            if (units.get(i).getUnitName().toLowerCase().equals(unit.getUnitName())
+            if (units.get(i).getUnitName().toLowerCase().equals(unit.getUnitName().toLowerCase())
                     && (!units.get(i).getUnitId().equals(unit.getUnitId()))) {
                 unitNameIsExists = true;
                 break;

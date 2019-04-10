@@ -54,6 +54,7 @@ public interface IDBUtils {
         String COLUMN_COLOR_CODE = "ColorCode";
         String COLUMN_ICON_PATH = "IconPath";
         String COLUMN_IS_SALE = "IsSale";
+        String COLUMN_STATE = "State";
     }
 
     /**
