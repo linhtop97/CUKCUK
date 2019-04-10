@@ -3,6 +3,7 @@ package vn.com.misa.cukcuklite.screen.adddish;
 import vn.com.misa.cukcuklite.base.IBasePresenter;
 import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.Dish;
+import vn.com.misa.cukcuklite.data.models.Unit;
 
 public interface IAddDishContract {
     interface IView extends IBaseView {
@@ -13,7 +14,7 @@ public interface IAddDishContract {
 
         void addDishFailed(int error);
 
-        void setUnit(String unit);
+        void setUnit(Unit unit);
 
         void upDateDishSuccess();
 

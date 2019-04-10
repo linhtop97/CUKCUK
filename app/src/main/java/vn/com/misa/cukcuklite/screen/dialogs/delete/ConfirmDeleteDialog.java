@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.screen.dialogs.color;
+package vn.com.misa.cukcuklite.screen.dialogs.delete;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -9,9 +9,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,37 +17,47 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
+import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 /**
- * Dialog hiển thị lựa chọn background cho icon của món ăn
+ * Dialog hiển thị xác nhận xóa
  * Created_by Nguyễn Bá Linh on 27/03/2019
  */
-public class ColorSelectorDialog extends DialogFragment implements IOnItemClickListener<String> {
-    private Button btnCancel;
-    private List<String> mListColorCode;
-    private IColorSelectedCallBack mCallBack;
+public class ConfirmDeleteDialog extends DialogFragment implements View.OnClickListener {
+    private IConfirmDeleteCallBack mCallBack;
+    private Button btnClose, btnYes, btnNo;
 
-    public static ColorSelectorDialog newInstance(String colorCode) {
-        ColorSelectorDialog colorSelectorDialog = new ColorSelectorDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString(AppConstants.ARG_DISH_COLOR_CODE, colorCode);
-        colorSelectorDialog.setArguments(bundle);
+    /**
+     * Phương thức khởi tạo dialog xác nhận xóa
+     * Created_by Nguyễn Bá Linh on 10/04/2019
+     *
+     * @param name - tên muốn xóa
+     * @param type - loại muốn xóa
+     * @return - dialog
+     */
+    public static ConfirmDeleteDialog newInstance(String name, String type) {
+        ConfirmDeleteDialog colorSelectorDialog = new ConfirmDeleteDialog();
+        try {
+            Bundle bundle = new Bundle();
+            bundle.putString(AppConstants.ARG_NAME, name);
+            bundle.putString(AppConstants.ARG_TYPE_DELETE, type);
+            colorSelectorDialog.setArguments(bundle);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return colorSelectorDialog;
     }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mListColorCode = Arrays.asList(getResources().getStringArray(R.array.color_list));
-        View view = inflater.inflate(R.layout.dialog_color_selector, container, false);
+        View view = inflater.inflate(R.layout.dialog_confirm, container, false);
         initViews(view);
         initEvents();
         return view;
@@ -60,12 +68,13 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     private void initEvents() {
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
+        try {
+            btnClose.setOnClickListener(this);
+            btnNo.setOnClickListener(this);
+            btnYes.setOnClickListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -74,39 +83,24 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
      */
     private void initViews(View view) {
         try {
-            RecyclerView rvColor = view.findViewById(R.id.rvColor);
-            btnCancel = view.findViewById(R.id.btnCancel);
+            TextView tvConfirm = view.findViewById(R.id.tvConfirm);
+            btnClose = view.findViewById(R.id.btnClose);
+            btnYes = view.findViewById(R.id.btnYes);
+            btnNo = view.findViewById(R.id.btnNo);
             Bundle bundle = getArguments();
-            int lastPosition = AppConstants.POSITION_DEFAULT;
-            //xác định vị trí màu của món ăn được chọn
+            String name = "";
             if (bundle != null) {
-                String colorCode = bundle.getString(AppConstants.ARG_DISH_COLOR_CODE, "");
-                String[] colorList = getResources().getStringArray(R.array.color_list);
-                for (int i = 0; i < colorList.length; i++) {
-                    if (colorCode.equals(colorList[i])) {
-                        lastPosition = i;
-                        break;
-                    }
+                name = bundle.getString(AppConstants.ARG_NAME);
+                String type = bundle.getString(AppConstants.ARG_TYPE_DELETE);
+                if (type.equals(IDBUtils.ITableUnitUtils.COLUMN_UNIT_NAME)) {
+                    tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_unit, name)));
+                } else {
+                    tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_dish, name)));
                 }
             }
-            ColorAdapter adapter = new ColorAdapter(getContext(), mListColorCode, lastPosition);
-            LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 4);
-            rvColor.setLayoutManager(linearLayoutManager);
-            adapter.setListener(this);
-            rvColor.setAdapter(adapter);
-        } catch (Resources.NotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Khởi tạo callback cho dialog
-     * Created_by Nguyễn Bá Linh on 09/04/2019
-     *
-     * @param callBack - callback
-     */
-    public void setCallBack(IColorSelectedCallBack callBack) {
-        mCallBack = callBack;
     }
 
     /**
@@ -119,7 +113,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
         try {
             Window window = getDialog().getWindow();
             int width = getResources().getDimensionPixelSize(R.dimen.color_dialog_width);
-            int height = getResources().getDimensionPixelSize(R.dimen.color_dialog_height);
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             assert window != null;
             window.setLayout(width, height);
             window.setGravity(Gravity.CENTER);
@@ -127,6 +121,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
             e.printStackTrace();
         }
     }
+
 
     /**
      * Ghi đè hàm khởi tạo dialog, thiết lập dialog
@@ -165,27 +160,35 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
         return super.onCreateDialog(savedInstanceState);
     }
 
-    /**
-     * Phương thức xử lý khi item color được click
-     * Created_by Nguyễn Bá Linh on 27/03/2019
-     *
-     * @param colorCode - mã màu của món ăn
-     */
     @Override
-    public void onItemClick(String colorCode) {
-        try {
-            mCallBack.onColorSelected(colorCode);
-            dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnNo:
+            case R.id.btnClose:
+                dismiss();
+                break;
+            case R.id.btnYes:
+                mCallBack.acceptDelete();
+                dismiss();
+                break;
         }
     }
 
     /**
-     * Call back được gọi để cập nhật màu cho món ăn
+     * Phương thức gán callback cho sự kiện xóa
+     * Created_by Nguyễn Bá Linh on 10/04/2019
+     *
+     * @param callBack - callback
+     */
+    public void setCallBack(IConfirmDeleteCallBack callBack) {
+        mCallBack = callBack;
+    }
+
+    /**
+     * Call back được gọi để thực hiện tác vụ xóa
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
-    public interface IColorSelectedCallBack {
-        void onColorSelected(String colorCode);
+    public interface IConfirmDeleteCallBack {
+        void acceptDelete();
     }
 }

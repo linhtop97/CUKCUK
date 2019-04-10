@@ -44,6 +44,9 @@
         <activity
             android:name=".screen.adddish.AddDishActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.selectunit.SelectUnitActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

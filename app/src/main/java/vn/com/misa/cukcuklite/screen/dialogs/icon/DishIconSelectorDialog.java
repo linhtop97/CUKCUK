@@ -1,6 +1,7 @@
-package vn.com.misa.cukcuklite.screen.dialogs.color;
+package vn.com.misa.cukcuklite.screen.dialogs.icon;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -20,36 +21,28 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
-import vn.com.misa.cukcuklite.utils.AppConstants;
+import vn.com.misa.cukcuklite.utils.ImageUtils;
 
 /**
- * Dialog hiển thị lựa chọn background cho icon của món ăn
+ * Dialog hiển thị danh sách icon cho món ăn
  * Created_by Nguyễn Bá Linh on 27/03/2019
  */
-public class ColorSelectorDialog extends DialogFragment implements IOnItemClickListener<String> {
+public class DishIconSelectorDialog extends DialogFragment implements IOnItemClickListener<String> {
     private Button btnCancel;
-    private List<String> mListColorCode;
-    private IColorSelectedCallBack mCallBack;
-
-    public static ColorSelectorDialog newInstance(String colorCode) {
-        ColorSelectorDialog colorSelectorDialog = new ColorSelectorDialog();
-        Bundle bundle = new Bundle();
-        bundle.putString(AppConstants.ARG_DISH_COLOR_CODE, colorCode);
-        colorSelectorDialog.setArguments(bundle);
-        return colorSelectorDialog;
-    }
+    private List<String> mStringList;
+    private Context mContext;
+    private IDishIconCallBack mCallBack;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mListColorCode = Arrays.asList(getResources().getStringArray(R.array.color_list));
-        View view = inflater.inflate(R.layout.dialog_color_selector, container, false);
+        mStringList = ImageUtils.getAllImage(mContext);
+        View view = inflater.inflate(R.layout.dialog_dish_icon_selector, container, false);
         initViews(view);
         initEvents();
         return view;
@@ -57,7 +50,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
 
     /**
      * Phương thức gắn sự kiện cho view
-     * Created_by Nguyễn Bá Linh on 09/04/2019
+     * Created_by Nguyễn Bá Linh on 10/04/2019
      */
     private void initEvents() {
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -69,34 +62,17 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
     }
 
     /**
-     * Phương thức khởi tạo các view
-     * Created_by Nguyễn Bá Linh on 27/03/2019
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 10/04/2019
      */
     private void initViews(View view) {
-        try {
-            RecyclerView rvColor = view.findViewById(R.id.rvColor);
-            btnCancel = view.findViewById(R.id.btnCancel);
-            Bundle bundle = getArguments();
-            int lastPosition = AppConstants.POSITION_DEFAULT;
-            //xác định vị trí màu của món ăn được chọn
-            if (bundle != null) {
-                String colorCode = bundle.getString(AppConstants.ARG_DISH_COLOR_CODE, "");
-                String[] colorList = getResources().getStringArray(R.array.color_list);
-                for (int i = 0; i < colorList.length; i++) {
-                    if (colorCode.equals(colorList[i])) {
-                        lastPosition = i;
-                        break;
-                    }
-                }
-            }
-            ColorAdapter adapter = new ColorAdapter(getContext(), mListColorCode, lastPosition);
-            LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 4);
-            rvColor.setLayoutManager(linearLayoutManager);
-            adapter.setListener(this);
-            rvColor.setAdapter(adapter);
-        } catch (Resources.NotFoundException e) {
-            e.printStackTrace();
-        }
+        btnCancel = view.findViewById(R.id.btnCancel);
+        RecyclerView rvDishIcon = view.findViewById(R.id.rvDishIcon);
+        IconAdapter adapter = new IconAdapter(getContext(), mStringList);
+        LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 5);
+        rvDishIcon.setLayoutManager(linearLayoutManager);
+        adapter.setItemClickListener(this);
+        rvDishIcon.setAdapter(adapter);
     }
 
     /**
@@ -105,7 +81,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
      *
      * @param callBack - callback
      */
-    public void setCallBack(IColorSelectedCallBack callBack) {
+    public void setCallBack(IDishIconCallBack callBack) {
         mCallBack = callBack;
     }
 
@@ -127,6 +103,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
             e.printStackTrace();
         }
     }
+
 
     /**
      * Ghi đè hàm khởi tạo dialog, thiết lập dialog
@@ -165,16 +142,22 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
         return super.onCreateDialog(savedInstanceState);
     }
 
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context;
+    }
+
     /**
-     * Phương thức xử lý khi item color được click
+     * Phương thức xử lý khi icon được lựa chọn
      * Created_by Nguyễn Bá Linh on 27/03/2019
      *
-     * @param colorCode - mã màu của món ăn
+     * @param fileName - tên file icon
      */
     @Override
-    public void onItemClick(String colorCode) {
+    public void onItemClick(String fileName) {
         try {
-            mCallBack.onColorSelected(colorCode);
+            mCallBack.onDishIconSelected(fileName);
             dismiss();
         } catch (Exception e) {
             e.printStackTrace();
@@ -182,10 +165,10 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
     }
 
     /**
-     * Call back được gọi để cập nhật màu cho món ăn
+     * Call back được gọi để cập icon cho món ăn
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
-    public interface IColorSelectedCallBack {
-        void onColorSelected(String colorCode);
+    public interface IDishIconCallBack {
+        void onDishIconSelected(String iconPath);
     }
 }

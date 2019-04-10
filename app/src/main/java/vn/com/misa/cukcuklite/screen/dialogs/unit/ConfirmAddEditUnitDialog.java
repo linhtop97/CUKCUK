@@ -1,6 +1,7 @@
-package vn.com.misa.cukcuklite.screen.dialogs.color;
+package vn.com.misa.cukcuklite.screen.dialogs.unit;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
 import android.graphics.Color;
@@ -9,9 +10,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -19,28 +17,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Objects;
+import java.util.UUID;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
+import vn.com.misa.cukcuklite.data.models.Unit;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 /**
- * Dialog hiển thị lựa chọn background cho icon của món ăn
+ * Dialog hiển thị xác nhận sửa, thêm đơn vị
  * Created_by Nguyễn Bá Linh on 27/03/2019
  */
-public class ColorSelectorDialog extends DialogFragment implements IOnItemClickListener<String> {
-    private Button btnCancel;
-    private List<String> mListColorCode;
-    private IColorSelectedCallBack mCallBack;
+public class ConfirmAddEditUnitDialog extends DialogFragment implements View.OnClickListener {
+    private TextView tvTitle;
+    private Button btnClose, btnYes, btnNo;
+    private EditText etUnitName;
+    private boolean isEdit;
+    private Unit mUnit;
+    private IUnitAddEditCallBack mCallBack;
 
-    public static ColorSelectorDialog newInstance(String colorCode) {
-        ColorSelectorDialog colorSelectorDialog = new ColorSelectorDialog();
+    /**
+     * Phương thức khởi tạo dialog
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     *
+     * @param unit - Đơn vị(có thể null)
+     * @return - ConfirmAddEditUnitDialog
+     */
+    public static ConfirmAddEditUnitDialog newInstance(Unit unit) {
+        ConfirmAddEditUnitDialog colorSelectorDialog = new ConfirmAddEditUnitDialog();
         Bundle bundle = new Bundle();
-        bundle.putString(AppConstants.ARG_DISH_COLOR_CODE, colorCode);
+        bundle.putParcelable(AppConstants.ARG_UNIT, unit);
         colorSelectorDialog.setArguments(bundle);
         return colorSelectorDialog;
     }
@@ -48,8 +57,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        mListColorCode = Arrays.asList(getResources().getStringArray(R.array.color_list));
-        View view = inflater.inflate(R.layout.dialog_color_selector, container, false);
+        View view = inflater.inflate(R.layout.dialog_add_edit_unit, container, false);
         initViews(view);
         initEvents();
         return view;
@@ -57,56 +65,42 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
 
     /**
      * Phương thức gắn sự kiện cho view
-     * Created_by Nguyễn Bá Linh on 09/04/2019
+     * Created_by Nguyễn Bá Linh on 10/04/2019
      */
     private void initEvents() {
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dismiss();
-            }
-        });
-    }
-
-    /**
-     * Phương thức khởi tạo các view
-     * Created_by Nguyễn Bá Linh on 27/03/2019
-     */
-    private void initViews(View view) {
         try {
-            RecyclerView rvColor = view.findViewById(R.id.rvColor);
-            btnCancel = view.findViewById(R.id.btnCancel);
-            Bundle bundle = getArguments();
-            int lastPosition = AppConstants.POSITION_DEFAULT;
-            //xác định vị trí màu của món ăn được chọn
-            if (bundle != null) {
-                String colorCode = bundle.getString(AppConstants.ARG_DISH_COLOR_CODE, "");
-                String[] colorList = getResources().getStringArray(R.array.color_list);
-                for (int i = 0; i < colorList.length; i++) {
-                    if (colorCode.equals(colorList[i])) {
-                        lastPosition = i;
-                        break;
-                    }
-                }
-            }
-            ColorAdapter adapter = new ColorAdapter(getContext(), mListColorCode, lastPosition);
-            LinearLayoutManager linearLayoutManager = new GridLayoutManager(getContext(), 4);
-            rvColor.setLayoutManager(linearLayoutManager);
-            adapter.setListener(this);
-            rvColor.setAdapter(adapter);
-        } catch (Resources.NotFoundException e) {
+            btnClose.setOnClickListener(this);
+            btnNo.setOnClickListener(this);
+            btnYes.setOnClickListener(this);
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * Khởi tạo callback cho dialog
-     * Created_by Nguyễn Bá Linh on 09/04/2019
-     *
-     * @param callBack - callback
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 10/04/2019
      */
-    public void setCallBack(IColorSelectedCallBack callBack) {
-        mCallBack = callBack;
+    private void initViews(View view) {
+        btnClose = view.findViewById(R.id.btnClose);
+        btnNo = view.findViewById(R.id.btnNo);
+        btnYes = view.findViewById(R.id.btnYes);
+        etUnitName = view.findViewById(R.id.etUnitName);
+        tvTitle = view.findViewById(R.id.tvTitle);
+        Bundle bundle = getArguments();
+        if (bundle != null) {
+            mUnit = bundle.getParcelable(AppConstants.ARG_UNIT);
+            if (mUnit != null) {
+                isEdit = true;
+                tvTitle.setText(R.string.edit_unit);
+                etUnitName.setText(mUnit.getUnitName());
+                etUnitName.setSelection(mUnit.getUnitName().length());
+            } else {
+                isEdit = false;
+                tvTitle.setText(R.string.add_new_unit);
+            }
+        }
+
     }
 
     /**
@@ -119,7 +113,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
         try {
             Window window = getDialog().getWindow();
             int width = getResources().getDimensionPixelSize(R.dimen.color_dialog_width);
-            int height = getResources().getDimensionPixelSize(R.dimen.color_dialog_height);
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
             assert window != null;
             window.setLayout(width, height);
             window.setGravity(Gravity.CENTER);
@@ -127,6 +121,7 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
             e.printStackTrace();
         }
     }
+
 
     /**
      * Ghi đè hàm khởi tạo dialog, thiết lập dialog
@@ -165,27 +160,47 @@ public class ColorSelectorDialog extends DialogFragment implements IOnItemClickL
         return super.onCreateDialog(savedInstanceState);
     }
 
-    /**
-     * Phương thức xử lý khi item color được click
-     * Created_by Nguyễn Bá Linh on 27/03/2019
-     *
-     * @param colorCode - mã màu của món ăn
-     */
     @Override
-    public void onItemClick(String colorCode) {
-        try {
-            mCallBack.onColorSelected(colorCode);
-            dismiss();
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btnNo:
+            case R.id.btnClose:
+                dismiss();
+                break;
+            case R.id.btnYes:
+                String unitName = etUnitName.getText().toString().trim();
+                if (isEdit) {
+                    mCallBack.onUpdateUnit(new Unit(mUnit.getUnitId(), unitName));
+                } else {
+                    mCallBack.onAddUnit(new Unit(UUID.randomUUID().toString(), unitName));
+                }
+                break;
         }
     }
 
+
     /**
-     * Call back được gọi để cập nhật màu cho món ăn
+     * Phương
+     *
+     * @param callBack
+     */
+    public void setCallBack(IUnitAddEditCallBack callBack) {
+        mCallBack = callBack;
+    }
+
+    /**
+     * Call back được gọi để cập nhật/thêm đơn vị
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
-    public interface IColorSelectedCallBack {
-        void onColorSelected(String colorCode);
+    public interface IUnitAddEditCallBack {
+        void onUpdateUnit(Unit unit);
+
+        void onAddUnit(Unit unit);
     }
+
 }

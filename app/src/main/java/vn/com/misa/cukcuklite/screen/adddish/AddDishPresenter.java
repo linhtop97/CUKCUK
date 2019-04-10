@@ -3,6 +3,7 @@ package vn.com.misa.cukcuklite.screen.adddish;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
+import vn.com.misa.cukcuklite.data.models.Unit;
 import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
 
 public class AddDishPresenter implements IAddDishContract.IPresenter {
@@ -138,9 +139,12 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     @Override
     public void onStart() {
         //gán đơn vị mặc định cho món ăn khi vào tính năng thêm mới
-        String unit = mUnitDataSource.getAllUnitName().get(0);
-        mView.setUnit(unit);
-
+        try {
+            Unit unit = mUnitDataSource.getAllUnit().get(0);
+            mView.setUnit(unit);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

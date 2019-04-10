@@ -43,6 +43,7 @@
     <string name="yes">Có</string>
     <string name="no">Không</string>
     <string name="confirm_delete_dish">Bạn có chắc chắn muốn xóa món <![CDATA[<b>%s</b>]]> không?</string>
+    <string name="confirm_delete_unit">Bạn có chắc chắn muốn xóa đơn vị <![CDATA[<b>%s</b>]]> không?</string>
     <string name="add_new_unit">Thêm đơn vị tính</string>
     <string name="edit_unit">Sửa đơn vị tính</string>
     <string name="unit_name_is_exists">Tên dơn vị đã tồn tại</string>
@@ -115,6 +116,7 @@
     <string name="sale">Bán hàng</string>
     <string name="menu_title">Thực đơn</string>
     <string name="init_restaurant_type">Đang khởi tạo danh sách nhà hàng…</string>
+    <string name="delete_unit">Xóa đơn vị tính</string>
 
 
     <string-array name="color_list">

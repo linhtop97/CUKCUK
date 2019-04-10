@@ -328,7 +328,7 @@ public class Navigator {
     public void showToastOnTopScreen(@StringRes int stringId) {
         Toast toast = Toast.makeText(mActivity,
                 stringId, Toast.LENGTH_SHORT);
-        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 100);
+        toast.setGravity(Gravity.TOP | Gravity.CENTER_HORIZONTAL, 0, 150);
         toast.show();
     }
 

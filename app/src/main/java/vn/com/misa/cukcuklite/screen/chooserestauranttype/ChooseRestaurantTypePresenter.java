@@ -80,9 +80,14 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
     public void insertAllUnit(List<Unit> units) {
         try {
             if (units != null) {
-                int unitSize = units.size();
-                for (int i = 0; i < unitSize; i++) {
-                    mUnitDataSource.addUnit(units.get(i));
+                if (mUnitDataSource.deleteAllUnit()) {
+                    int unitSize = units.size();
+                    for (int i = 0; i < unitSize; i++) {
+                        if (!mUnitDataSource.addUnit(units.get(i))) {
+                            mView.receiveMessage(R.string.something_went_wrong);
+                            break;
+                        }
+                    }
                 }
             } else {
                 mView.receiveMessage(R.string.something_went_wrong);

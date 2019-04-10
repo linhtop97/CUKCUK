@@ -17,11 +17,12 @@
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <ImageView
+    <Button
         android:id="@+id/btnClose"
         android:layout_width="@dimen/close_button_width"
         android:layout_height="@dimen/close_button_height"
         android:layout_marginEnd="@dimen/margin_small"
+        android:background="@null"
         android:contentDescription="@string/image_description"
         app:layout_constraintBottom_toBottomOf="@id/tvTitle"
         app:layout_constraintRight_toRightOf="@id/tvTitle"
@@ -34,7 +35,7 @@
         android:layout_height="wrap_content"
         android:background="@android:color/white"
         android:inputType="text"
-        android:padding="@dimen/padding_large"
+        android:padding="@dimen/padding_normal"
         android:textColor="@color/colorTextDarkGray"
         android:textSize="@dimen/text_size_normal"
         app:layout_constraintLeft_toLeftOf="parent"

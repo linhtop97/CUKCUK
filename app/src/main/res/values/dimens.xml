@@ -13,6 +13,7 @@
     <dimen name="text_size_logo">48sp</dimen>
     <dimen name="dp_124">124dp</dimen>
     <dimen name="action_height">48dp</dimen>
+    <dimen name="action_width">48dp</dimen>
     <dimen name="actionbar_height">56dp</dimen>
     <dimen name="item_dish_height">48dp</dimen>
     <dimen name="margin_micro">4dp</dimen>

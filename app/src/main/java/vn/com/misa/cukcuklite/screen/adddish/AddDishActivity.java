@@ -1,6 +1,9 @@
 package vn.com.misa.cukcuklite.screen.adddish;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -17,8 +20,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Dish;
+import vn.com.misa.cukcuklite.data.models.Unit;
 import vn.com.misa.cukcuklite.screen.dialogs.color.ColorSelectorDialog;
+import vn.com.misa.cukcuklite.screen.dialogs.delete.ConfirmDeleteDialog;
+import vn.com.misa.cukcuklite.screen.dialogs.icon.DishIconSelectorDialog;
+import vn.com.misa.cukcuklite.screen.selectunit.SelectUnitActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.ImageUtils;
 import vn.com.misa.cukcuklite.utils.Navigator;
@@ -27,10 +35,13 @@ import vn.com.misa.cukcuklite.utils.Navigator;
  * Màn hình thêm/sửa món ăn
  * Created_by Nguyễn Bá Linh on 09/04/2019
  */
-public class AddDishActivity extends AppCompatActivity implements IAddDishContract.IView, View.OnClickListener, ColorSelectorDialog.IColorSelectedCallBack {
+public class AddDishActivity extends AppCompatActivity implements IAddDishContract.IView, View.OnClickListener, ColorSelectorDialog.IColorSelectedCallBack, DishIconSelectorDialog.IDishIconCallBack, ConfirmDeleteDialog.IConfirmDeleteCallBack {
 
     public static final String ACTION_OK = "ACTION_OK";
+    public static final String EXTRA_UNIT_ID = "EXTRA_UNIT_ID";
     private static final String COLOR_DIALOG = "COLOR_DIALOG";
+    private static final String DISH_ICON_DIALOG = "DISH_ICON_DIALOG";
+    private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private ImageButton btnBack;
     private TextView tvTitle, tvSave, tvUnit, tvStateTitle;
     private EditText etDishName, tvPrice;
@@ -42,6 +53,25 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
     private AddDishPresenter mPresenter;
     private boolean isEdit;
     private Navigator mNavigator;
+    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            if (intent != null) {
+                if (intent.getAction() != null) {
+                    try {
+                        String unitId = intent.getStringExtra(SelectUnitActivity.EXTRA_UNIT_SELECTED);
+                        if (unitId != null) {
+                            //thiết lập đơn vị cho món ăn
+                            mDish.setUnitId(unitId);
+                            tvUnit.setText(mPresenter.getUnitName(unitId));
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -52,6 +82,15 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         mPresenter.setView(this);
         initViews();
         initEvents();
+        //đăng kí lắng nghe sự kiện thay đổi đơn vị của món ăn
+        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(SelectUnitActivity.ACTION_UNIT_SELECTED));
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        //hủy đăng kí lắng nghe sự thay đôi của đơn vị món ăn
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
     }
 
     /**
@@ -104,9 +143,12 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         } else {
             hideViews();
             isEdit = false;
+            mDish = new Dish.Builder().setColorCode(AppConstants.COLOR_DEFAULT)
+                    .setIconPath(AppConstants.ICON_DEFAULT)
+                    .build();
             mPresenter.onStart();
             tvTitle.setText(R.string.add_dish);
-            mDish = new Dish.Builder().setColorCode(AppConstants.COLOR_DEFAULT).setIconPath(AppConstants.ICON_DEFAULT).build();
+
         }
     }
 
@@ -168,9 +210,23 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
 
     }
 
+    /**
+     * Phương thức gán Đơn vị cho món ăn
+     * Created_by Nguyễn Bá Linh on 10/04/2019
+     *
+     * @param unit - đơn vị
+     */
     @Override
-    public void setUnit(String unit) {
-
+    public void setUnit(Unit unit) {
+        try {
+            if (unit != null) {
+                String unitId = unit.getUnitId();
+                mDish.setUnitId(unitId);
+                tvUnit.setText(mPresenter.getUnitName(unitId));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -179,8 +235,12 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      */
     @Override
     public void upDateDishSuccess() {
-        mNavigator.showToastOnTopScreen(R.string.update_dish_success);
-        finishTask();
+        try {
+            mNavigator.showToastOnTopScreen(R.string.update_dish_success);
+            finishTask();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -198,10 +258,20 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         }
     }
 
+    /**
+     * Thông báo cho người dùng đã xóa món ăn thành công và quay về màn hình thực đơn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
     @Override
     public void deleteDishSuccess() {
-
+        try {
+            mNavigator.showToastOnTopScreen(R.string.delete_success);
+            finishTask();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
+
 
     /**
      * Phương thức nhận 1 thông điệp
@@ -211,7 +281,7 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      */
     @Override
     public void receiveMessage(int message) {
-
+        mNavigator.showToastOnTopScreen(message);
     }
 
     /**
@@ -255,20 +325,35 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
                 break;
             case R.id.ivSelectUnit:
             case R.id.tvUnit:
-                // selectUnit();
+                selectUnit();
                 break;
             case R.id.ivIcon:
-                // showDishIconSelector();
+                showDishIconSelector();
                 break;
             case R.id.btnSave:
             case R.id.tvSave:
                 save();
                 break;
             case R.id.btnDelete:
-                // showDeleteDishDialogConfirm();
+                showDeleteDishDialogConfirm();
                 break;
             default:
                 break;
+        }
+    }
+
+
+    /**
+     * Phương thức hiển thị dialog xác nhận việc xóa món ăn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    private void showDeleteDishDialogConfirm() {
+        try {
+            ConfirmDeleteDialog f = ConfirmDeleteDialog.newInstance(mDish.getDishName(), IDBUtils.ITableDishUtils.COLUMN_DISH_NAME);
+            f.setCallBack(this);
+            getSupportFragmentManager().beginTransaction().add(f, DELETE_DIALOG).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -309,13 +394,46 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
     }
 
     /**
+     * Khởi chạy màn hình lựa chọn đơn vị cho món ăn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    private void selectUnit() {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, SelectUnitActivity.class);
+            intent.putExtra(EXTRA_UNIT_ID, mDish.getUnitId());
+            mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Phương thức hiển thị dialog lựa chọn background cho món ăn
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     private void showColorSelector() {
-        ColorSelectorDialog f = ColorSelectorDialog.newInstance(mDish.getColorCode());
-        f.setCallBack(this);
-        getSupportFragmentManager().beginTransaction().add(f, COLOR_DIALOG).commit();
+        try {
+            ColorSelectorDialog f = ColorSelectorDialog.newInstance(mDish.getColorCode());
+            f.setCallBack(this);
+            getSupportFragmentManager().beginTransaction().add(f, COLOR_DIALOG).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức hiển thị dialog lựa chọn icon cho món ăn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    private void showDishIconSelector() {
+        try {
+            DishIconSelectorDialog f = new DishIconSelectorDialog();
+            f.setCallBack(this);
+            getSupportFragmentManager().beginTransaction().add(f, DISH_ICON_DIALOG).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -334,6 +452,33 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
                 ivColor.setBackground(drawable);
                 ivIcon.setBackground(drawable);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức cập nhật icon cho món ăn
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     *
+     * @param iconPath - đường dẫn icon của món ăn
+     */
+    @Override
+    public void onDishIconSelected(String iconPath) {
+        try {
+            if (iconPath != null) {
+                mDish.setIconPath(iconPath);
+                ivIcon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(this, iconPath));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void acceptDelete() {
+        try {
+            mPresenter.deleteDish(mDish.getDishId());
         } catch (Exception e) {
             e.printStackTrace();
         }

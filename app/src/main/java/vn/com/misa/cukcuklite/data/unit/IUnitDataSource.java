@@ -24,7 +24,7 @@ public interface IUnitDataSource {
 
     List<Unit> getAllUnit();
 
-    boolean isUnitIfExists(String dishName);
+    boolean isUnitIfExists(String unitName);
 
     Unit getUnitById(String unitId);
 
