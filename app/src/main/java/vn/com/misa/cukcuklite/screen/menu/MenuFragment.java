@@ -8,6 +8,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -15,6 +16,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import java.util.List;
 
@@ -38,6 +40,9 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
     private MenuPresenter mPresenter;
     private DishAdapter mAdapter;
     private ProgressDialog mDialog;
+    private ConstraintLayout clWaterMark;
+    private TextView tvAddDish;
+
     private BroadcastReceiver mReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -62,9 +67,28 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
         mPresenter = new MenuPresenter();
         mPresenter.setView(this);
         initViews(view);
+        initEvents();
         mPresenter.onStart();
         LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, new IntentFilter(AddDishActivity.ACTION_OK));
         return view;
+    }
+
+    /**
+     * Phương thức gắn sự kiện cho view
+     * Created_by Nguyễn Bá Linh on 11/04/2019
+     */
+    private void initEvents() {
+        tvAddDish.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    //khởi động màn hình thêm món ăn
+                    mNavigator.startActivity(AddDishActivity.class);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 
@@ -85,6 +109,8 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
      */
     private void initViews(View view) {
         RecyclerView rvDish = view.findViewById(R.id.rvDish);
+        clWaterMark = view.findViewById(R.id.clWaterMark);
+        tvAddDish = view.findViewById(R.id.tvAddDish);
         mAdapter = new DishAdapter(mContext);
         mAdapter.setItemClickListener(this);
         rvDish.setLayoutManager(new LinearLayoutManager(mContext));
@@ -101,8 +127,12 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
     @Override
     public void showDish(List<Dish> dishes) {
         try {
-            if (dishes != null) {
+            if (dishes != null && dishes.size() > 0) {
+                clWaterMark.setVisibility(View.GONE);
                 mAdapter.setListData(dishes);
+            } else {
+                mAdapter.clearData();
+                clWaterMark.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();

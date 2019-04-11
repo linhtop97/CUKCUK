@@ -58,6 +58,16 @@
         <item name="android:textStyle">normal</item>
         <item name="android:textColor">@color/colorTextDarkGray</item>
     </style>
+    <style name="TextViewNormalBlue" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">normal</item>
+        <item name="android:textColor">@color/colorBlueHighLight</item>
+    </style>
+    <style name="TextViewNormalBold" parent="@android:style/TextAppearance.Widget.TextView">
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/colorTextDarkGray</item>
+    </style>
 
     <style name="TextViewNormalWhite" parent="@android:style/TextAppearance.Widget.TextView">
         <item name="android:textSize">@dimen/text_size_normal</item>

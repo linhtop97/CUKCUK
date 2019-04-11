@@ -174,6 +174,12 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
         return dishNames;
     }
 
+    /**
+     * Phương thức lấy toàn bộ danh sách món ăn đang có
+     * Created_by Nguyễn Bá Linh on 11/04/2019
+     *
+     * @return - danh sách món ăn
+     */
     @Override
     public List<Dish> getAllDish() {
         List<Dish> dishes = new ArrayList<>();
@@ -233,5 +239,57 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
             e.printStackTrace();
             return false;
         }
+    }
+
+    /**
+     * Phương thức lấy món ăn theo id của món ăn
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param dishId - id của món ăn
+     * @return - món ăn
+     */
+    @Override
+    public Dish getDishById(String dishId) {
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_DISH_ID + "=" + "'" + dishId + "'", null);
+            cursor.moveToFirst();
+            Dish dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
+                    .setDishName(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)))
+                    .setPrice(cursor.getInt((cursor.getColumnIndex(COLUMN_PRICE))))
+                    .setUnitId(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)))
+                    .setColorCode(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_CODE)))
+                    .setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_PATH)))
+                    .setSale(cursor.getInt(cursor.getColumnIndex(COLUMN_IS_SALE)) == 1)
+                    .build();
+            cursor.close();
+            return dish;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Lấy tất cả danh sách id của món ăn
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @return - danh sách id của món ăn
+     */
+    @Override
+    public List<String> getAllDishId() {
+        List<String> dishIds = new ArrayList<>();
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String dishId = cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID));
+                dishIds.add(dishId);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return dishIds;
     }
 }

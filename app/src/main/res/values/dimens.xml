@@ -81,4 +81,9 @@
 
     <dimen name="close_button_height">32dp</dimen>
     <dimen name="close_button_width">32dp</dimen>
+    <dimen name="water_mark_height">220dp</dimen>
+    <dimen name="direct_top_height">200dp</dimen>
+    <dimen name="table_icon_size">36dp</dimen>
+    <dimen name="min_width_tv_number_select">48dp</dimen>
+    <dimen name="corner_quality_layout">32dp</dimen>
 </resources>

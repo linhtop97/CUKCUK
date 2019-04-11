@@ -27,4 +27,8 @@ public interface IDishDataSource {
     boolean isDishIfExists(String dishName);
 
     boolean deleteAllDish();
+
+    Dish getDishById(String dishId);
+
+    List<String> getAllDishId();
 }

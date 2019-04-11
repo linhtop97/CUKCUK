@@ -16,6 +16,7 @@ import vn.com.misa.cukcuklite.R;
  */
 public class SaleFragment extends Fragment {
 
+
     public static SaleFragment newInstance() {
         return new SaleFragment();
     }

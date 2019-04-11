@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
+import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.menu.MenuFragment;
 import vn.com.misa.cukcuklite.screen.sale.SaleFragment;
 import vn.com.misa.cukcuklite.utils.Navigator;
@@ -55,6 +56,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 try {
                     if (mIsSale) {
                         //thêm oder
+                        mNavigator.startActivity(DishOrderActivity.class);
                     } else {
                         //vào màn hình món ăn, thêm món ăn
                         mNavigator.startActivity(AddDishActivity.class);

@@ -119,6 +119,17 @@
     <string name="delete_unit">Xóa đơn vị tính</string>
     <string name="init_dish_list">Khởi tạo danh sách món ăn…</string>
     <string name="delete_unit_success">Xóa đơn vị thành công</string>
+    <string name="no_customers_oder_yet">Chưa có khách gọi món</string>
+    <string name="click_here_or_add_to_oder">Bấm vào đây hoặc dấu + để gọi món</string>
+    <string name="no_dish_in_menu_yet">Chưa có món nào trong thực đơn</string>
+    <string name="click_here_or_add_to_add_dish">Bấm vào đây hoặc dấu + để thêm món</string>
+    <string name="you_have_not_dish_in_menu">Bạn chưa có món nào trong thực đơn</string>
+    <string name="please_go_to_menu_add_dish">Vui lòng vào thực đơn để thêm món</string>
+    <string name="go_to_menu">VÀO THỰC ĐƠN</string>
+    <string name="pay">Thu tiền</string>
+    <string name="total_money">Tổng tiền</string>
+    <string name="money_default">0</string>
+    <string name="choose_dish">Chọn món</string>
 
 
     <string-array name="color_list">
