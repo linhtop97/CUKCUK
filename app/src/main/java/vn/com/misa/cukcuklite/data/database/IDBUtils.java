@@ -66,6 +66,11 @@ public interface IDBUtils {
         String COLUMN_BILL_ID = "BillId";
         String COLUMN_BILL_NUMBER = "BillNumber";
         String COLUMN_DATE_CREATED = "DateCreated";
+        String COLUMN_STATE = "State";
+        String COLUMN_TABLE_NUMBER = "TableNumber";
+        String COLUMN_NUMBER_CUSTOMER = "NumberCustomer";
+        String COLUMN_TOTAL_MONEY = "TotalMoney";
+        String COLUMN_CUSTOMER_PAY = "CustomerPay";
     }
 
     /**
@@ -74,10 +79,11 @@ public interface IDBUtils {
      */
     interface ITableBillDetailUtils {
         String BILL_DETAIL_TBL_NAME = "tblBillDetail";
+        String COLUMN_BILL_DETAIL_ID = "BillDetailId";
         String COLUMN_BILL_ID = "BillId";
-        String COLUMN_DISH_NAME = "DishName";
-        String COLUMN_NUMBER_OF_DISH = "NumOfDish";
-        String COLUMN_PRICE = "Price";
+        String COLUMN_DISH_ID = "DishId";
+        String COLUMN_QUANTITY = "Quantity";
+        String COLUMN_TOTAL_MONEY = "TotalMoney";
     }
 
     //sql query

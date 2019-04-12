@@ -1,6 +1,7 @@
 package vn.com.misa.cukcuklite.screen.dishorder;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -62,6 +63,22 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
         mOnItemClickListener = onItemClickListener;
     }
 
+    /**
+     * Tính tổng tiền hóa đơn
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     */
+    private void totalMoney() {
+        try {
+            int totalMoney = 0;
+            for (int i = 0; i < mListData.size(); i++) {
+                totalMoney += mListData.get(i).getTotalMoney();
+            }
+            mOnItemClickListener.onItemClick(totalMoney);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     public class DishOrderHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         private ImageView ivICon, ivDefault;
         private TextView tvDishName, tvPrice, tvQuantity;
@@ -70,6 +87,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
         private ConstraintLayout clDishOrder;
         private BillDetail mBillDetail;
         private DishDataSource mDishDataSource;
+        private int mPrice;
 
         public DishOrderHolder(@NonNull View itemView) {
             super(itemView);
@@ -113,33 +131,62 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
          */
         @Override
         public void onClick(View v) {
-            int quantity = mListData.get(getAdapterPosition()).getQuantity();
+            //lấy số lượng món ăn từ text view
+            int quantity = Integer.parseInt(tvQuantity.getText().toString());
             switch (v.getId()) {
                 case R.id.clDishOrder:
-                    if (quantity == 0) {
-                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
-                        mListData.get(getAdapterPosition()).setQuantity(++quantity);
-                        lnQuantity.setVisibility(View.VISIBLE);
-                        tvQuantity.setText(String.valueOf(quantity));
-                        ivDefault.setVisibility(View.GONE);
+                    try {
+                        if (quantity == 0) {
+                            //khi click vào item, nếu hiện tại số lượng là 0 thì thay đổi background
+                            clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
+                            lnQuantity.setVisibility(View.VISIBLE);
+                            ivDefault.setVisibility(View.GONE);
+                            ivICon.setVisibility(View.VISIBLE);
+                        }
+                        //tăng số lượng lên 1
+                        tvQuantity.setText(String.valueOf(++quantity));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
                     }
                     break;
                 case R.id.tvQuantity:
-                    Toast.makeText(mContext, "nothing", Toast.LENGTH_SHORT).show();
+                    try {
+                        Toast.makeText(mContext, "nothing", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case R.id.btnPlus:
-                    mListData.get(getAdapterPosition()).setQuantity(++quantity);
+                    try {
+                        //tăng số lượng lên 1
+                        tvQuantity.setText(String.valueOf(++quantity));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                     break;
                 case R.id.btnMinus:
-                    if (quantity - 1 == 0) {
-                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
-                        lnQuantity.setVisibility(View.GONE);
-                        ivICon.setVisibility(View.GONE);
+                    try {
+                        --quantity;
+                        if (quantity == 0) {
+                            //giảm số lượng nếu bằng 0 thì thay đổi background và hiện icon phủ xanh
+                            clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
+                            lnQuantity.setVisibility(View.GONE);
+                            ivDefault.setVisibility(View.VISIBLE);
+                            ivICon.setVisibility(View.INVISIBLE);
+                        } else if (quantity < 0) {
+                            quantity = 0;
+                        }
+                        tvQuantity.setText(String.valueOf(quantity));
+                    } catch (Resources.NotFoundException e) {
+                        e.printStackTrace();
                     }
-                    mListData.get(getAdapterPosition()).setQuantity(--quantity);
-                    tvQuantity.setText(String.valueOf(quantity));
                     break;
             }
+            //gán số lượng và tổng tiền món ăn của hóa đơn chi tiết
+            mBillDetail.setQuantity(quantity);
+            mBillDetail.setTotalMoney(quantity * mPrice);
+            mListData.set(getAdapterPosition(), mBillDetail);
+            totalMoney();
         }
 
         /**
@@ -149,23 +196,41 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
          * @param billDetail - hóa đơn chi tiết bao gồm các thông tin về món ăn trong hóa đơn
          */
         void bind(BillDetail billDetail) {
-            if (billDetail == null) {
-                return;
-            }
-            mBillDetail = billDetail;
-            if (billDetail.getDishId() != null) {
-                if (billDetail.getQuantity() == 0) {
-                    lnQuantity.setVisibility(View.GONE);
+            try {
+                if (billDetail == null) {
+                    return;
                 }
-                Dish dish = mDishDataSource.getDishById(billDetail.getDishId());
-                if (dish != null) {
-                    tvDishName.setText(dish.getDishName());
-                    tvPrice.setText(String.valueOf(dish.getPrice()));
-                    Drawable drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
-                    drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
-                    ivICon.setBackground(drawable);
-                    ivICon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
+                mBillDetail = billDetail;
+                if (billDetail.getDishId() != null) {
+                    int quantity = billDetail.getQuantity();
+                    if (quantity == 0) {
+                        lnQuantity.setVisibility(View.GONE);
+                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
+                        ivDefault.setVisibility(View.VISIBLE);
+                        ivICon.setVisibility(View.INVISIBLE);
+                    } else if (quantity > 0) {
+                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
+                        lnQuantity.setVisibility(View.VISIBLE);
+                        ivDefault.setVisibility(View.GONE);
+                        ivICon.setVisibility(View.VISIBLE);
+                    }
+
+                    Dish dish = mDishDataSource.getDishById(billDetail.getDishId());
+                    if (dish != null) {
+                        mPrice = dish.getPrice();
+                        tvDishName.setText(dish.getDishName());
+                        tvPrice.setText(String.valueOf(dish.getPrice()));
+                        Drawable drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
+                        drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
+                        ivICon.setBackground(drawable);
+                        ivICon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
+                        if (billDetail.getQuantity() == 0) {
+                            ivICon.setVisibility(View.INVISIBLE);
+                        }
+                    }
                 }
+            } catch (Resources.NotFoundException e) {
+                e.printStackTrace();
             }
         }
     }

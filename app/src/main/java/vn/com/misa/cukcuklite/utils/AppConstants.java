@@ -26,4 +26,9 @@ public final class AppConstants {
     public static final String ARG_DISH_COLOR_CODE = "ARG_DISH_COLOR_CODE";
     public static final String ARG_NAME = "ARG_NAME";
     public static final String ARG_TYPE_DELETE = "ARG_TYPE_DELETE";
+
+    //trạng thái hóa đơn
+    public static final int UN_PAID = 0;
+    public static final int PAID = 1;
+    public static final int CANCEL = 2;
 }

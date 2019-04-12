@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.screen.adddish;
 
+import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -50,6 +51,7 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
     private ImageView ivSelectUnit, ivSelectPrice, ivColor, ivIcon;
     private CheckBox cbState;
     private Button btnDelete, btnSave;
+    private ProgressDialog mDialog;
 
     private Dish mDish;
     private AddDishPresenter mPresenter;
@@ -136,6 +138,7 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         btnDelete = findViewById(R.id.btnDelete);
         btnSave = findViewById(R.id.btnSave);
 
+        initProgressBar();
         setPaddingForTextToRightOfCheckBox();
         Dish dish = getIntent().getParcelableExtra(AppConstants.EXTRA_DISH);
         if (dish != null) {
@@ -300,13 +303,40 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         mNavigator.showToastOnTopScreen(message);
     }
 
+
+    /**
+     * Phương thức khởi tạo progressbar
+     * Created_by Nguyễn Bá Linh on 09/04/2019
+     */
+    private void initProgressBar() {
+        try {
+            mDialog = new ProgressDialog(this) {
+                @Override
+                public void onBackPressed() {
+                    super.onBackPressed();
+                }
+            };
+            mDialog.setMessage(getString(R.string.init_dish_list));
+            mDialog.setCancelable(false);
+            mDialog.setCanceledOnTouchOutside(false);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
     /**
      * Phương thức hiển thị 1 dialog chờ xử lý tác vụ với 1 thông điệp
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     @Override
     public void showLoading() {
-
+        try {
+            if (mDialog != null && !mDialog.isShowing()) {
+                mDialog.show();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -315,7 +345,13 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      */
     @Override
     public void hideLoading() {
-
+        try {
+            if (mDialog != null && mDialog.isShowing()) {
+                mDialog.dismiss();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

@@ -3,15 +3,20 @@ package vn.com.misa.cukcuklite.screen.dishorder;
 import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
 import java.util.List;
-import java.util.UUID;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
+import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -19,12 +24,17 @@ import vn.com.misa.cukcuklite.utils.Navigator;
  * Màn hình thêm món ăn cho hóa đơn
  * Created_by Nguyễn Bá Linh on 12/04/2019
  */
-public class DishOrderActivity extends AppCompatActivity implements DishOrderContract.IView, IOnItemClickListener<Integer> {
+public class DishOrderActivity extends AppCompatActivity implements DishOrderContract.IView, IOnItemClickListener<Integer>, View.OnClickListener {
 
     private DishOrderPresenter mPresenter;
     private ProgressDialog mDialog;
     private Navigator mNavigator;
     private DishOrderAdapter mAdapter;
+    private TextView tvTotalMoney, tvPay, tvTable, tvPerson;
+    private ImageButton btnBack;
+    private ConstraintLayout clWaterMark;
+    private Button btnSave, btnPay;
+    private Bill mBill;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -41,6 +51,12 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      * Created_by Nguyễn Bá Linh on 12/04/2019
      */
     private void initEvents() {
+        tvPay.setOnClickListener(this);
+        tvTable.setOnClickListener(this);
+        tvPerson.setOnClickListener(this);
+        btnBack.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
+        btnPay.setOnClickListener(this);
     }
 
     /**
@@ -49,6 +65,15 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      */
     private void initViews() {
         try {
+            tvTotalMoney = findViewById(R.id.tvTotalMoney);
+            tvPay = findViewById(R.id.tvPay);
+            tvTable = findViewById(R.id.tvTable);
+            tvPerson = findViewById(R.id.tvPerson);
+            btnBack = findViewById(R.id.btnBack);
+            clWaterMark = findViewById(R.id.clWaterMark);
+            btnSave = findViewById(R.id.btnSave);
+            btnPay = findViewById(R.id.btnPay);
+            //khởi tạo recycler view
             RecyclerView rvDishOrder = findViewById(R.id.rvDishOrder);
             rvDishOrder.setLayoutManager(new LinearLayoutManager(this));
             mAdapter = new DishOrderAdapter(this);
@@ -56,7 +81,8 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             rvDishOrder.setAdapter(mAdapter);
             initProgressBar();
             //kiểm tra đầu vào r mới khởi tạo presenter
-            mPresenter = new DishOrderPresenter(UUID.randomUUID().toString());
+            mBill = new Bill();
+            mPresenter = new DishOrderPresenter(mBill.getBillId());
             mPresenter.setView(this);
         } catch (Exception e) {
             e.printStackTrace();
@@ -133,7 +159,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      */
     @Override
     public void onItemClick(Integer data) {
-
+        tvTotalMoney.setText(String.valueOf(data));
     }
 
     /**
@@ -150,6 +176,57 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             }
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức xử lý khi thêm Order thành công
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     */
+    @Override
+    public void saveOrderSuccess() {
+        finish();
+    }
+
+    /**
+     * Phương thức xử lý khi thêm Order thất bại
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     */
+    @Override
+    public void saveOrderFailed() {
+        mNavigator.showToastOnTopScreen(R.string.something_went_wrong);
+    }
+
+    /**
+     * Phương thức xử lý các sự kiện click cho các view được gắn sự kiện OnClick
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param v - view xảy ra sự kiện
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.tvPay:
+                break;
+            case R.id.btnSave:
+                try {
+                    mBill.setTotalMoney(Integer.parseInt(tvTotalMoney.getText().toString()));
+                    mPresenter.saveOrder(mBill, mAdapter.getListData());
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.tvPerson:
+                break;
+            case R.id.tvTable:
+                break;
+            case R.id.btnBack:
+                finish();
+                break;
+            case R.id.btnPay:
+                break;
+            default:
+                break;
         }
     }
 }

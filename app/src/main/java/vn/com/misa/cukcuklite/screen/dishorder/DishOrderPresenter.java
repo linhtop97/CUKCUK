@@ -1,12 +1,15 @@
 package vn.com.misa.cukcuklite.screen.dishorder;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.data.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 
 public class DishOrderPresenter implements DishOrderContract.IPresenter {
 
+    private static final String TAG = "DishOrderPresenter";
     private DishOrderContract.IView mView;
     private BillDataSource mBillDataSource;
     private String mBillId;
@@ -16,9 +19,40 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
         mBillId = billId;
     }
 
+    /**
+     * Phương thức lưu trữ hóa đơn và danh sách hóa đơn chi tiết
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param bill        - hóa đơn
+     * @param billDetails - danh sách hóa đơn chi tiết
+     */
     @Override
-    public void saveOrder() {
-
+    public void saveOrder(Bill bill, List<BillDetail> billDetails) {
+        try {
+            mView.showLoading();
+            if (mBillDataSource.addBill(bill)) {
+                int size = billDetails.size();
+                List<BillDetail> billDetailList = new ArrayList<>();
+                for (int i = 0; i < size; i++) {
+                    //nếu như danh sách món ăn trong hóa đơn chi tiết có số lượng lớn hơn 0
+                    //thì sẽ thêm vào danh sách món ăn trong hóa đơn chi tiết mới để lưu trữ
+                    if (billDetails.get(i).getQuantity() > 0) {
+                        billDetailList.add(billDetails.get(i));
+                    }
+                }
+                //Kiểm tra việc lưu trữ danh sách hóa đơn chi tiết và xử lý kết quả
+                if (mBillDataSource.addBillDetailList(billDetailList)) {
+                    mView.saveOrderSuccess();
+                } else {
+                    mView.saveOrderFailed();
+                }
+            }
+            mView.hideLoading();
+            return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        mView.saveOrderFailed();
     }
 
     @Override

@@ -1,5 +1,7 @@
 package vn.com.misa.cukcuklite.data.models;
 
+import java.util.UUID;
+
 import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
 
 /**
@@ -15,6 +17,12 @@ public class Bill {
     private int NumberCustomer;
     private int TotalMoney;
     private int CustomerPay;
+
+    public Bill() {
+        BillId = UUID.randomUUID().toString();
+        State = EnumBillSate.UNPAID;
+        DateCreated = "";
+    }
 
     public Bill(Builder builder) {
         BillId = builder.BillId;

@@ -170,6 +170,7 @@
                 android:src="@drawable/ic_mic" />
 
             <Button
+                android:id="@+id/btnSave"
                 style="@style/TextViewTitleWhite"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/action_height"
@@ -180,6 +181,7 @@
                 android:textColor="@color/colorBluePrimary" />
 
             <Button
+                android:id="@+id/btnPay"
                 style="@style/TextViewTitleWhite"
                 android:layout_width="0dp"
                 android:layout_height="@dimen/action_height"
@@ -196,7 +198,7 @@
         android:layout_height="match_parent"
         android:layout_below="@id/clActionbar"
         android:background="@android:color/white"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <ImageView
             android:id="@+id/ivMark1"
@@ -205,15 +207,6 @@
             android:contentDescription="@string/image_description"
             android:src="@drawable/order_water_mark_1"
             app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <ImageView
-            android:id="@+id/ivMark2"
-            android:layout_width="wrap_content"
-            android:layout_height="@dimen/direct_top_height"
-            android:contentDescription="@string/image_description"
-            android:src="@drawable/order_water_mark_2"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 

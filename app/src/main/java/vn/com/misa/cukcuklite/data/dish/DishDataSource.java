@@ -163,14 +163,18 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public List<String> getAllDishName() {
         List<String> dishNames = new ArrayList<>();
-        Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_DISH_NAME +
-                " from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
-        cursor.moveToFirst();
-        while (!cursor.isAfterLast()) {
-            dishNames.add(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)).toLowerCase());
-            cursor.moveToNext();
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_DISH_NAME +
+                    " from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                dishNames.add(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)).toLowerCase());
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        cursor.close();
         return dishNames;
     }
 

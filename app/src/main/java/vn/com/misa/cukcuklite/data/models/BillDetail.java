@@ -47,8 +47,8 @@ public class BillDetail {
         return Quantity;
     }
 
-    public void setQuantity(int Quantity) {
-        Quantity = Quantity;
+    public void setQuantity(int quantity) {
+        Quantity = quantity;
     }
 
     public int getTotalMoney() {
@@ -81,8 +81,8 @@ public class BillDetail {
             return this;
         }
 
-        public Builder setQuantity(int Quantity) {
-            Quantity = Quantity;
+        public Builder setQuantity(int quantity) {
+            Quantity = quantity;
             return this;
         }
 
