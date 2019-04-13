@@ -12,6 +12,7 @@ import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.data.models.Order;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.BILL_DETAIL_TBL_NAME;
@@ -30,7 +31,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
 
     public BillDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
-        mDishDataSource = new DishDataSource();
+        mDishDataSource = DishDataSource.getInstance();
     }
 
     /**
@@ -184,5 +185,59 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
             e.printStackTrace();
         }
         return billDetails;
+    }
+
+    /**
+     * Phương thức lấy danh sách các hóa đơn
+     * Created_by Nguyễn Bá Linh on 13/04/2019
+     *
+     * @return - danh sách hóa đơn
+     */
+    @Override
+    public List<Bill> getAllBillUnpaid() {
+        List<Bill> bills = new ArrayList<>();
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + BILL_TBL_NAME + " where " + COLUMN_STATE + "=0", null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                Bill bill = new Bill.Builder().setBillId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_ID)))
+                        .setBillNumber(cursor.getInt(cursor.getColumnIndex(COLUMN_BILL_NUMBER)))
+                        .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
+                        .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
+                        .build();
+                bills.add(bill);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return bills;
+    }
+
+    /**
+     * Lấy danh sách gọi món
+     * Created_by Nguyễn Bá Linh on 13/04/2019
+     *
+     * @return - danh sách gọi món
+     */
+    @Override
+    public List<Order> getAllOrder() {
+        List<Order> orders = new ArrayList<>();
+        List<Bill> bills = getAllBillUnpaid();
+        if (bills != null) {
+            for (Bill bill : bills) {
+                List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
+                if (billDetails != null) {
+                    int size = billDetails.size();
+                    String[] dishNames= new String[size];
+                    String[] quantities = new String[size];
+                    for (BillDetail billDetail : billDetails) {
+
+                    }
+                }
+            }
+        }
+        return null;
     }
 }

@@ -24,8 +24,8 @@ public class SelectUnitPresenter implements IUnitContract.IPresenter {
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     SelectUnitPresenter() {
-        mUnitDataSource = new UnitDataSource();
-        mDishDataSource = new DishDataSource();
+        mUnitDataSource = UnitDataSource.getInstance();
+        mDishDataSource = DishDataSource.getInstance();
     }
 
     @Override

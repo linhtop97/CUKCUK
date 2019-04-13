@@ -27,8 +27,8 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
 
     ChooseRestaurantTypePresenter(Context context) {
         mContext = context;
-        mUnitDataSource = new UnitDataSource();
-        mDishDataSource = new DishDataSource();
+        mUnitDataSource = UnitDataSource.getInstance();
+        mDishDataSource = DishDataSource.getInstance();
     }
 
     /**

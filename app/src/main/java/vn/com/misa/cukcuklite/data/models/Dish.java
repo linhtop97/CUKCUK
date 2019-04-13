@@ -9,6 +9,27 @@ import android.support.annotation.NonNull;
  * Created_by Nguyễn Bá Linh on 27/03/2019
  */
 public class Dish implements Parcelable {
+
+    private String DishId;
+    private String DishName;
+    private int Price;
+    private String UnitId;
+    private String ColorCode;
+    private String IconPath;
+    private boolean IsSale;
+    private boolean State;
+
+    protected Dish(Parcel in) {
+        DishId = in.readString();
+        DishName = in.readString();
+        Price = in.readInt();
+        UnitId = in.readString();
+        ColorCode = in.readString();
+        IconPath = in.readString();
+        IsSale = in.readByte() != 0;
+        State = in.readByte() != 0;
+    }
+
     public static final Creator<Dish> CREATOR = new Creator<Dish>() {
         @Override
         public Dish createFromParcel(Parcel in) {
@@ -20,13 +41,14 @@ public class Dish implements Parcelable {
             return new Dish[size];
         }
     };
-    private String DishId;
-    private String DishName;
-    private int Price;
-    private String UnitId;
-    private String ColorCode;
-    private String IconPath;
-    private boolean IsSale;
+
+    public boolean isState() {
+        return State;
+    }
+
+    public void setState(boolean state) {
+        State = state;
+    }
 
     public Dish(Builder builder) {
         DishId = builder.DishId;
@@ -36,17 +58,9 @@ public class Dish implements Parcelable {
         ColorCode = builder.ColorCode;
         IconPath = builder.IconPath;
         IsSale = builder.IsSale;
+        State = builder.State;
     }
 
-    protected Dish(Parcel in) {
-        DishId = in.readString();
-        DishName = in.readString();
-        Price = in.readInt();
-        UnitId = in.readString();
-        ColorCode = in.readString();
-        IconPath = in.readString();
-        IsSale = in.readByte() != 0;
-    }
 
     @NonNull
     @Override
@@ -124,6 +138,7 @@ public class Dish implements Parcelable {
         dest.writeString(ColorCode);
         dest.writeString(IconPath);
         dest.writeByte((byte) (IsSale ? 1 : 0));
+        dest.writeByte((byte) (State ? 1 : 0));
     }
 
     public static class Builder {
@@ -134,6 +149,12 @@ public class Dish implements Parcelable {
         private String ColorCode;
         private String IconPath;
         private boolean IsSale;
+        private boolean State;
+
+        public Builder setState(boolean state) {
+            State = state;
+            return this;
+        }
 
         public Builder setDishId(String dishId) {
             DishId = dishId;

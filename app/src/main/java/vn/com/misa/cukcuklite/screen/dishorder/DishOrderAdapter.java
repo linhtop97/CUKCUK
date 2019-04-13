@@ -91,7 +91,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
 
         public DishOrderHolder(@NonNull View itemView) {
             super(itemView);
-            mDishDataSource = new DishDataSource();
+            mDishDataSource = DishDataSource.getInstance();
             initViews(itemView);
             initEvents();
         }

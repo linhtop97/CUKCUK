@@ -18,14 +18,32 @@ import vn.com.misa.cukcuklite.data.models.Unit;
 public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils {
 
     private static final String TAG = "UnitDataSource";
+    private static UnitDataSource sInstance;
     private SQLiteDBManager mSQLiteDBManager;
+    private List<Unit> mUnits;
 
     /**
-     * Phương thức khởi tạo cho đối tượng UnitDataSource
+     * Phương thức khởi tạo cho đối tượng UnitDataSource, và danh sách đơn vị
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
-    public UnitDataSource() {
+    private UnitDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
+        mUnits = getAllUnit();
+    }
+
+    /**
+     * Phương thức khởi tạo cho đối tượng UnitDataSource truy cập mọi nơi
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    public static UnitDataSource getInstance() {
+        if (sInstance == null) {
+            synchronized (UnitDataSource.class) {
+                if (sInstance == null) {
+                    sInstance = new UnitDataSource();
+                }
+            }
+        }
+        return sInstance;
     }
 
     /**
@@ -63,6 +81,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
                 return EnumResult.Exists;
             } else {
                 if (addUnit(unit)) {
+                    mUnits.add(unit);
                     return EnumResult.Success;
                 }
             }
@@ -80,8 +99,20 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
     @Override
     public boolean deleteUnitById(String unitId) {
         try {
-            return mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME,
-                    COLUMN_UNIT_ID + "=?", new String[]{unitId});
+            if (mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME,
+                    COLUMN_UNIT_ID + "=?", new String[]{unitId})) {
+                if (mUnits != null) {
+                    int size = mUnits.size();
+                    for (int i = 0; i < size; i++) {
+                        Unit unit = mUnits.get(i);
+                        if (mUnits.get(i).getUnitId().equals(unitId)) {
+                            mUnits.remove(i);
+                            break;
+                        }
+                    }
+                }
+                return true;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -116,22 +147,34 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
      */
     @Override
     public EnumResult updateUnitToDatabase(Unit unit) {
-        List<Unit> units = getAllUnit();
-        int size = units.size();
-        boolean unitNameIsExists = false;
-        for (int i = 0; i < size; i++) {
-            if (units.get(i).getUnitName().toLowerCase().equals(unit.getUnitName().toLowerCase())
-                    && (!units.get(i).getUnitId().equals(unit.getUnitId()))) {
-                unitNameIsExists = true;
-                break;
+        try {
+            if (mUnits != null) {
+                int size = mUnits.size();
+                boolean unitNameIsExists = false;
+                for (int i = 0; i < size; i++) {
+                    if (mUnits.get(i).getUnitName().equalsIgnoreCase(unit.getUnitName())
+                            && (!mUnits.get(i).getUnitId().equals(unit.getUnitId()))) {
+                        unitNameIsExists = true;
+                        break;
+                    }
+                }
+                if (unitNameIsExists) {
+                    return EnumResult.Exists;
+                } else {
+                    if (updateUnit(unit)) {
+                        for (int i = 0; i < size; i++) {
+                            if (mUnits.get(i).getUnitId().equals(unit.getUnitId())) {
+                                mUnits.set(i, unit);
+                                break;
+                            }
+                        }
+                        return EnumResult.Success;
+                    }
+                }
+                return EnumResult.SomethingWentWrong;
             }
-        }
-        if (unitNameIsExists) {
-            return EnumResult.Exists;
-        } else {
-            if (updateUnit(unit)) {
-                return EnumResult.Success;
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return EnumResult.SomethingWentWrong;
     }

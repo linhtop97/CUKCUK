@@ -19,10 +19,32 @@ import vn.com.misa.cukcuklite.data.models.Dish;
 public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils {
 
     private static final String TAG = "DishDataSource";
+    private static DishDataSource sInstance;
     private SQLiteDBManager mSQLiteDBManager;
+    private List<Dish> mDishes;
 
-    public DishDataSource() {
+    /**
+     * Phương thức khởi tạo cho đối tượng DishDataSource, và danh sách món ăn
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    private DishDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
+        mDishes = getAllDish();
+    }
+
+    /**
+     * Phương thức khởi tạo cho đối tượng DishDataSource truy cập mọi nơi
+     * Created_by Nguyễn Bá Linh on 27/03/2019
+     */
+    public static DishDataSource getInstance() {
+        if (sInstance == null) {
+            synchronized (SQLiteDBManager.class) {
+                if (sInstance == null) {
+                    sInstance = new DishDataSource();
+                }
+            }
+        }
+        return sInstance;
     }
 
     /**
@@ -67,6 +89,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                 return EnumResult.Exists;
             } else {
                 if (addDish(dish)) {
+                    mDishes.add(dish);
                     return EnumResult.Success;
                 }
             }
@@ -83,23 +106,30 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public EnumResult updateDishToDatabase(Dish dish) {
         try {
-            List<Dish> dishes = getAllDish();
-            int size = dishes.size();
-            boolean dishNameIsExists = false;
-            for (int i = 0; i < size; i++) {
-                if (dishes.get(i).getDishName().toLowerCase().equals(dish.getDishName())
-                        && (!dishes.get(i).getDishId().equals(dish.getDishId()))) {
-                    dishNameIsExists = true;
-                    break;
+            if (mDishes != null) {
+                int size = mDishes.size();
+                boolean dishNameIsExists = false;
+                for (int i = 0; i < size; i++) {
+                    if (mDishes.get(i).getDishName().toLowerCase().equals(dish.getDishName())
+                            && (!mDishes.get(i).getDishId().equals(dish.getDishId()))) {
+                        dishNameIsExists = true;
+                        break;
+                    }
                 }
-            }
-            if (dishNameIsExists) {
-                return EnumResult.Exists;
-            } else {
-                if (updateDish(dish)) {
-                    return EnumResult.Success;
+                if (dishNameIsExists) {
+                    return EnumResult.Exists;
                 } else {
-                    return EnumResult.SomethingWentWrong;
+                    if (updateDish(dish)) {
+                        for (int i = 0; i < size; i++) {
+                            if (mDishes.get(i).getDishId().equals(dish.getDishId())) {
+                                mDishes.set(i, dish);
+                                break;
+                            }
+                        }
+                        return EnumResult.Success;
+                    } else {
+                        return EnumResult.SomethingWentWrong;
+                    }
                 }
             }
         } catch (Exception e) {
@@ -121,8 +151,22 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
         try {
             ContentValues contentValues = new ContentValues();
             contentValues.put(COLUMN_STATE, 0);
-            return mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
-                    COLUMN_DISH_ID + "=?", new String[]{dishId});
+            if (mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
+                    COLUMN_DISH_ID + "=?", new String[]{dishId})) {
+                if (mDishes != null) {
+                    int size = mDishes.size();
+                    for (int i = 0; i < size; i++) {
+                        Dish dish = mDishes.get(i);
+                        if (mDishes.get(i).getDishId().equals(dishId)) {
+                            dish.setState(false);
+                            mDishes.set(i, dish);
+                            break;
+                        }
+                    }
+                }
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -186,27 +230,33 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public List<Dish> getAllDish() {
-        List<Dish> dishes = new ArrayList<>();
-        try {
-            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                Dish dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
-                        .setDishName(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)))
-                        .setPrice(cursor.getInt((cursor.getColumnIndex(COLUMN_PRICE))))
-                        .setUnitId(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)))
-                        .setColorCode(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_CODE)))
-                        .setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_PATH)))
-                        .setSale(cursor.getInt(cursor.getColumnIndex(COLUMN_IS_SALE)) == 1)
-                        .build();
-                dishes.add(dish);
-                cursor.moveToNext();
+        if (mDishes != null) {
+            return mDishes;
+        } else {
+            List<Dish> dishes = new ArrayList<>();
+            try {
+                Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    Dish dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
+                            .setDishName(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)))
+                            .setPrice(cursor.getInt((cursor.getColumnIndex(COLUMN_PRICE))))
+                            .setUnitId(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)))
+                            .setColorCode(cursor.getString(cursor.getColumnIndex(COLUMN_COLOR_CODE)))
+                            .setIconPath(cursor.getString(cursor.getColumnIndex(COLUMN_ICON_PATH)))
+                            .setSale(cursor.getInt(cursor.getColumnIndex(COLUMN_IS_SALE)) == 1)
+                            .build();
+                    dishes.add(dish);
+                    cursor.moveToNext();
+                }
+                mDishes = dishes;
+                cursor.close();
+                return mDishes;
+            } catch (Exception e) {
+                e.printStackTrace();
             }
-            cursor.close();
-        } catch (Exception e) {
-            e.printStackTrace();
+            return null;
         }
-        return dishes;
     }
 
     /**
@@ -219,6 +269,16 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean isDishIfExists(String dishName) {
         try {
+            boolean isExists = false;
+            if (mDishes != null) {
+                for (Dish d : mDishes) {
+                    if (d.getDishName().equalsIgnoreCase(dishName)) {
+                        isExists = true;
+                        break;
+                    }
+                }
+                return isExists;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords(DISH_TBL_NAME, new String[]{COLUMN_DISH_NAME},
                     "lower(" + COLUMN_DISH_NAME + ")" + " = ? ", new String[]{dishName.toLowerCase()},
                     null, null, null);
@@ -238,7 +298,11 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteAllDish() {
         try {
-            return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null);
+            if (mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null)) {
+                mDishes = new ArrayList<>();
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
@@ -255,9 +319,19 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public Dish getDishById(String dishId) {
         try {
+            Dish dish = null;
+            if (mDishes != null && mDishes.size() > 0) {
+                for (Dish d : mDishes) {
+                    if (d.getDishId().equals(dishId)) {
+                        dish = d;
+                        break;
+                    }
+                }
+                return dish;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_DISH_ID + "=" + "'" + dishId + "'", null);
             cursor.moveToFirst();
-            Dish dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
+            dish = new Dish.Builder().setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
                     .setDishName(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_NAME)))
                     .setPrice(cursor.getInt((cursor.getColumnIndex(COLUMN_PRICE))))
                     .setUnitId(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)))
@@ -283,14 +357,23 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     public List<String> getAllDishId() {
         List<String> dishIds = new ArrayList<>();
         try {
-            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
-            cursor.moveToFirst();
-            while (!cursor.isAfterLast()) {
-                String dishId = cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID));
-                dishIds.add(dishId);
-                cursor.moveToNext();
+            if (mDishes != null) {
+                for (Dish dish : mDishes) {
+                    if (dish.isSale()) {
+                        dishIds.add(dish.getDishId());
+                    }
+                }
+            } else {
+                Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    String dishId = cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID));
+                    dishIds.add(dishId);
+                    cursor.moveToNext();
+                }
+                cursor.close();
             }
-            cursor.close();
+
         } catch (Exception e) {
             e.printStackTrace();
         }

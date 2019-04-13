@@ -9,6 +9,7 @@ import java.io.File;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 
 import static vn.com.misa.cukcuklite.data.database.IDBUtils.DB_NAME;
 
@@ -20,6 +21,7 @@ public class CukCukLiteApplication extends Application {
         try {
             SQLiteDBManager.getInstance(this);
             initDatabaseStructure();
+            initDataCache();
             //cho phép đặt nguồn ảnh là vector
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
             //đặt font chữ mặc định cho thư viện
@@ -31,11 +33,14 @@ public class CukCukLiteApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
 
-        //gennerate id
-//        for (int i = 0; i < 100; i++) {
-//            System.out.println(""+ UUID.randomUUID().toString());
-//        }
+    /**
+     * Phương thức khởi tạo dữ liệu cache cho ứng dụng
+     * Created_by Nguyễn Bá Linh on 13/04/2019
+     */
+    private void initDataCache() {
+        DishDataSource.getInstance();
     }
 
     /**

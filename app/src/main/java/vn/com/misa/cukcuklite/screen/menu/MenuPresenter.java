@@ -14,7 +14,7 @@ public class MenuPresenter implements IMenuContract.IPresenter {
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     MenuPresenter() {
-        mDishDataSource = new DishDataSource();
+        mDishDataSource = DishDataSource.getInstance();
     }
 
     /**

@@ -4,6 +4,7 @@ import java.util.List;
 
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.data.models.Order;
 
 /**
  * Lớp định nghĩa các phương thức cho lớp thao tác với dữ liệu của hóa đơn
@@ -20,4 +21,8 @@ public interface IBillDataSource {
     boolean addBillDetailList(List<BillDetail> billDetails);
 
     List<BillDetail> getAllBillDeTailByBillId(String billId);
+
+    List<Bill> getAllBillUnpaid();
+
+    List<Order> getAllOrder();
 }

@@ -130,6 +130,7 @@
     <string name="total_money">Tổng tiền</string>
     <string name="money_default">0</string>
     <string name="choose_dish">Chọn món</string>
+    <string name="cancel_short">Hủy</string>
 
 
     <string-array name="color_list">

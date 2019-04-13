@@ -9,7 +9,7 @@ public class ChooseDishDefaultPresenter implements IChooseDishDefaultContract.IP
 
 
     ChooseDishDefaultPresenter() {
-        mDishDataSource = new DishDataSource();
+        mDishDataSource = DishDataSource.getInstance();
     }
 
     /**

@@ -16,8 +16,8 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     AddDishPresenter() {
-        mDishDataSource = new DishDataSource();
-        mUnitDataSource = new UnitDataSource();
+        mDishDataSource = DishDataSource.getInstance();
+        mUnitDataSource = UnitDataSource.getInstance();
     }
 
     /**
@@ -39,6 +39,7 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
                         mView.addDishFailed(R.string.dish_name_is_exists);
                         break;
                     case Success:
+
                         mView.addDishSuccess();
                         break;
                     case SomethingWentWrong:

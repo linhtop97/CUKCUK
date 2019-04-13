@@ -86,4 +86,7 @@
     <dimen name="table_icon_size">36dp</dimen>
     <dimen name="min_width_tv_number_select">48dp</dimen>
     <dimen name="corner_quality_layout">32dp</dimen>
+    <dimen name="item_order_default_height">140dp</dimen>
+    <dimen name="size_icon_table_sale">64dp</dimen>
+    <dimen name="padding_tv_image">-6dp</dimen>
 </resources>
