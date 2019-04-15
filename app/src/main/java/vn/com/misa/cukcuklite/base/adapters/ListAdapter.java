@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.ViewGroup;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +27,7 @@ public abstract class ListAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      */
     public ListAdapter(Context context) {
         mContext = context;
+        mListData = new ArrayList<>();
     }
 
     @NonNull
@@ -61,7 +63,8 @@ public abstract class ListAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * @param listData danh sách dữ liệu được truyền vào
      */
     public void setListData(List<T> listData) {
-        mListData = listData;
+        mListData.clear();
+        mListData.addAll(listData);
         notifyDataSetChanged();
     }
 
@@ -72,11 +75,7 @@ public abstract class ListAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
      * @param listData danh sách dữ liệu được thêm vào
      */
     public void addData(List<T> listData) {
-        if (mListData == null) {
-            mListData = listData;
-        } else {
-            mListData.addAll(listData);
-        }
+        mListData.addAll(listData);
         notifyDataSetChanged();
     }
 

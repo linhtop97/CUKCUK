@@ -8,7 +8,7 @@ public class Order {
     private int NumberCustomer;
     private int TotalMoney;
     private String Content;
-    private String ColorCode;
+    private long DateCreated;
 
     public Order(Builder builder) {
         BillId = builder.BillId;
@@ -17,7 +17,15 @@ public class Order {
         NumberCustomer = builder.NumberCustomer;
         TotalMoney = builder.TotalMoney;
         Content = builder.Content;
-        ColorCode = builder.ColorCode;
+        DateCreated = builder.DateCreated;
+    }
+
+    public long getDateCreated() {
+        return DateCreated;
+    }
+
+    public void setDateCreated(long dateCreated) {
+        DateCreated = dateCreated;
     }
 
     public String getBillId() {
@@ -60,14 +68,6 @@ public class Order {
         TotalMoney = totalMoney;
     }
 
-    public String getColorCode() {
-        return ColorCode;
-    }
-
-    public void setColorCode(String colorCode) {
-        ColorCode = colorCode;
-    }
-
     public String getContent() {
         return Content;
     }
@@ -83,13 +83,12 @@ public class Order {
         private int NumberCustomer;
         private int TotalMoney;
         private String Content;
-        private String ColorCode;
+        private long DateCreated;
 
-        public Builder setColorCode(String colorCode) {
-            ColorCode = colorCode;
+        public Builder setDateCreated(long dateCreated) {
+            DateCreated = dateCreated;
             return this;
         }
-
 
         public Builder setBillId(String billId) {
             BillId = billId;

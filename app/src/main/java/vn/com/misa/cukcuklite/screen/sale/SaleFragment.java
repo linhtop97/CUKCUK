@@ -18,22 +18,30 @@ import android.widget.TextView;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Order;
+import vn.com.misa.cukcuklite.screen.dialogs.delete.ConfirmDeleteDialog;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
+import vn.com.misa.cukcuklite.screen.main.MainActivity;
+import vn.com.misa.cukcuklite.utils.AppConstants;
+import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
  * Màn hình bán hàng
  * Created_by Nguyễn Bá Linh on 09/04/2019s
  */
-public class SaleFragment extends Fragment implements ISaleContract.IView {
+public class SaleFragment extends Fragment implements ISaleContract.IView, OrderAdapter.IOrderClickListener, ConfirmDeleteDialog.IConfirmDeleteCallBack {
 
+    private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private RecyclerView rvOrder;
     private ConstraintLayout clWaterMark;
-    private Context mContext;
+    private MainActivity mContext;
     private SalePresenter mPresenter;
     private OrderAdapter mAdapter;
     private ProgressDialog mDialog;
     private TextView tvAddOrder;
+    private String mBillId;
+    private Navigator mNavigator;
 
     public static SaleFragment newInstance() {
         return new SaleFragment();
@@ -45,6 +53,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
         View view = inflater.inflate(R.layout.fragment_sale, container, false);
         mPresenter = new SalePresenter();
         mPresenter.setView(this);
+        mNavigator = new Navigator(this);
         initViews(view);
         initEvents();
         return view;
@@ -59,7 +68,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
             @Override
             public void onClick(View v) {
                 try {
-                    startActivity(new Intent(mContext, DishOrderActivity.class));
+                    mNavigator.startActivity(new Intent(mContext, DishOrderActivity.class));
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -78,6 +87,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
             tvAddOrder = view.findViewById(R.id.tvAddOrder);
             rvOrder.setLayoutManager(new LinearLayoutManager(mContext));
             mAdapter = new OrderAdapter(mContext);
+            mAdapter.setIOrderClickListener(this);
             rvOrder.setAdapter(mAdapter);
             initProgressBar();
         } catch (Exception e) {
@@ -115,7 +125,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        mContext = context;
+        mContext = (MainActivity) context;
     }
 
     @Override
@@ -140,7 +150,11 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
      */
     @Override
     public void receiveMessage(int message) {
-
+        try {
+            mNavigator.showToastOnTopScreen(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -168,6 +182,67 @@ public class SaleFragment extends Fragment implements ISaleContract.IView {
             if (mDialog != null && mDialog.isShowing()) {
                 mDialog.dismiss();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức sửa order
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @param billId - id của hóa đơn
+     */
+    @Override
+    public void orderClick(String billId) {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(mContext, DishOrderActivity.class);
+            intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
+            mNavigator.startActivity(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức hủy order
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @param billId - id của hóa đơn
+     */
+    @Override
+    public void cancelOrder(String billId) {
+        try {
+            mBillId = billId;
+            ConfirmDeleteDialog deleteDialog = ConfirmDeleteDialog.newInstance(null,
+                    IDBUtils.ITableBillUtils.COLUMN_BILL_ID);
+            deleteDialog.setCallBack(this);
+            mContext.getSupportFragmentManager().beginTransaction().add(deleteDialog, DELETE_DIALOG).commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức thanh toán/thu tiền order
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @param billId - id của hóa đơn
+     */
+    @Override
+    public void payOrder(String billId) {
+
+    }
+
+    /**
+     * Phương thức xử lý khi xác nhận xóa order
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     */
+    @Override
+    public void acceptDelete() {
+        try {
+            mPresenter.cancelOrder(mBillId);
         } catch (Exception e) {
             e.printStackTrace();
         }

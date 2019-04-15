@@ -16,6 +16,10 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.data.models.Order;
@@ -58,12 +62,25 @@ public class OrderAdapter extends ListAdapter<Order> {
         mIOrderClickListener = orderClickListener;
     }
 
+    @Override
+    public void setListData(List<Order> listData) {
+        Collections.sort(listData, new Comparator<Order>() {
+            @Override
+            public int compare(Order o1, Order o2) {
+                return (int) (o1.getDateCreated() - o2.getDateCreated());
+            }
+        });
+        mListData.clear();
+        mListData.addAll(listData);
+        notifyDataSetChanged();
+    }
+
     public interface IOrderClickListener {
-        void orderClick(String orderId);
+        void orderClick(String billId);
 
-        void cancelOrder(String orderId);
+        void cancelOrder(String billId);
 
-        void payOrder(String orderId);
+        void payOrder(String billId);
     }
 
     public class OrderHolder extends RecyclerView.ViewHolder {
@@ -71,11 +88,12 @@ public class OrderAdapter extends ListAdapter<Order> {
         private TextView tvTable, tvPerson, tvContent, tvTotalMoney;
         private LinearLayout lnCancel, lnPay;
         private Drawable drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
+        private String[] colorArr = mContext.getResources().getStringArray(R.array.color_list);
 
         public OrderHolder(@NonNull View itemView) {
             super(itemView);
             initViews(itemView);
-            initEvents();
+            initEvents(itemView);
         }
 
 
@@ -101,7 +119,7 @@ public class OrderAdapter extends ListAdapter<Order> {
                 tvPerson.setText(String.valueOf(order.getNumberCustomer()));
                 if (order.getTableNumber() > 0) {
                     tvTable.setText(String.valueOf(order.getTableNumber()));
-                    drawable.setColorFilter(Color.parseColor(order.getColorCode()), PorterDuff.Mode.SRC);
+                    drawable.setColorFilter(Color.parseColor(colorArr[getAdapterPosition() % colorArr.length]), PorterDuff.Mode.SRC);
                     ivBackground.setBackground(drawable);
                 } else {
                     drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
@@ -114,9 +132,11 @@ public class OrderAdapter extends ListAdapter<Order> {
         /**
          * Phương thức gắn sự kiện cho view
          * Created_by Nguyễn Bá Linh on 13/04/2019
+         *
+         * @param itemView - view
          */
-        private void initEvents() {
-            itemView.setOnClickListener(new View.OnClickListener() {
+        private void initEvents(View itemView) {
+            this.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     try {
@@ -147,8 +167,6 @@ public class OrderAdapter extends ListAdapter<Order> {
                     }
                 }
             });
-
-
         }
 
         /**

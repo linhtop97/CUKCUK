@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.data.models;
 
+import java.util.Calendar;
 import java.util.UUID;
 
 import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
@@ -11,7 +12,7 @@ import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
 public class Bill {
     private String BillId;
     private int BillNumber;
-    private String DateCreated;
+    private long DateCreated;
     private EnumBillSate State;
     private int TableNumber;
     private int NumberCustomer;
@@ -20,8 +21,7 @@ public class Bill {
 
     public Bill() {
         BillId = UUID.randomUUID().toString();
-        State = EnumBillSate.UNPAID;
-        DateCreated = "";
+        DateCreated = Calendar.getInstance().getTimeInMillis();
     }
 
     public Bill(Builder builder) {
@@ -51,11 +51,11 @@ public class Bill {
         BillNumber = billNumber;
     }
 
-    public String getDateCreated() {
+    public Long getDateCreated() {
         return DateCreated;
     }
 
-    public void setDateCreated(String dateCreated) {
+    public void setDateCreated(long dateCreated) {
         DateCreated = dateCreated;
     }
 
@@ -102,7 +102,7 @@ public class Bill {
     public static class Builder {
         private String BillId;
         private int BillNumber;
-        private String DateCreated;
+        private long DateCreated;
         private EnumBillSate State;
         private int TableNumber;
         private int NumberCustomer;
@@ -119,7 +119,7 @@ public class Bill {
             return this;
         }
 
-        public Builder setDateCreated(String dateCreated) {
+        public Builder setDateCreated(long dateCreated) {
             DateCreated = dateCreated;
             return this;
         }

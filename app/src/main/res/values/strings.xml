@@ -132,6 +132,7 @@
     <string name="choose_dish">Chọn món</string>
     <string name="cancel_short">Hủy</string>
     <string name="you_have_not_select_dish_yet">Bạn chưa chọn món ăn nào!</string>
+    <string name="confirm_delete_order">Bạn có muốn hủy Order này không?</string>
 
 
     <string-array name="color_list">

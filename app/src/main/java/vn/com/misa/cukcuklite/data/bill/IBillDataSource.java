@@ -14,7 +14,7 @@ public interface IBillDataSource {
 
     List<BillDetail> initNewBillDetailList(String BillId);
 
-    boolean addBill(Bill bill);
+    boolean addBill(Bill bill, List<BillDetail> billDetails);
 
     boolean addBillDetail(BillDetail billDetail);
 
@@ -25,4 +25,8 @@ public interface IBillDataSource {
     List<Bill> getAllBillUnpaid();
 
     List<Order> getAllOrder();
+
+    boolean cancelOrder(String billId);
+
+    void getOrderUnpaidByBillId(String billId);
 }

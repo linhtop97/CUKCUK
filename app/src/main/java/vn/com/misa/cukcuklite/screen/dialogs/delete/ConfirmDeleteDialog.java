@@ -37,11 +37,11 @@ public class ConfirmDeleteDialog extends DialogFragment implements View.OnClickL
      * Phương thức khởi tạo dialog xác nhận xóa
      * Created_by Nguyễn Bá Linh on 10/04/2019
      *
-     * @param name - tên muốn xóa
+     * @param name - tên muốn xóa - có thể null
      * @param type - loại muốn xóa
      * @return - dialog
      */
-    public static ConfirmDeleteDialog newInstance(String name, String type) {
+    public static ConfirmDeleteDialog newInstance(@Nullable String name, String type) {
         ConfirmDeleteDialog colorSelectorDialog = new ConfirmDeleteDialog();
         try {
             Bundle bundle = new Bundle();
@@ -92,11 +92,16 @@ public class ConfirmDeleteDialog extends DialogFragment implements View.OnClickL
             if (bundle != null) {
                 name = bundle.getString(AppConstants.ARG_NAME);
                 String type = bundle.getString(AppConstants.ARG_TYPE_DELETE);
-                if (type.equals(IDBUtils.ITableUnitUtils.COLUMN_UNIT_NAME)) {
-                    tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_unit, name)));
-                } else {
-                    tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_dish, name)));
+                if (type != null) {
+                    if (type.equals(IDBUtils.ITableUnitUtils.COLUMN_UNIT_NAME)) {
+                        tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_unit, name)));
+                    } else if (type.equals(IDBUtils.ITableDishUtils.COLUMN_DISH_NAME)) {
+                        tvConfirm.setText(Html.fromHtml(getString(R.string.confirm_delete_dish, name)));
+                    } else {
+                        tvConfirm.setText(R.string.confirm_delete_order);
+                    }
                 }
+
             }
         } catch (Exception e) {
             e.printStackTrace();

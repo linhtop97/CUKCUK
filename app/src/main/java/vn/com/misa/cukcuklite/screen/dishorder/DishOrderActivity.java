@@ -21,6 +21,7 @@ import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
+import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
@@ -39,6 +40,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     private ConstraintLayout clWaterMark;
     private Button btnSave, btnPay;
     private Bill mBill;
+    private boolean mIsEdit;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -47,7 +49,6 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
         mNavigator = new Navigator(this);
         initViews();
         initEvents();
-        mPresenter.onStart();
     }
 
     /**
@@ -85,13 +86,36 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             rvDishOrder.setAdapter(mAdapter);
             initProgressBar();
             //kiểm tra đầu vào r mới khởi tạo presenter
-            mBill = new Bill();
-            mPresenter = new DishOrderPresenter(mBill.getBillId());
-            mPresenter.setView(this);
+            getBillIdFromAnotherScreen();
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    /**
+     * Phuương thức nhận bill id từ màn hình khác gửi đến
+     * nếu không có sẽ tạo mới 1 bill
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     */
+    private void getBillIdFromAnotherScreen() {
+        try {
+            Intent intent = getIntent();
+            String billId = intent.getStringExtra(AppConstants.EXTRA_BILL_ID);
+            if (billId != null) {
+                mIsEdit = true;
+                mPresenter = new DishOrderPresenter(billId);
+                mPresenter.setView(this);
+            } else {
+                mIsEdit = false;
+                mBill = new Bill();
+                mPresenter = new DishOrderPresenter(mBill.getBillId());
+                mPresenter.setView(this);
+                mPresenter.onStart();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -175,8 +199,11 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     @Override
     public void showListDishOrder(List<BillDetail> billDetails) {
         try {
-            if (billDetails != null) {
+            if (billDetails != null && billDetails.size() > 0) {
                 mAdapter.setListData(billDetails);
+                clWaterMark.setVisibility(View.GONE);
+            } else {
+                clWaterMark.setVisibility(View.VISIBLE);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -228,7 +255,11 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                         if (!tvPerson.getText().toString().isEmpty()) {
                             mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
                         }
-                        mPresenter.saveOrder(mBill, mAdapter.getListData());
+                        if (mIsEdit) {
+
+                        } else {
+                            mPresenter.saveOrder(mBill, mAdapter.getListData());
+                        }
                     } else {
                         mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
                     }

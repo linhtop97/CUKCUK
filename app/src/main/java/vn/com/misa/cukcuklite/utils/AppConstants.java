@@ -31,4 +31,7 @@ public final class AppConstants {
     public static final int UN_PAID = 0;
     public static final int PAID = 1;
     public static final int CANCEL = 2;
+
+
+    public static final String EXTRA_BILL_ID = "EXTRA_BILL_ID";
 }

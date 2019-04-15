@@ -13,5 +13,6 @@ public interface ISaleContract {
 
     interface IPresenter extends IBasePresenter<IView> {
 
+        void cancelOrder(String billId);
     }
 }

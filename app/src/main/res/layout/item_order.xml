@@ -8,16 +8,13 @@
     android:layout_marginStart="@dimen/margin_small"
     android:layout_marginTop="@dimen/margin_small"
     android:layout_marginEnd="@dimen/margin_small"
-    android:background="@drawable/background_item_order"
-    android:clickable="true"
-    android:focusable="true"
+    android:background="@drawable/selector_order"
     android:orientation="horizontal">
 
     <LinearLayout
-        android:focusable="true"
-        android:clickable="true"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
+        android:background="@drawable/background_item_order"
         android:orientation="vertical"
         android:paddingLeft="@dimen/padding_normal"
         android:paddingTop="@dimen/padding_normal"
@@ -80,8 +77,6 @@
             android:layout_height="0dp"
             android:layout_weight="1"
             android:background="@drawable/selector_dish"
-            android:clickable="true"
-            android:focusable="true"
             tools:ignore="NestedWeights">
 
             <ImageView
@@ -96,7 +91,6 @@
                 app:srcCompat="@drawable/ic_enter" />
 
             <TextView
-                app:layout_constraintVertical_chainStyle="packed"
                 android:id="@+id/tvContent"
                 style="@style/TextViewNormal"
                 android:layout_width="@dimen/dp_0"
@@ -110,17 +104,18 @@
                 app:layout_constraintBottom_toTopOf="@id/tvTotalMoney"
                 app:layout_constraintEnd_toStartOf="@id/ivGotoDetail"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_chainStyle="packed" />
 
             <TextView
                 android:id="@+id/tvTotalMoney"
                 style="@style/TextViewNormal"
-                android:textColor="@color/colorTextGray"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/tvContent"
                 android:layout_alignParentStart="true"
                 android:layout_marginStart="@dimen/margin_normal"
+                android:textColor="@color/colorTextGray"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@id/tvContent"
                 app:layout_constraintStart_toStartOf="parent"

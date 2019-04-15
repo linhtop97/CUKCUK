@@ -5,11 +5,18 @@ package vn.com.misa.cukcuklite.data.models;
  * Created_by Nguyễn Bá Linh on 11/04/2019
  */
 public class BillDetail {
+
     private String BillDetailId;
+
     private String BillId;
+
     private String DishId;
+
     private int Quantity;
+
     private int TotalMoney;
+
+    private String name;
 
     public BillDetail(Builder builder) {
         BillDetailId = builder.BillDetailId;
@@ -17,6 +24,7 @@ public class BillDetail {
         DishId = builder.DishId;
         Quantity = builder.Quantity;
         TotalMoney = builder.TotalMoney;
+        name = builder.name;
     }
 
     public String getBillDetailId() {
@@ -59,12 +67,26 @@ public class BillDetail {
         TotalMoney = totalMoney;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public static class Builder {
         private String BillDetailId;
         private String BillId;
         private String DishId;
         private int Quantity;
         private int TotalMoney;
+        private String name;
+
+        public Builder setName(String name) {
+            this.name = name;
+            return this;
+        }
 
         public Builder setBillDetailId(String billDetailId) {
             BillDetailId = billDetailId;

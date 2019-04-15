@@ -16,6 +16,7 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
 
     DishOrderPresenter(String billId) {
         mBillDataSource = BillDataSource.getInstance();
+        mBillDataSource.getAllOrder();
         mBillId = billId;
     }
 
@@ -30,22 +31,20 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
     public void saveOrder(Bill bill, List<BillDetail> billDetails) {
         try {
             mView.showLoading();
-            if (mBillDataSource.addBill(bill)) {
-                int size = billDetails.size();
-                List<BillDetail> billDetailList = new ArrayList<>();
-                for (int i = 0; i < size; i++) {
-                    //nếu như danh sách món ăn trong hóa đơn chi tiết có số lượng lớn hơn 0
-                    //thì sẽ thêm vào danh sách món ăn trong hóa đơn chi tiết mới để lưu trữ
-                    if (billDetails.get(i).getQuantity() > 0) {
-                        billDetailList.add(billDetails.get(i));
-                    }
+            int size = billDetails.size();
+            List<BillDetail> billDetailList = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                //nếu như danh sách món ăn trong hóa đơn chi tiết có số lượng lớn hơn 0
+                //thì sẽ thêm vào danh sách món ăn trong hóa đơn chi tiết mới để lưu trữ
+                if (billDetails.get(i).getQuantity() > 0) {
+                    billDetailList.add(billDetails.get(i));
                 }
-                //Kiểm tra việc lưu trữ danh sách hóa đơn chi tiết và xử lý kết quả
-                if (mBillDataSource.addBillDetailList(billDetailList)) {
-                    mView.saveOrderSuccess();
-                } else {
-                    mView.saveOrderFailed();
-                }
+            }
+
+            if (mBillDataSource.addBill(bill, billDetailList)) {
+                mView.saveOrderSuccess();
+            } else {
+                mView.saveOrderFailed();
             }
             mView.hideLoading();
             return;

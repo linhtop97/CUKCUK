@@ -19,8 +19,11 @@ import vn.com.misa.cukcuklite.data.models.Dish;
 public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils {
 
     private static final String TAG = "DishDataSource";
+
     private static DishDataSource sInstance;
+
     private SQLiteDBManager mSQLiteDBManager;
+
     private List<Dish> mDishes;
 
     /**

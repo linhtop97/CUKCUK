@@ -5,17 +5,15 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import vn.com.misa.cukcuklite.CukCukLiteApplication;
-import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
-import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Order;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
@@ -34,10 +32,12 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     private static BillDataSource sInstance;
     private SQLiteDBManager mSQLiteDBManager;
     private DishDataSource mDishDataSource;
+    private HashMap<String, Order> orderHashMap;
 
     private BillDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
         mDishDataSource = DishDataSource.getInstance();
+        orderHashMap = new HashMap<>();
     }
 
     public static BillDataSource getInstance() {
@@ -67,8 +67,8 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                 List<String> dishIds = mDishDataSource.getAllDishId();
                 if (dishIds != null) {
                     for (int i = 0; i < dishIds.size(); i++) {
-                        BillDetail billDetail = new BillDetail.Builder().
-                                setBillDetailId(UUID.randomUUID().toString())
+                        BillDetail billDetail = new BillDetail.Builder()
+                                .setBillDetailId(UUID.randomUUID().toString())
                                 .setBillId(billId)
                                 .setDishId(dishIds.get(i)).build();
                         billDetails.add(billDetail);
@@ -92,29 +92,28 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      * @return - thêm hóa đơn thành công/thất bại
      */
     @Override
-    public boolean addBill(Bill bill) {
+    public boolean addBill(Bill bill, List<BillDetail> billDetails) {
         try {
             if (bill != null) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_BILL_ID, bill.getBillId());
                 contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
-                contentValues.put(COLUMN_DATE_CREATED, bill.getDateCreated());
+                contentValues.put(COLUMN_DATE_CREATED, String.valueOf(bill.getDateCreated()));
                 contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
                 contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
                 contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
                 contentValues.put(COLUMN_CUSTOMER_PAY, bill.getCustomerPay());
-                //kiểm tra trạng thái của hóa đơn để cập nhật vào cơ sở dữ liệu dữ liệu hợp lý
-                int state = AppConstants.UN_PAID;
-                switch (bill.getState()) {
-                    case PAID:
-                        state = AppConstants.PAID;
-                        break;
-                    case CANCEL:
-                        state = AppConstants.CANCEL;
-                        break;
+                contentValues.put(COLUMN_STATE, AppConstants.UN_PAID);
+                if (mSQLiteDBManager.addNewRecord(BILL_TBL_NAME, contentValues)) {
+                    if (addBillDetailList(billDetails)) {
+                        addOrderToCache(getOrderFromBill(bill));
+                        return true;
+                    } else {
+                        return false;
+                    }
+                } else {
+                    return false;
                 }
-                contentValues.put(COLUMN_STATE, state);
-                return mSQLiteDBManager.addNewRecord(BILL_TBL_NAME, contentValues);
             } else {
                 return false;
             }
@@ -122,6 +121,10 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void addOrderToCache(Order order) {
+        orderHashMap.put(order.getBillId(), order);
     }
 
 
@@ -161,8 +164,8 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      */
     @Override
     public boolean addBillDetailList(List<BillDetail> billDetails) {
-        boolean addSuccess = true;
         try {
+            boolean addSuccess = true;
             if (billDetails != null) {
                 int size = billDetails.size();
                 for (int i = 0; i < size; i++) {
@@ -171,11 +174,12 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                         break;
                     }
                 }
+                return addSuccess;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return addSuccess;
+        return false;
     }
 
     /**
@@ -189,15 +193,31 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     public List<BillDetail> getAllBillDeTailByBillId(String billId) {
         List<BillDetail> billDetails = new ArrayList<>();
         try {
-            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + BILL_DETAIL_TBL_NAME + " where " + COLUMN_BILL_ID + "=" + "'" + billId + "'", null);
+            String sql = String.format(
+                    "SELECT %s.%s,%s,%s,%s,%s,%s FROM " + BILL_DETAIL_TBL_NAME + "," + DishDataSource.DISH_TBL_NAME + " where " + COLUMN_BILL_ID + "=" + "'" + billId + "'" + " and %s.%s = %s.%s",
+                    BILL_DETAIL_TBL_NAME,
+                    COLUMN_DISH_ID,
+                    DishDataSource.COLUMN_DISH_NAME,
+                    COLUMN_BILL_ID,
+                    COLUMN_QUANTITY,
+                    COLUMN_TOTAL_MONEY,
+                    COLUMN_BILL_DETAIL_ID,
+                    BILL_DETAIL_TBL_NAME,
+                    COLUMN_DISH_ID,
+                    DishDataSource.DISH_TBL_NAME,
+                    COLUMN_DISH_ID
+            );
+            Log.d(TAG, "getAllBillDeTailByBillId: " + sql);
+            Cursor cursor = mSQLiteDBManager.getRecords(sql, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
-                BillDetail billDetail = new BillDetail.Builder().setBillDetailId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_DETAIL_ID)))
+                BillDetail billDetail = new BillDetail.Builder()
+                        .setBillDetailId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_DETAIL_ID)))
                         .setBillId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_ID)))
                         .setQuantity(cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY)))
                         .setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
                         .setTotalMoney(cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_MONEY)))
-                        .setTotalMoney(cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_MONEY)))
+                        .setName(cursor.getString(cursor.getColumnIndex(DishDataSource.COLUMN_DISH_NAME)))
                         .build();
                 billDetails.add(billDetail);
                 cursor.moveToNext();
@@ -227,6 +247,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                         .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
                         .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
                         .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))
+                        .setDateCreated(Long.parseLong(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
                         .build();
                 bills.add(bill);
                 cursor.moveToNext();
@@ -247,47 +268,74 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     @Override
     public List<Order> getAllOrder() {
         try {
-            Log.d(TAG, "getAllOrder: ");
-            List<Order> orders = new ArrayList<>();
+            if (orderHashMap.size() > 0) {
+                return new ArrayList<>(orderHashMap.values());
+            }
             List<Bill> bills = getAllBillUnpaid();
-            int colorId = 0;
-            String[] color = CukCukLiteApplication.getInstance().getResources().getStringArray(R.array.color_list);
             if (bills != null) {
-                List<Dish> dishes = DishDataSource.getInstance().getAllDish();
                 for (Bill bill : bills) {
-                    List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
-                    StringBuilder content = new StringBuilder();
-                    if (billDetails != null) {
-                        for (BillDetail billDetail : billDetails) {
-                            for (Dish d : dishes) {
-                                if (d.getDishId().equals(billDetail.getDishId())) {
-                                    content.append(d.getDishName());
-                                    break;
-                                }
-                            }
-                            content.append(" <font color=#0973b9>(").append(billDetail.getQuantity()).append(")</font>").append(", ");
-                        }
-                    }
-
-                    String colorCode = null;
-                    if (bill.getTableNumber() > 0) {
-                        colorCode = color[colorId];
-                        colorId++;
-                    }
-                    content = content.replace(content.length() - 2, content.length(), ".");
-                    orders.add(new Order.Builder().setBillId(bill.getBillId())
-                            .setContent(content.toString())
-                            .setColorCode(colorCode)
-                            .setNumberCustomer(bill.getNumberCustomer())
-                            .setTableNumber(bill.getTableNumber())
-                            .setTotalMoney(bill.getTotalMoney()).build());
-
+                    addOrderToCache(getOrderFromBill(bill));
                 }
-                return orders;
+                return new ArrayList<>(orderHashMap.values());
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
+    }
+
+    private Order getOrderFromBill(Bill bill) {
+
+        List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
+        StringBuilder content = new StringBuilder();
+        if (billDetails != null) {
+            for (BillDetail billDetail : billDetails) {
+                content.append(billDetail.getName());
+                content.append(" <font color=#0973b9>(").append(billDetail.getQuantity()).append(")</font>").append(", ");
+            }
+        }
+
+        content = content.replace(content.length() - 2, content.length(), ".");
+        return new Order.Builder().setBillId(bill.getBillId())
+                .setContent(content.toString())
+                .setNumberCustomer(bill.getNumberCustomer())
+                .setTableNumber(bill.getTableNumber())
+                .setTotalMoney(bill.getTotalMoney())
+                .setDateCreated(bill.getDateCreated()).build();
+    }
+
+
+    @Override
+    public boolean cancelOrder(String billId) {
+        try {
+            ContentValues contentValues = new ContentValues();
+            contentValues.put(COLUMN_STATE, AppConstants.CANCEL);
+            if (mSQLiteDBManager.updateRecord(BILL_TBL_NAME, contentValues,
+                    COLUMN_BILL_ID + "=?", new String[]{billId})) {
+                removeOrderInCache(billId);
+                return true;
+            }
+            return false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    @Override
+    public void getOrderUnpaidByBillId(String billId) {
+
+    }
+
+    /**
+     * Loại bỏ order ra khỏi bộ nhớ cache
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @param billId - hóa đơn id
+     */
+    private void removeOrderInCache(String billId) {
+        if (orderHashMap != null && orderHashMap.size() > 0) {
+            orderHashMap.remove(billId);
+        }
     }
 }
