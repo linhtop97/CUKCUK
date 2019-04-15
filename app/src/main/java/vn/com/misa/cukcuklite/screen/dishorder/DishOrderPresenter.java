@@ -15,7 +15,7 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
     private String mBillId;
 
     DishOrderPresenter(String billId) {
-        mBillDataSource = new BillDataSource();
+        mBillDataSource = BillDataSource.getInstance();
         mBillId = billId;
     }
 

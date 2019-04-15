@@ -8,6 +8,7 @@ public class Order {
     private int NumberCustomer;
     private int TotalMoney;
     private String Content;
+    private String ColorCode;
 
     public Order(Builder builder) {
         BillId = builder.BillId;
@@ -16,6 +17,7 @@ public class Order {
         NumberCustomer = builder.NumberCustomer;
         TotalMoney = builder.TotalMoney;
         Content = builder.Content;
+        ColorCode = builder.ColorCode;
     }
 
     public String getBillId() {
@@ -58,6 +60,14 @@ public class Order {
         TotalMoney = totalMoney;
     }
 
+    public String getColorCode() {
+        return ColorCode;
+    }
+
+    public void setColorCode(String colorCode) {
+        ColorCode = colorCode;
+    }
+
     public String getContent() {
         return Content;
     }
@@ -73,6 +83,13 @@ public class Order {
         private int NumberCustomer;
         private int TotalMoney;
         private String Content;
+        private String ColorCode;
+
+        public Builder setColorCode(String colorCode) {
+            ColorCode = colorCode;
+            return this;
+        }
+
 
         public Builder setBillId(String billId) {
             BillId = billId;

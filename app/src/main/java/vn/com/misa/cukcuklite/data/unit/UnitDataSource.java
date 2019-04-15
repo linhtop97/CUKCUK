@@ -28,7 +28,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
      */
     private UnitDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
-        mUnits = getAllUnit();
+        mUnits = new ArrayList<>();
     }
 
     /**
@@ -104,7 +104,6 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
                 if (mUnits != null) {
                     int size = mUnits.size();
                     for (int i = 0; i < size; i++) {
-                        Unit unit = mUnits.get(i);
                         if (mUnits.get(i).getUnitId().equals(unitId)) {
                             mUnits.remove(i);
                             break;
@@ -189,6 +188,12 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
     public List<String> getAllUnitName() {
         List<String> unitNames = new ArrayList<>();
         try {
+            if (mUnits != null) {
+                for (Unit unit : mUnits) {
+                    unitNames.add(unit.getUnitName());
+                }
+                return unitNames;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_UNIT_NAME + " from " + UNIT_TBL_NAME, null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
@@ -211,6 +216,9 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
      */
     @Override
     public List<Unit> getAllUnit() {
+        if (mUnits != null && mUnits.size() > 0) {
+            return mUnits;
+        }
         List<Unit> units = new ArrayList<>();
         try {
             Cursor cursor = mSQLiteDBManager.getRecords("select * from " + UNIT_TBL_NAME, null);
@@ -221,6 +229,8 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
                 units.add(unit);
                 cursor.moveToNext();
             }
+            mUnits.clear();
+            mUnits.addAll(units);
             cursor.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -238,6 +248,16 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
     @Override
     public boolean isUnitIfExists(String unitName) {
         try {
+            boolean isExists = false;
+            if (mUnits != null) {
+                for (Unit unit : mUnits) {
+                    if (unit.getUnitName().equalsIgnoreCase(unitName)) {
+                        isExists = true;
+                        break;
+                    }
+                }
+                return isExists;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords(UNIT_TBL_NAME, new String[]{COLUMN_UNIT_NAME},
                     "lower(" + COLUMN_UNIT_NAME + ")" + " = ? ", new String[]{unitName.toLowerCase()},
                     null, null, null);
@@ -260,9 +280,19 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
     @Override
     public Unit getUnitById(String unitId) {
         try {
+            Unit unit = null;
+            if (mUnits != null && mUnits.size() > 0) {
+                for (Unit u : mUnits) {
+                    if (u.getUnitId().equalsIgnoreCase(unitId)) {
+                        unit = u;
+                        break;
+                    }
+                }
+                return unit;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords("select * from " + UNIT_TBL_NAME + " where " + COLUMN_UNIT_ID + "=" + unitId, null);
             cursor.moveToFirst();
-            Unit unit = new Unit(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)),
+            unit = new Unit(cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_ID)),
                     cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_NAME)));
             cursor.close();
             return unit;
@@ -282,9 +312,19 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
     @Override
     public String getUnitNameById(String unitId) {
         try {
+            String unitName = null;
+            if (mUnits != null && mUnits.size() > 0 && unitId != null) {
+                for (Unit u : mUnits) {
+                    if (u.getUnitId().equals(unitId)) {
+                        unitName = u.getUnitName();
+                        break;
+                    }
+                }
+                return unitName;
+            }
             Cursor cursor = mSQLiteDBManager.getRecords("select " + COLUMN_UNIT_NAME + " from " + UNIT_TBL_NAME + " where " + COLUMN_UNIT_ID + "='" + unitId + "'", null);
             cursor.moveToFirst();
-            String unitName = cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_NAME));
+            unitName = cursor.getString(cursor.getColumnIndex(COLUMN_UNIT_NAME));
             cursor.close();
             return unitName;
         } catch (Exception e) {
@@ -302,6 +342,9 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
         boolean deleteSuccess = false;
         try {
             deleteSuccess = mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME, null, null);
+            if (deleteSuccess) {
+                mUnits = null;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }

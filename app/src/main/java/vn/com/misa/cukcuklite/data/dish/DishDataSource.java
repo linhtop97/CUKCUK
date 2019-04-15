@@ -29,7 +29,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     private DishDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
-        mDishes = getAllDish();
+        mDishes = new ArrayList<>();
     }
 
     /**
@@ -156,10 +156,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                 if (mDishes != null) {
                     int size = mDishes.size();
                     for (int i = 0; i < size; i++) {
-                        Dish dish = mDishes.get(i);
                         if (mDishes.get(i).getDishId().equals(dishId)) {
-                            dish.setState(false);
-                            mDishes.set(i, dish);
+                            mDishes.remove(i);
                             break;
                         }
                     }
@@ -230,7 +228,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public List<Dish> getAllDish() {
-        if (mDishes != null) {
+        if (mDishes != null && mDishes.size() > 0) {
             return mDishes;
         } else {
             List<Dish> dishes = new ArrayList<>();
@@ -249,9 +247,10 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                     dishes.add(dish);
                     cursor.moveToNext();
                 }
-                mDishes = dishes;
                 cursor.close();
-                return mDishes;
+                mDishes.clear();
+                mDishes.addAll(dishes);
+                return dishes;
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -298,11 +297,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteAllDish() {
         try {
-            if (mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null)) {
-                mDishes = new ArrayList<>();
-                return true;
-            }
-            return false;
+            return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null);
         } catch (Exception e) {
             e.printStackTrace();
             return false;

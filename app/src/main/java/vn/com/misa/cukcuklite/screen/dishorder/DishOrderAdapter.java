@@ -105,6 +105,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
             btnMinus.setOnClickListener(this);
             btnPlus.setOnClickListener(this);
             tvQuantity.setOnClickListener(this);
+            ivDefault.setOnClickListener(this);
         }
 
         /**
@@ -140,8 +141,8 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                             //khi click vào item, nếu hiện tại số lượng là 0 thì thay đổi background
                             clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
                             lnQuantity.setVisibility(View.VISIBLE);
-                            ivDefault.setVisibility(View.GONE);
-                            ivICon.setVisibility(View.VISIBLE);
+                            ivDefault.setVisibility(View.VISIBLE);
+                            ivICon.setVisibility(View.INVISIBLE);
                         }
                         //tăng số lượng lên 1
                         tvQuantity.setText(String.valueOf(++quantity));
@@ -152,6 +153,18 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                 case R.id.tvQuantity:
                     try {
                         Toast.makeText(mContext, "nothing", Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case R.id.ivDefault:
+                    try {
+                        ivDefault.setVisibility(View.GONE);
+                        ivICon.setVisibility(View.VISIBLE);
+                        quantity = 0;
+                        tvQuantity.setText(String.valueOf(0));
+                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
+                        lnQuantity.setVisibility(View.GONE);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -171,8 +184,8 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                             //giảm số lượng nếu bằng 0 thì thay đổi background và hiện icon phủ xanh
                             clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
                             lnQuantity.setVisibility(View.GONE);
-                            ivDefault.setVisibility(View.VISIBLE);
-                            ivICon.setVisibility(View.INVISIBLE);
+                            ivDefault.setVisibility(View.INVISIBLE);
+                            ivICon.setVisibility(View.VISIBLE);
                         } else if (quantity < 0) {
                             quantity = 0;
                         }
@@ -206,13 +219,9 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                     if (quantity == 0) {
                         lnQuantity.setVisibility(View.GONE);
                         clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
-                        ivDefault.setVisibility(View.VISIBLE);
-                        ivICon.setVisibility(View.INVISIBLE);
                     } else if (quantity > 0) {
                         clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
                         lnQuantity.setVisibility(View.VISIBLE);
-                        ivDefault.setVisibility(View.GONE);
-                        ivICon.setVisibility(View.VISIBLE);
                     }
 
                     Dish dish = mDishDataSource.getDishById(billDetail.getDishId());
@@ -224,8 +233,12 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                         drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
                         ivICon.setBackground(drawable);
                         ivICon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
-                        if (billDetail.getQuantity() == 0) {
+                        if (billDetail.getQuantity() > 0) {
+                            ivDefault.setVisibility(View.VISIBLE);
                             ivICon.setVisibility(View.INVISIBLE);
+                        } else {
+                            ivICon.setVisibility(View.VISIBLE);
+                            ivDefault.setVisibility(View.GONE);
                         }
                     }
                 }

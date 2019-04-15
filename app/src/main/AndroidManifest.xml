@@ -3,6 +3,7 @@
     package="vn.com.misa.cukcuklite">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.REAL_GET_TASKS " />
 
     <application
         android:name=".CukCukLiteApplication"
@@ -25,6 +26,7 @@
         </activity>
         <activity
             android:name=".screen.main.MainActivity"
+            android:launchMode="singleTop"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screen.introduction.IntroductionActivity"

@@ -1,13 +1,9 @@
 package vn.com.misa.cukcuklite.screen.choosedishdefault;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -41,16 +37,6 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
     private Navigator mNavigator;
     private SharedPrefersManager mSharedPrefersManager;
     private ProgressDialog mDialog;
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                mPresenter.onStart();
-            }
-        }
-    };
-
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,17 +48,13 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
         mPresenter.setView(this);
         initViews();
         initEvents();
-        mPresenter.onStart();
-        //Đăng kí lắng nghe sự kiện sửa món ăn
-        LocalBroadcastManager.getInstance(this).registerReceiver(mReceiver, new IntentFilter(AddDishActivity.ACTION_OK));
     }
 
-
     @Override
-    protected void onDestroy() {
-        //hủy đăng kí lắng nghe sự kiện hủy món ăn
-        LocalBroadcastManager.getInstance(this).unregisterReceiver(mReceiver);
-        super.onDestroy();
+    protected void onResume() {
+        super.onResume();
+        //load lại dữ liệu khi màn hình quay lại
+        mPresenter.onStart();
     }
 
     /**

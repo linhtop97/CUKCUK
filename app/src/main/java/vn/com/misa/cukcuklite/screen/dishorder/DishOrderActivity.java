@@ -1,6 +1,7 @@
 package vn.com.misa.cukcuklite.screen.dishorder;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
@@ -9,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -18,6 +20,7 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
@@ -30,7 +33,8 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     private ProgressDialog mDialog;
     private Navigator mNavigator;
     private DishOrderAdapter mAdapter;
-    private TextView tvTotalMoney, tvPay, tvTable, tvPerson;
+    private TextView tvTotalMoney, tvPay;
+    private EditText tvTable, tvPerson;
     private ImageButton btnBack;
     private ConstraintLayout clWaterMark;
     private Button btnSave, btnPay;
@@ -185,7 +189,12 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      */
     @Override
     public void saveOrderSuccess() {
-        finish();
+        try {
+            checkIfIsOnlyActivity();
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -210,8 +219,20 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                 break;
             case R.id.btnSave:
                 try {
-                    mBill.setTotalMoney(Integer.parseInt(tvTotalMoney.getText().toString()));
-                    mPresenter.saveOrder(mBill, mAdapter.getListData());
+                    int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
+                    if (totalMoney > 0) {
+                        mBill.setTotalMoney(totalMoney);
+                        if (!tvTable.getText().toString().isEmpty()) {
+                            mBill.setTableNumber(Integer.parseInt(tvTable.getText().toString()));
+                        }
+                        if (!tvPerson.getText().toString().isEmpty()) {
+                            mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
+                        }
+                        mPresenter.saveOrder(mBill, mAdapter.getListData());
+                    } else {
+                        mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
+                    }
+
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -221,12 +242,38 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             case R.id.tvTable:
                 break;
             case R.id.btnBack:
-                finish();
+                try {
+                    checkIfIsOnlyActivity();
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btnPay:
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * Phương thức kiểm tra liệu đây có phải là activity duy nhất đang hoạt động
+     * nếu đúng thì khi bấm nút trở về sẽ mở màn hình main activity
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     */
+    private void checkIfIsOnlyActivity() {
+        try {
+            if (isTaskRoot()) {
+                startActivity(new Intent(this, MainActivity.class));
+            }
+        } catch (SecurityException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        checkIfIsOnlyActivity();
+        super.onBackPressed();
     }
 }

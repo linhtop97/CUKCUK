@@ -9,8 +9,8 @@ import android.support.v7.app.AppCompatActivity;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
+import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.introduction.IntroductionActivity;
-import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -18,15 +18,18 @@ import vn.com.misa.cukcuklite.utils.Navigator;
  * Màn hình chờ
  * Created_by Nguyễn Bá Linh on 03/04/2019
  */
-public class SplashActivity extends AppCompatActivity {
+public class SplashActivity extends AppCompatActivity implements ISplashContract.IView {
 
     private static final String TAG = "SplashActivity";
     private Navigator mNavigator;
+    private SplashPresenter mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        mPresenter = new SplashPresenter(this);
+        mPresenter.setView(this);
         mNavigator = new Navigator(this);
         startMainScreen();
     }
@@ -53,8 +56,7 @@ public class SplashActivity extends AppCompatActivity {
                     //thì hiển thị màn hình chính của ứng dụng
                     if (!isLoginBefore && isAlreadyHasData) {
                         Intent intent = new Intent();
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setClass(getApplicationContext(), MainActivity.class);
+                        intent.setClass(getApplicationContext(), DishOrderActivity.class);
                         mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
                         finish();
                     }
@@ -63,7 +65,6 @@ public class SplashActivity extends AppCompatActivity {
                     //thì hiển thị màn hình chọn loại nhà hàng
                     if (isLoginBefore && !isAlreadyHasData) {
                         Intent intent = new Intent();
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
                         intent.setClass(getApplicationContext(), ChooseRestaurantTypeActivity.class);
                         intent.putExtra(AppConstants.EXTRA_LOGIN_SUCCESS, true);
                         mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
@@ -73,15 +74,45 @@ public class SplashActivity extends AppCompatActivity {
                     //hiển thị màn hình chính của ứng dụng
                     if (isLoginBefore && isAlreadyHasData) {
                         Intent intent = new Intent();
-                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                        intent.setClass(getApplicationContext(), MainActivity.class);
+                        intent.setClass(getApplicationContext(), DishOrderActivity.class);
                         mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
                         finish();
                     }
                 }
             }, SPLASH_DISPLAY_LENGTH);
+            //
+            mPresenter.onStart();
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Phương thức nhận 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @param message - thông điệp được nhận
+     */
+    @Override
+    public void receiveMessage(int message) {
+
+    }
+
+    /**
+     * Phương thức hiển thị 1 dialog chờ xử lý tác vụ với 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     */
+    @Override
+    public void showLoading() {
+
+    }
+
+    /**
+     * Phương thức ẩn/đóng dialog đang chờ xử lý khi thực hiện xong tác vụ
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     */
+    @Override
+    public void hideLoading() {
+
     }
 }

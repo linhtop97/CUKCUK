@@ -1,16 +1,13 @@
 package vn.com.misa.cukcuklite.screen.menu;
 
 import android.app.ProgressDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -43,18 +40,6 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
     private ConstraintLayout clWaterMark;
     private TextView tvAddDish;
 
-    private BroadcastReceiver mReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            String action = intent.getAction();
-            if (action != null) {
-                if (action.equals(AddDishActivity.ACTION_OK)) {
-                    mPresenter.onStart();
-                }
-            }
-        }
-    };
-
     public static MenuFragment newInstance() {
         return new MenuFragment();
     }
@@ -68,8 +53,6 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
         mPresenter.setView(this);
         initViews(view);
         initEvents();
-        mPresenter.onStart();
-        LocalBroadcastManager.getInstance(mContext).registerReceiver(mReceiver, new IntentFilter(AddDishActivity.ACTION_OK));
         return view;
     }
 
@@ -91,17 +74,12 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
         });
     }
 
-
-    /**
-     * Created_by Nguyễn Bá Linh on 10/04/2019
-     */
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        //hủy đăng kí lắng nghe sự kiện món ăn thay đổi
-        LocalBroadcastManager.getInstance(mContext).unregisterReceiver(mReceiver);
+    public void onResume() {
+        super.onResume();
+        //load dữ liệu khi màn hình trở lại
+        mPresenter.onStart();
     }
-
 
     /**
      * Phương thức khởi tạo view

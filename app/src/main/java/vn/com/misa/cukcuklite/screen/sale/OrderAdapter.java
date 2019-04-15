@@ -4,25 +4,26 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import java.util.Random;
-
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
-import vn.com.misa.cukcuklite.data.bill.BillDataSource;
-import vn.com.misa.cukcuklite.data.models.Bill;
+import vn.com.misa.cukcuklite.data.models.Order;
 
-public class OrderAdapter extends ListAdapter<Bill> {
+public class OrderAdapter extends ListAdapter<Order> {
 
+    private static final String TAG = "OrderAdapter";
     private IOrderClickListener mIOrderClickListener;
-    private BillDataSource mBillDataSource;
 
     /**
      * Là phương thức khởi tạo cho ListAdapter
@@ -37,12 +38,14 @@ public class OrderAdapter extends ListAdapter<Bill> {
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        return super.onCreateViewHolder(viewGroup, i);
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_order, viewGroup, false);
+        return new OrderHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
-        super.onBindViewHolder(viewHolder, i);
+        OrderHolder orderHolder = (OrderHolder) viewHolder;
+        orderHolder.bind(mListData.get(i));
     }
 
     /**
@@ -56,11 +59,11 @@ public class OrderAdapter extends ListAdapter<Bill> {
     }
 
     public interface IOrderClickListener {
-        void orderClick(String billId);
+        void orderClick(String orderId);
 
-        void cancelOrder(String billId);
+        void cancelOrder(String orderId);
 
-        void payOrder(String billId);
+        void payOrder(String orderId);
     }
 
     public class OrderHolder extends RecyclerView.ViewHolder {
@@ -80,17 +83,31 @@ public class OrderAdapter extends ListAdapter<Bill> {
          * Phương thức khởi tạo gắn các giá trị từ hóa đơn vào view
          * Created_by Nguyễn Bá Linh on 27/03/2019
          *
-         * @param bill - hóa đơn
+         * @param order - hóa đơn
          */
-        void bind(Bill bill) {
-            if (bill == null) {
+        void bind(Order order) {
+            if (order == null) {
                 return;
             }
-            if (bill.getBillId() != null) {
+            if (order.getBillId() != null) {
+                Log.d(TAG, "bind: " + order.getTableNumber());
                 //Lấy danh sách tên món ăn chi tiết, số lượng, tổng tiền của
-                tvTotalMoney.setText(String.valueOf(bill.getTotalMoney()));
-                drawable.setColorFilter(Color.parseColor(mContext.getResources().getStringArray(R.array.color_list)[new Random().nextInt(32)]), PorterDuff.Mode.SRC);
-                ivBackground.setBackground(drawable);
+                tvTotalMoney.setText(String.valueOf(order.getTotalMoney()));
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                    tvContent.setText(Html.fromHtml(order.getContent(), Html.FROM_HTML_MODE_COMPACT));
+                } else {
+                    tvContent.setText(Html.fromHtml(order.getContent()));
+                }
+                tvPerson.setText(String.valueOf(order.getNumberCustomer()));
+                if (order.getTableNumber() > 0) {
+                    tvTable.setText(String.valueOf(order.getTableNumber()));
+                    drawable.setColorFilter(Color.parseColor(order.getColorCode()), PorterDuff.Mode.SRC);
+                    ivBackground.setBackground(drawable);
+                } else {
+                    drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
+                    tvTable.setText("");
+                    ivBackground.setBackground(drawable);
+                }
             }
         }
 

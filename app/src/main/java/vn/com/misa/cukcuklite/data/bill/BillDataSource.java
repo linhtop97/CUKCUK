@@ -2,16 +2,20 @@ package vn.com.misa.cukcuklite.data.bill;
 
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import vn.com.misa.cukcuklite.CukCukLiteApplication;
+import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Order;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
@@ -26,12 +30,25 @@ import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtil
  */
 public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils {
 
+    private static final String TAG = "BillDataSource";
+    private static BillDataSource sInstance;
     private SQLiteDBManager mSQLiteDBManager;
     private DishDataSource mDishDataSource;
 
-    public BillDataSource() {
+    private BillDataSource() {
         mSQLiteDBManager = SQLiteDBManager.getInstance();
         mDishDataSource = DishDataSource.getInstance();
+    }
+
+    public static BillDataSource getInstance() {
+        if (sInstance == null) {
+            synchronized (BillDataSource.class) {
+                if (sInstance == null) {
+                    sInstance = new BillDataSource();
+                }
+            }
+        }
+        return sInstance;
     }
 
     /**
@@ -45,17 +62,21 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     @Override
     public List<BillDetail> initNewBillDetailList(String billId) {
         try {
-            List<BillDetail> billDetails = new ArrayList<>();
-            List<String> dishIds = mDishDataSource.getAllDishId();
-            if (dishIds != null) {
-                for (int i = 0; i < dishIds.size(); i++) {
-                    BillDetail billDetail = new BillDetail.Builder().
-                            setBillDetailId(UUID.randomUUID().toString())
-                            .setBillId(billId)
-                            .setDishId(dishIds.get(i)).build();
-                    billDetails.add(billDetail);
+            if (billId != null) {
+                List<BillDetail> billDetails = new ArrayList<>();
+                List<String> dishIds = mDishDataSource.getAllDishId();
+                if (dishIds != null) {
+                    for (int i = 0; i < dishIds.size(); i++) {
+                        BillDetail billDetail = new BillDetail.Builder().
+                                setBillDetailId(UUID.randomUUID().toString())
+                                .setBillId(billId)
+                                .setDishId(dishIds.get(i)).build();
+                        billDetails.add(billDetail);
+                    }
+                    return billDetails;
                 }
-                return billDetails;
+            } else {
+                return null;
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -176,6 +197,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                         .setQuantity(cursor.getInt(cursor.getColumnIndex(COLUMN_QUANTITY)))
                         .setDishId(cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID)))
                         .setTotalMoney(cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_MONEY)))
+                        .setTotalMoney(cursor.getInt(cursor.getColumnIndex(COLUMN_TOTAL_MONEY)))
                         .build();
                 billDetails.add(billDetail);
                 cursor.moveToNext();
@@ -204,6 +226,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                         .setBillNumber(cursor.getInt(cursor.getColumnIndex(COLUMN_BILL_NUMBER)))
                         .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
                         .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
+                        .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))
                         .build();
                 bills.add(bill);
                 cursor.moveToNext();
@@ -223,20 +246,47 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      */
     @Override
     public List<Order> getAllOrder() {
-        List<Order> orders = new ArrayList<>();
-        List<Bill> bills = getAllBillUnpaid();
-        if (bills != null) {
-            for (Bill bill : bills) {
-                List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
-                if (billDetails != null) {
-                    int size = billDetails.size();
-                    String[] dishNames= new String[size];
-                    String[] quantities = new String[size];
-                    for (BillDetail billDetail : billDetails) {
-
+        try {
+            Log.d(TAG, "getAllOrder: ");
+            List<Order> orders = new ArrayList<>();
+            List<Bill> bills = getAllBillUnpaid();
+            int colorId = 0;
+            String[] color = CukCukLiteApplication.getInstance().getResources().getStringArray(R.array.color_list);
+            if (bills != null) {
+                List<Dish> dishes = DishDataSource.getInstance().getAllDish();
+                for (Bill bill : bills) {
+                    List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
+                    StringBuilder content = new StringBuilder();
+                    if (billDetails != null) {
+                        for (BillDetail billDetail : billDetails) {
+                            for (Dish d : dishes) {
+                                if (d.getDishId().equals(billDetail.getDishId())) {
+                                    content.append(d.getDishName());
+                                    break;
+                                }
+                            }
+                            content.append(" <font color=#0973b9>(").append(billDetail.getQuantity()).append(")</font>").append(", ");
+                        }
                     }
+
+                    String colorCode = null;
+                    if (bill.getTableNumber() > 0) {
+                        colorCode = color[colorId];
+                        colorId++;
+                    }
+                    content = content.replace(content.length() - 2, content.length(), ".");
+                    orders.add(new Order.Builder().setBillId(bill.getBillId())
+                            .setContent(content.toString())
+                            .setColorCode(colorCode)
+                            .setNumberCustomer(bill.getNumberCustomer())
+                            .setTableNumber(bill.getTableNumber())
+                            .setTotalMoney(bill.getTotalMoney()).build());
+
                 }
+                return orders;
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return null;
     }

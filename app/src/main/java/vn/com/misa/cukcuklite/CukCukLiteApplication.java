@@ -9,19 +9,30 @@ import java.io.File;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 
 import static vn.com.misa.cukcuklite.data.database.IDBUtils.DB_NAME;
 
 public class CukCukLiteApplication extends Application {
 
+    private static CukCukLiteApplication sInstance;
+
+    /**
+     * Phương thức láy context app
+     * Created_by Nguyễn Bá Linh on 15/04/2019
+     *
+     * @return - app context
+     */
+    public static CukCukLiteApplication getInstance() {
+        return sInstance;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
         try {
+            sInstance = this;
             SQLiteDBManager.getInstance(this);
             initDatabaseStructure();
-            initDataCache();
             //cho phép đặt nguồn ảnh là vector
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
             //đặt font chữ mặc định cho thư viện
@@ -33,14 +44,6 @@ public class CukCukLiteApplication extends Application {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    /**
-     * Phương thức khởi tạo dữ liệu cache cho ứng dụng
-     * Created_by Nguyễn Bá Linh on 13/04/2019
-     */
-    private void initDataCache() {
-        DishDataSource.getInstance();
     }
 
     /**

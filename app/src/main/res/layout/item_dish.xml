@@ -71,6 +71,7 @@
     <ImageView
         android:id="@+id/ivEnter"
         android:layout_width="40dp"
+        android:padding="@dimen/padding_micro"
         android:layout_height="@dimen/item_dish_height"
         android:contentDescription="@string/image_description"
         app:layout_constraintBottom_toBottomOf="parent"

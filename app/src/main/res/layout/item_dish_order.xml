@@ -13,21 +13,20 @@
     android:paddingBottom="@dimen/padding_small">
 
     <ImageView
-        android:id="@+id/ivIcon"
-        android:layout_width="@dimen/dish_image_height"
+        android:id="@+id/ivDefault"
+        android:layout_width="@dimen/dish_image_width"
         android:layout_height="@dimen/dish_image_width"
-        android:background="@drawable/background_dish_icon"
-        android:clickable="false"
+        android:background="@drawable/ic_selected"
         android:contentDescription="@string/image_description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ImageView
-        android:id="@+id/ivDefault"
-        android:layout_width="@dimen/dish_image_width"
+        android:id="@+id/ivIcon"
+        android:layout_width="@dimen/dish_image_height"
         android:layout_height="@dimen/dish_image_width"
-        android:background="@drawable/ic_selected"
+        android:background="@drawable/background_dish_icon"
         android:clickable="false"
         android:contentDescription="@string/image_description"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -88,9 +87,9 @@
             android:layout_marginStart="@dimen/margin_small"
             android:background="@drawable/selector_white_blue_with_radius"
             android:gravity="center"
-            android:text="@string/price_default"
             android:minWidth="@dimen/min_width_tv_number_select"
-            android:padding="@dimen/padding_small" />
+            android:padding="@dimen/padding_small"
+            android:text="@string/price_default" />
 
         <Button
             android:id="@+id/btnPlus"

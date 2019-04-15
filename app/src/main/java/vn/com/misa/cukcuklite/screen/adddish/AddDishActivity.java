@@ -268,9 +268,6 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      */
     private void finishTask() {
         try {
-            Intent intent = new Intent(ACTION_OK);
-            intent.putExtra(AppConstants.EXTRA_DISH, mDish);
-            LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
             finish();
         } catch (Exception e) {
             e.printStackTrace();
