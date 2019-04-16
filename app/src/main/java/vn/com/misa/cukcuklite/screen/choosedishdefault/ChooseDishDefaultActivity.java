@@ -198,6 +198,7 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
         try {
             mSharedPrefersManager.setAlreadyHasData(true);
             Intent intent = new Intent();
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             intent.setClass(this, MainActivity.class);
             mNavigator.startActivity(intent);
         } catch (Exception e) {

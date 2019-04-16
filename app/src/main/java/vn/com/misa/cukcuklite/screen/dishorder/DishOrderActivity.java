@@ -20,7 +20,10 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
+import vn.com.misa.cukcuklite.screen.pay.PayActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -247,8 +250,28 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                 mBill = bill;
                 tvTable.setText(bill.getTableNumber() > 0 ? String.valueOf(bill.getTableNumber()) : "");
                 tvPerson.setText(bill.getNumberCustomer() > 0 ? String.valueOf(bill.getNumberCustomer()) : "");
+                tvTotalMoney.setText(String.valueOf(bill.getTotalMoney()));
                 mPresenter.setListDishOrder(bill.getBillId());
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    /**
+     * Phương thức thanh toán hóa đơn qua hóa đơn id
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @param billId - hóa đơn Id
+     */
+    @Override
+    public void pay(String billId) {
+        try {
+            Intent intent = new Intent();
+            intent.setClass(this, PayActivity.class);
+            intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
+            mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -263,28 +286,9 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.tvPay:
-                break;
             case R.id.btnSave:
                 try {
-                    int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
-                    if (totalMoney > 0) {
-                        mBill.setTotalMoney(totalMoney);
-                        if (!tvTable.getText().toString().isEmpty()) {
-                            mBill.setTableNumber(Integer.parseInt(tvTable.getText().toString()));
-                        }
-                        if (!tvPerson.getText().toString().isEmpty()) {
-                            mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
-                        }
-                        if (mIsEdit) {
-                            mPresenter.updateOrder(mBill, mAdapter.getListData());
-                        } else {
-                            mPresenter.saveOrder(mBill, mAdapter.getListData());
-                        }
-                    } else {
-                        mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
-                    }
-
+                    saveOrder(false);
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
                 }
@@ -301,11 +305,53 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                     e.printStackTrace();
                 }
                 break;
+            case R.id.tvPay:
             case R.id.btnPay:
+                try {
+                    if (SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
+                        saveOrder(true);
+                    } else {
+                        int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
+                        if (totalMoney > 0) {
+                            mNavigator.startActivity(LoginActivity.class);
+                        } else {
+                            mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             default:
                 break;
         }
+    }
+
+    /**
+     * Phương thức lưu order
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @param isPayNow - nếu isPayNow = true thì sẽ lưu và thanh toán, isPayNow = false sẽ chỉ lưu
+     */
+    private void saveOrder(boolean isPayNow) {
+        int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
+        if (totalMoney > 0) {
+            mBill.setTotalMoney(totalMoney);
+            if (!tvTable.getText().toString().isEmpty()) {
+                mBill.setTableNumber(Integer.parseInt(tvTable.getText().toString()));
+            }
+            if (!tvPerson.getText().toString().isEmpty()) {
+                mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
+            }
+            if (mIsEdit) {
+                mPresenter.updateOrder(mBill, mAdapter.getListData(), isPayNow);
+            } else {
+                mPresenter.saveOrder(mBill, mAdapter.getListData(), isPayNow);
+            }
+        } else {
+            mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
+        }
+
     }
 
     /**

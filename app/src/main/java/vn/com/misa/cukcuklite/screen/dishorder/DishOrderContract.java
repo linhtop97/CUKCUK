@@ -17,17 +17,17 @@ public interface DishOrderContract {
         void saveOrderFailed();
 
         void setBill(Bill bill);
+
+        void pay(String billId);
     }
 
     interface IPresenter extends IBasePresenter<IView> {
-        void saveOrder(Bill bill, List<BillDetail> billDetails);
-
-        void pay();
+        void saveOrder(Bill bill, List<BillDetail> billDetails, boolean isPayNow);
 
         void setListDishOrder(String billId);
 
         void getBillById(String billId);
 
-        void updateOrder(Bill bill, List<BillDetail> billDetails);
+        void updateOrder(Bill bill, List<BillDetail> billDetails, boolean isPayNow);
     }
 }

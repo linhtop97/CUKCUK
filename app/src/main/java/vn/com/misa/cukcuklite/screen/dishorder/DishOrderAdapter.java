@@ -216,31 +216,28 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                 mBillDetail = billDetail;
                 if (billDetail.getDishId() != null) {
                     int quantity = billDetail.getQuantity();
-                    if (quantity == 0) {
-                        lnQuantity.setVisibility(View.GONE);
-                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
-                    } else if (quantity > 0) {
-                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
-                        lnQuantity.setVisibility(View.VISIBLE);
-                    }
-
                     Dish dish = mDishDataSource.getDishById(billDetail.getDishId());
                     if (dish != null) {
-                        mPrice = dish.getPrice();
                         tvDishName.setText(dish.getDishName());
-                        tvPrice.setText(String.valueOf(dish.getPrice()));
                         Drawable drawable = mContext.getResources().getDrawable(R.drawable.background_dish_icon);
                         drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
                         ivICon.setBackground(drawable);
                         ivICon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
-                        if (billDetail.getQuantity() > 0) {
+                        if (quantity > 0) {
+                            mPrice = billDetail.getTotalMoney() / quantity;
                             tvQuantity.setText(String.valueOf(billDetail.getQuantity()));
                             ivDefault.setVisibility(View.VISIBLE);
                             ivICon.setVisibility(View.INVISIBLE);
+                            clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_button_gray));
+                            lnQuantity.setVisibility(View.VISIBLE);
                         } else {
+                            mPrice = dish.getPrice();
                             ivICon.setVisibility(View.VISIBLE);
                             ivDefault.setVisibility(View.GONE);
+                            lnQuantity.setVisibility(View.GONE);
+                            clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
                         }
+                        tvPrice.setText(String.valueOf(mPrice));
                     }
                 }
             } catch (Resources.NotFoundException e) {

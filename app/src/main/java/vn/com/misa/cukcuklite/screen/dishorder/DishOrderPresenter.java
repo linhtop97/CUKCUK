@@ -34,15 +34,21 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
      *
      * @param bill        - hóa đơn
      * @param billDetails - danh sách hóa đơn chi tiết
+     * @param isPayNow    - kiểm tra xem sau khi thêm có thanh toán luôn không
      */
     @Override
-    public void saveOrder(Bill bill, List<BillDetail> billDetails) {
+    public void saveOrder(Bill bill, List<BillDetail> billDetails, boolean isPayNow) {
         try {
             mView.showLoading();
             List<BillDetail> validBillDetailList = getValidBillDetailList(billDetails);
             if (validBillDetailList != null) {
                 if (mBillDataSource.addBill(bill, validBillDetailList)) {
-                    mView.saveOrderSuccess();
+                    if (isPayNow) {
+                        //nếu thanh toán luôn thì thanh toán
+                        mView.pay(bill.getBillId());
+                    } else {
+                        mView.saveOrderSuccess();
+                    }
                 } else {
                     mView.saveOrderFailed();
                 }
@@ -53,11 +59,6 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
             e.printStackTrace();
         }
         mView.saveOrderFailed();
-    }
-
-    @Override
-    public void pay() {
-
     }
 
     /**
@@ -106,13 +107,17 @@ public class DishOrderPresenter implements DishOrderContract.IPresenter {
      * @param billDetails - danh sách hóa đơn chi tiết
      */
     @Override
-    public void updateOrder(Bill bill, List<BillDetail> billDetails) {
+    public void updateOrder(Bill bill, List<BillDetail> billDetails, boolean isPayNow) {
         try {
             mView.showLoading();
             List<BillDetail> validBillDetailList = getValidBillDetailList(billDetails);
             if (validBillDetailList != null) {
                 if (mBillDataSource.updateBill(bill, validBillDetailList)) {
-                    mView.saveOrderSuccess();
+                    if (isPayNow) {
+                        mView.pay(bill.getBillId());
+                    } else {
+                        mView.saveOrderSuccess();
+                    }
                 } else {
                     mView.saveOrderFailed();
                 }

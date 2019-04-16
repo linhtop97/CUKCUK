@@ -6,6 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
+import vn.com.misa.cukcuklite.data.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
@@ -23,6 +24,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     private static DishDataSource sInstance;
 
     private SQLiteDBManager mSQLiteDBManager;
+
+    private BillDataSource mBillDataSource;
 
     private List<Dish> mDishes;
 
@@ -152,20 +155,38 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteDishById(String dishId) {
         try {
-            ContentValues contentValues = new ContentValues();
-            contentValues.put(COLUMN_STATE, 0);
-            if (mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
-                    COLUMN_DISH_ID + "=?", new String[]{dishId})) {
-                if (mDishes != null) {
-                    int size = mDishes.size();
-                    for (int i = 0; i < size; i++) {
-                        if (mDishes.get(i).getDishId().equals(dishId)) {
-                            mDishes.remove(i);
+            mBillDataSource = BillDataSource.getInstance();
+            boolean isUsing = false;
+            List<String> dishIdUsing = mBillDataSource.getAllDishIdFromAllBillDetail();
+            if (dishIdUsing != null) {
+                int size = dishIdUsing.size();
+                if (size > 0) {
+                    for (String id : dishIdUsing) {
+                        if (id.equals(dishId)) {
+                            isUsing = true;
                             break;
                         }
                     }
                 }
-                return true;
+            }
+            if (isUsing) {
+                return false;
+            } else {
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_STATE, 0);
+                if (mSQLiteDBManager.updateRecord(DISH_TBL_NAME, contentValues,
+                        COLUMN_DISH_ID + "=?", new String[]{dishId})) {
+                    if (mDishes != null) {
+                        int size = mDishes.size();
+                        for (int i = 0; i < size; i++) {
+                            if (mDishes.get(i).getDishId().equals(dishId)) {
+                                mDishes.remove(i);
+                                break;
+                            }
+                        }
+                    }
+                    return true;
+                }
             }
             return false;
         } catch (Exception e) {

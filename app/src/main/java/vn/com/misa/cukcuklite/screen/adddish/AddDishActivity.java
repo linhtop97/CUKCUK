@@ -151,6 +151,10 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
             mDish = new Dish.Builder().setColorCode(AppConstants.COLOR_DEFAULT)
                     .setIconPath(AppConstants.ICON_DEFAULT)
                     .build();
+            Drawable drawable = getResources().getDrawable(R.drawable.background_dish_icon);
+            drawable.setColorFilter(Color.parseColor(AppConstants.COLOR_DEFAULT), PorterDuff.Mode.SRC);
+            ivColor.setBackground(drawable);
+            ivIcon.setBackground(drawable);
             mPresenter.onStart();
             tvTitle.setText(R.string.add_dish);
 

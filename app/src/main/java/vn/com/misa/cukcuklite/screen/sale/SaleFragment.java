@@ -20,9 +20,12 @@ import java.util.List;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Order;
+import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.dialogs.delete.ConfirmDeleteDialog;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
+import vn.com.misa.cukcuklite.screen.pay.PayActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -42,6 +45,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView, Order
     private TextView tvAddOrder;
     private String mBillId;
     private Navigator mNavigator;
+    private SharedPrefersManager mPrefersManager;
 
     public static SaleFragment newInstance() {
         return new SaleFragment();
@@ -52,6 +56,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView, Order
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sale, container, false);
         mPresenter = new SalePresenter();
+        mPrefersManager = SharedPrefersManager.getInstance(mContext);
         mPresenter.setView(this);
         mNavigator = new Navigator(this);
         initViews(view);
@@ -225,14 +230,26 @@ public class SaleFragment extends Fragment implements ISaleContract.IView, Order
     }
 
     /**
-     * Phương thức thanh toán/thu tiền order
+     * Phương thức thanh toán/thu tiền order, nếu người dùng chưa đăng nhập thì
+     * phải đăng nhập mới cho thanh toán
      * Created_by Nguyễn Bá Linh on 15/04/2019
      *
      * @param billId - id của hóa đơn
      */
     @Override
     public void payOrder(String billId) {
-
+        try {
+            if (mPrefersManager.getIsLoginSuccess()) {
+                Intent intent = new Intent();
+                intent.setClass(mContext, PayActivity.class);
+                intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
+                mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+            } else {
+                mNavigator.startActivity(LoginActivity.class, Navigator.ActivityTransition.NONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

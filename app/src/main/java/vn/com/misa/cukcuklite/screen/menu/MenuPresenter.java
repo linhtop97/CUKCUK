@@ -1,6 +1,11 @@
 package vn.com.misa.cukcuklite.screen.menu;
 
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.models.Dish;
 
 /**
  * Presenter cho màn hình menu
@@ -37,7 +42,16 @@ public class MenuPresenter implements IMenuContract.IPresenter {
         //lấy danh sách các món ăn và hiển thị ra màn hình
         try {
             mView.showLoading();
-            mView.showDish(mDishDataSource.getAllDish());
+            List<Dish> dishes = mDishDataSource.getAllDish();
+            if (dishes != null && dishes.size() > 2) {
+                Collections.sort(dishes, new Comparator<Dish>() {
+                    @Override
+                    public int compare(Dish o1, Dish o2) {
+                        return o1.getDishName().compareToIgnoreCase(o2.getDishName());
+                    }
+                });
+                mView.showDish(dishes);
+            }
             mView.hideLoading();
         } catch (Exception e) {
             e.printStackTrace();

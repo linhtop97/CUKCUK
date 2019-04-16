@@ -171,7 +171,87 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                             return false;
                         }
                     }
-//
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Phương thúc lấy toàn bộ id của món ăn đã sử dụng cho việc thanh toán
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @return - danh sách id của món ăn đã sử dụng
+     */
+    @Override
+    public List<String> getAllDishIdFromAllBillDetail() {
+        List<String> listDishId = null;
+        try {
+            listDishId = new ArrayList<>();
+            String sql = String.format(
+                    "SELECT %s FROM " + BILL_DETAIL_TBL_NAME, COLUMN_DISH_ID);
+            Cursor cursor = mSQLiteDBManager.getRecords(sql, null);
+            cursor.moveToFirst();
+            while (!cursor.isAfterLast()) {
+                String dishId = cursor.getString(cursor.getColumnIndex(COLUMN_DISH_ID));
+                listDishId.add(dishId);
+                cursor.moveToNext();
+            }
+            cursor.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return listDishId;
+    }
+
+    /**
+     * Lấy danh số lượng hóa đơn đã thanh toán
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @return - số lượng hóa đơn đã thanh toán
+     */
+    @Override
+    public int countBillWasPaid() {
+        try {
+            String sql = String.format("select count(*) form %s where %s = '%s' ", BILL_TBL_NAME, COLUMN_STATE, AppConstants.PAID);
+            Cursor cursor = mSQLiteDBManager.getRecords(sql, null);
+            return cursor == null ? 0 : cursor.getCount();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Phương thức thanh toán hóa đơn
+     * Created_by Nguyễn Bá Linh on 17/04/2019
+     *
+     * @param bill
+     */
+    @Override
+    public boolean payBill(Bill bill) {
+        try {
+            if (bill != null) {
+                String billId = bill.getBillId();
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_BILL_ID, billId);
+                contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
+                contentValues.put(COLUMN_DATE_CREATED, String.valueOf(bill.getDateCreated()));
+                contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
+                contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
+                contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
+                contentValues.put(COLUMN_CUSTOMER_PAY, bill.getCustomerPay());
+                contentValues.put(COLUMN_STATE, AppConstants.PAID);
+                if (mSQLiteDBManager.updateRecord(BILL_TBL_NAME, contentValues
+                        , COLUMN_BILL_ID + "=?", new String[]{billId})) {
+                    removeOrderInCache(billId);
+                    return true;
                 } else {
                     return false;
                 }

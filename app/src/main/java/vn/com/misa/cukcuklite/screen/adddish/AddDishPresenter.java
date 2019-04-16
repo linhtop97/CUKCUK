@@ -98,7 +98,7 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
         if (mDishDataSource.deleteDishById(dishId)) {
             mView.deleteDishSuccess();
         } else {
-            mView.receiveMessage(R.string.something_went_wrong);
+            mView.receiveMessage(R.string.dish_is_using);
         }
     }
 

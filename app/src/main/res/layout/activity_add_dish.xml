@@ -284,7 +284,7 @@
     <android.support.constraint.ConstraintLayout
         android:id="@+id/clButtonAction"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/action_button_height"
+        android:layout_height="@dimen/action_height"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="@dimen/margin_small"
         android:paddingLeft="@dimen/padding_normal"

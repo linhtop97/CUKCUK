@@ -52,6 +52,9 @@
         <activity
             android:name=".screen.dishorder.DishOrderActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.pay.PayActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

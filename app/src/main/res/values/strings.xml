@@ -133,6 +133,18 @@
     <string name="cancel_short">Hủy</string>
     <string name="you_have_not_select_dish_yet">Bạn chưa chọn món ăn nào!</string>
     <string name="confirm_delete_order">Bạn có muốn hủy Order này không?</string>
+    <string name="dish_is_using">Món ăn của bạn đã được sử dụng trong hóa đơn, không thể xóa!</string>
+    <string name="bill">HÓA ĐƠN</string>
+    <string name="num">Số:</string>
+    <string name="date">Ngày: </string>
+    <string name="good_name">Hàng hóa</string>
+    <string name="quatity">SL</string>
+    <string name="unit_price">Đơn giá</string>
+    <string name="into_money">Thành tiền</string>
+    <string name="the_money_have_to_pay">Số tiền phải trả</string>
+    <string name="guest_pay">Tiền khách đưa</string>
+    <string name="money_returned_to_guest">Tiền trả lại cho khách</string>
+    <string name="the_amount_of_guest_money_must_not_be_less_than_the_amount_payable">số tiền khách đưa không được nhỏ hơn số tiền phải trả</string>
 
 
     <string-array name="color_list">

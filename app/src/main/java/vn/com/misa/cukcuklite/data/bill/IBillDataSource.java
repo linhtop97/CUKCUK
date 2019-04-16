@@ -35,4 +35,10 @@ public interface IBillDataSource {
     Bill getBillById(String billId);
 
     boolean updateBill(Bill bill, List<BillDetail> validBillDetailList);
+
+    List<String> getAllDishIdFromAllBillDetail();
+
+    int countBillWasPaid();
+
+    boolean payBill(Bill bill);
 }
