@@ -234,6 +234,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                         ivICon.setBackground(drawable);
                         ivICon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
                         if (billDetail.getQuantity() > 0) {
+                            tvQuantity.setText(String.valueOf(billDetail.getQuantity()));
                             ivDefault.setVisibility(View.VISIBLE);
                             ivICon.setVisibility(View.INVISIBLE);
                         } else {

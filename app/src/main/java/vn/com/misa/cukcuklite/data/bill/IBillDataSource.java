@@ -29,4 +29,10 @@ public interface IBillDataSource {
     boolean cancelOrder(String billId);
 
     void getOrderUnpaidByBillId(String billId);
+
+    List<BillDetail> initBillDetailList(String billId);
+
+    Bill getBillById(String billId);
+
+    boolean updateBill(Bill bill, List<BillDetail> validBillDetailList);
 }

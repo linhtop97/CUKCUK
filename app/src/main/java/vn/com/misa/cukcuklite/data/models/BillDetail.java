@@ -16,7 +16,7 @@ public class BillDetail {
 
     private int TotalMoney;
 
-    private String name;
+    private String Name;
 
     public BillDetail(Builder builder) {
         BillDetailId = builder.BillDetailId;
@@ -24,7 +24,7 @@ public class BillDetail {
         DishId = builder.DishId;
         Quantity = builder.Quantity;
         TotalMoney = builder.TotalMoney;
-        name = builder.name;
+        Name = builder.Name;
     }
 
     public String getBillDetailId() {
@@ -68,11 +68,11 @@ public class BillDetail {
     }
 
     public String getName() {
-        return name;
+        return Name;
     }
 
     public void setName(String name) {
-        this.name = name;
+        Name = name;
     }
 
     public static class Builder {
@@ -81,10 +81,10 @@ public class BillDetail {
         private String DishId;
         private int Quantity;
         private int TotalMoney;
-        private String name;
+        private String Name;
 
         public Builder setName(String name) {
-            this.name = name;
+            Name = name;
             return this;
         }
 

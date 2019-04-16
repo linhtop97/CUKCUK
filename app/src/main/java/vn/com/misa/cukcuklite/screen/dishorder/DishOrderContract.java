@@ -15,11 +15,19 @@ public interface DishOrderContract {
         void saveOrderSuccess();
 
         void saveOrderFailed();
+
+        void setBill(Bill bill);
     }
 
     interface IPresenter extends IBasePresenter<IView> {
         void saveOrder(Bill bill, List<BillDetail> billDetails);
 
         void pay();
+
+        void setListDishOrder(String billId);
+
+        void getBillById(String billId);
+
+        void updateOrder(Bill bill, List<BillDetail> billDetails);
     }
 }

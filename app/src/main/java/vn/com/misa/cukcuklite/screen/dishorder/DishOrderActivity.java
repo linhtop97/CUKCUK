@@ -104,8 +104,9 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             String billId = intent.getStringExtra(AppConstants.EXTRA_BILL_ID);
             if (billId != null) {
                 mIsEdit = true;
-                mPresenter = new DishOrderPresenter(billId);
+                mPresenter = new DishOrderPresenter(null);
                 mPresenter.setView(this);
+                mPresenter.getBillById(billId);
             } else {
                 mIsEdit = false;
                 mBill = new Bill();
@@ -234,6 +235,26 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     }
 
     /**
+     * Phương thức gán hóa đơn
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @param bill - hóa đơn
+     */
+    @Override
+    public void setBill(Bill bill) {
+        try {
+            if (bill != null) {
+                mBill = bill;
+                tvTable.setText(bill.getTableNumber() > 0 ? String.valueOf(bill.getTableNumber()) : "");
+                tvPerson.setText(bill.getNumberCustomer() > 0 ? String.valueOf(bill.getNumberCustomer()) : "");
+                mPresenter.setListDishOrder(bill.getBillId());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
      * Phương thức xử lý các sự kiện click cho các view được gắn sự kiện OnClick
      * Created_by Nguyễn Bá Linh on 12/04/2019
      *
@@ -256,7 +277,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                             mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
                         }
                         if (mIsEdit) {
-
+                            mPresenter.updateOrder(mBill, mAdapter.getListData());
                         } else {
                             mPresenter.saveOrder(mBill, mAdapter.getListData());
                         }

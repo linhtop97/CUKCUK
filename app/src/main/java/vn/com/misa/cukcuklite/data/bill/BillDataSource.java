@@ -84,11 +84,130 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         return null;
     }
 
+    /* Phương thức khởi tạo danh sách hóa đơn chi tiết chưa được lưu thông qua bill Id
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param billId - id của hóa đơn
+     * @return - danh sách hóa đơn chi tiết của hóa đơn chưa được lưu
+     */
+    @Override
+    public List<BillDetail> initBillDetailList(String billId) {
+        try {
+            if (billId != null) {
+                List<BillDetail> billDetailDefault = initNewBillDetailList(billId);
+                List<BillDetail> billDetailInDB = getAllBillDeTailByBillId(billId);
+                if (billDetailDefault != null && billDetailInDB != null) {
+                    int sizeDefault = billDetailDefault.size();
+                    int sizeInIB = billDetailInDB.size();
+                    for (int i = 0; i < sizeDefault; i++) {
+                        for (int j = 0; j < sizeInIB; j++) {
+                            if (billDetailDefault.get(i).getDishId().equals(billDetailInDB.get(j).getDishId())) {
+                                billDetailDefault.set(i, billDetailInDB.get(j));
+                                break;
+                            }
+                        }
+                    }
+                    return billDetailDefault;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
+    @Override
+    public Bill getBillById(String billId) {
+        try {
+            Cursor cursor = mSQLiteDBManager.getRecords("select * from " + BILL_TBL_NAME +
+                    " where " + COLUMN_STATE + "=0 and " + COLUMN_BILL_ID + "=" + "'" + billId + "'", null);
+            cursor.moveToFirst();
+            Bill bill = new Bill.Builder().setBillId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_ID)))
+                    .setBillNumber(cursor.getInt(cursor.getColumnIndex(COLUMN_BILL_NUMBER)))
+                    .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
+                    .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
+                    .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))
+                    .setDateCreated(Long.parseLong(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
+                    .build();
+            cursor.moveToNext();
+            cursor.close();
+            return bill;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    /**
+     * Cập nhật hóa đơn vào cơ sở dữ liệu
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param bill - hóa đơn
+     * @return - thêm hóa đơn thành công/thất bại
+     */
+    @Override
+    public boolean updateBill(Bill bill, List<BillDetail> validBillDetailList) {
+        try {
+            if (bill != null) {
+                String billId = bill.getBillId();
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_BILL_ID, billId);
+                contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
+                contentValues.put(COLUMN_DATE_CREATED, String.valueOf(bill.getDateCreated()));
+                contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
+                contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
+                contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
+                contentValues.put(COLUMN_CUSTOMER_PAY, bill.getCustomerPay());
+                contentValues.put(COLUMN_STATE, AppConstants.UN_PAID);
+                if (mSQLiteDBManager.updateRecord(BILL_TBL_NAME, contentValues
+                        , COLUMN_BILL_ID + "=?", new String[]{billId})) {
+                    //xóa hết bản ghi hóa đơn chi tiết cũ -> thêm bản ghi hóa đơn chi tiết mới
+                    if (removeAllBillDetaiListByBillId(billId)) {
+                        if (addBillDetailList(validBillDetailList)) {
+                            addOrderToCache(getOrderFromBill(bill));
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+//
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Phương thức xóa bỏ hết các bản ghi hóa đơn chi tiết thông qua hóa đơn id
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @param billId - hóa đơn id
+     * @return - xóa thành công hay thất bại
+     */
+    private boolean removeAllBillDetaiListByBillId(String billId) {
+        try {
+            return mSQLiteDBManager.deleteRecord(BILL_DETAIL_TBL_NAME,
+                    COLUMN_BILL_ID + "=?", new String[]{billId});
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+
     /**
      * Thêm hóa đơn vào cơ sở dữ liệu
      * Created_by Nguyễn Bá Linh on 12/04/2019
      *
-     * @param bill - hóa đơn
+     * @param bill        - hóa đơn
+     * @param billDetails - hóa đơn chi tiết
      * @return - thêm hóa đơn thành công/thất bại
      */
     @Override
@@ -194,7 +313,9 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         List<BillDetail> billDetails = new ArrayList<>();
         try {
             String sql = String.format(
-                    "SELECT %s.%s,%s,%s,%s,%s,%s FROM " + BILL_DETAIL_TBL_NAME + "," + DishDataSource.DISH_TBL_NAME + " where " + COLUMN_BILL_ID + "=" + "'" + billId + "'" + " and %s.%s = %s.%s",
+                    "SELECT %s.%s,%s,%s,%s,%s,%s FROM " + BILL_DETAIL_TBL_NAME + ","
+                            + DishDataSource.DISH_TBL_NAME + " where " + COLUMN_BILL_ID
+                            + "=" + "'" + billId + "'" + " and %s.%s = %s.%s",
                     BILL_DETAIL_TBL_NAME,
                     COLUMN_DISH_ID,
                     DishDataSource.COLUMN_DISH_NAME,
@@ -284,6 +405,13 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         return null;
     }
 
+    /**
+     * Phương thức lấy order từ hóa đơn
+     * Created_by Nguyễn Bá Linh on 16/04/2019
+     *
+     * @param bill - hóa đơn
+     * @return - order
+     */
     private Order getOrderFromBill(Bill bill) {
 
         List<BillDetail> billDetails = getAllBillDeTailByBillId(bill.getBillId());
