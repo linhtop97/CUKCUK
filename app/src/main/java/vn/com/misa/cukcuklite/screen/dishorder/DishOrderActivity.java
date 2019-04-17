@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.screen.dishorder;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -24,6 +25,7 @@ import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.screen.pay.PayActivity;
+import vn.com.misa.cukcuklite.screen.sale.SaleFragment;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -111,12 +113,27 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                 mPresenter.setView(this);
                 mPresenter.getBillById(billId);
             } else {
-                mIsEdit = false;
-                mBill = new Bill();
-                mPresenter = new DishOrderPresenter(mBill.getBillId());
-                mPresenter.setView(this);
-                mPresenter.onStart();
+                onCreateNew();
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức khởi tạo mặc định cho màn hình
+     * Created_by Nguyễn Bá Linh on 17/04/2019
+     */
+    private void onCreateNew() {
+        try {
+            mAdapter.clearData();
+            tvTotalMoney.setText(R.string.price_default);
+            mIsEdit = false;
+            mBill = new Bill();
+            mPresenter = null;
+            mPresenter = new DishOrderPresenter(mBill.getBillId());
+            mPresenter.setView(this);
+            mPresenter.onStart();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -271,7 +288,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             Intent intent = new Intent();
             intent.setClass(this, PayActivity.class);
             intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
-            mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+            mNavigator.startActivityForResult(intent, SaleFragment.REQUEST_PAY);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -373,5 +390,31 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     public void onBackPressed() {
         checkIfIsOnlyActivity();
         super.onBackPressed();
+    }
+
+    /**
+     * Phương thức xử lý kết quả trả về từ 1 activity khác
+     * Created_by Nguyễn Bá Linh on 17/04/2019
+     *
+     * @param requestCode - mã yêu cầu
+     * @param resultCode  - mã kết quả trả về
+     * @param data        - dữ liệu được trả về
+     */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        try {
+            if (requestCode == SaleFragment.REQUEST_PAY) {
+                if (resultCode == Activity.RESULT_OK) {
+                    //nếu kết quả là ok(thanh toán hóa đơn thành công) thì sẽ khởi tạo lại màn hình
+                    onCreateNew();
+                } else if (resultCode == Activity.RESULT_CANCELED) {
+                    //nếu kết quả là cancel(không thanh toán luôn) thì sẽ gán lại hóa đơn là đang sửa
+                    mIsEdit = true;
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

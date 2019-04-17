@@ -1,7 +1,10 @@
 package vn.com.misa.cukcuklite.screen.main;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -138,5 +141,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == SaleFragment.REQUEST_PAY && resultCode == Activity.RESULT_OK) {
+            mNavigator.startActivity(DishOrderActivity.class);
+        }
+    }
 }

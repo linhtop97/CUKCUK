@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorGrayNormal">
+
+    <RelativeLayout
+        android:id="@+id/rlTime"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/action_height"
+        android:background="@color/colorGrayLight"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/tvTime"
+            style="@style/TextViewNormalGray"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:contentDescription="@string/image_description"
+            android:text="@string/time" />
+
+        <TextView
+            style="@style/TextViewNormal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="@dimen/margin_normal"
+            android:layout_toStartOf="@id/tvDownArrow"
+            android:layout_toEndOf="@id/tvTime"
+            android:contentDescription="@string/image_description"
+            android:gravity="center_vertical"
+            android:textAlignment="textEnd"
+            tools:ignore="RtlCompat" />
+
+        <ImageView
+            android:id="@+id/tvDownArrow"
+            android:layout_width="@dimen/action_height"
+            android:layout_height="@dimen/action_height"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@string/image_description"
+            android:padding="@dimen/padding_normal"
+            app:srcCompat="@drawable/ic_down_arrow" />
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/flReport"
+        android:layout_width="@dimen/dp_0"
+        android:layout_height="@dimen/dp_0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rlTime" />
+</android.support.constraint.ConstraintLayout>

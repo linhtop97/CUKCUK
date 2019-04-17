@@ -145,6 +145,8 @@
     <string name="guest_pay">Tiền khách đưa</string>
     <string name="money_returned_to_guest">Tiền trả lại cho khách</string>
     <string name="the_amount_of_guest_money_must_not_be_less_than_the_amount_payable">số tiền khách đưa không được nhỏ hơn số tiền phải trả</string>
+    <string name="pay_success">Đã thu tiền thành công, vui lòng chọn món mới</string>
+    <string name="time">Thời gian</string>
 
 
     <string-array name="color_list">

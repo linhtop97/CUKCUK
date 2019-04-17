@@ -86,6 +86,7 @@ public abstract class ListAdapter<T> extends RecyclerView.Adapter<RecyclerView.V
     public void clearData() {
         if (mListData != null) {
             mListData.clear();
+            mListData = new ArrayList<>();
             notifyDataSetChanged();
         }
     }

@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.screen.pay;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -19,7 +20,6 @@ import java.util.List;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
-import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 import vn.com.misa.cukcuklite.utils.StringUtils;
@@ -113,6 +113,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
         switch (v.getId()) {
             case R.id.btnBack:
                 try {
+                    setResult(Activity.RESULT_CANCELED);
                     finish();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -160,9 +161,9 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     public void paySuccess() {
         try {
             //Đóng màn hình thanh toán và trở về màn hình trước
-            Intent intent = new Intent(this, DishOrderActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+            mNavigator.showToastOnTopScreen(R.string.pay_success);
+            setResult(Activity.RESULT_OK);
+            finish();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -207,7 +208,11 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
      */
     @Override
     public void receiveMessage(int message) {
-
+        try {
+            mNavigator.showToastOnTopScreen(message);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -226,5 +231,11 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     @Override
     public void hideLoading() {
 
+    }
+
+    @Override
+    public void onBackPressed() {
+        setResult(Activity.RESULT_CANCELED);
+        super.onBackPressed();
     }
 }

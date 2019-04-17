@@ -235,6 +235,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                             ivICon.setVisibility(View.VISIBLE);
                             ivDefault.setVisibility(View.GONE);
                             lnQuantity.setVisibility(View.GONE);
+                            tvQuantity.setText(R.string.price_default);
                             clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
                         }
                         tvPrice.setText(String.valueOf(mPrice));

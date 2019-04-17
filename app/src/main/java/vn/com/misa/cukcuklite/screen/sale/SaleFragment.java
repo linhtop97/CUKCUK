@@ -35,6 +35,7 @@ import vn.com.misa.cukcuklite.utils.Navigator;
  */
 public class SaleFragment extends Fragment implements ISaleContract.IView, OrderAdapter.IOrderClickListener, ConfirmDeleteDialog.IConfirmDeleteCallBack {
 
+    public static final int REQUEST_PAY = 111;
     private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private RecyclerView rvOrder;
     private ConstraintLayout clWaterMark;
@@ -243,7 +244,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView, Order
                 Intent intent = new Intent();
                 intent.setClass(mContext, PayActivity.class);
                 intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
-                mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
+                mNavigator.startActivityForResult(intent, REQUEST_PAY);
             } else {
                 mNavigator.startActivity(LoginActivity.class, Navigator.ActivityTransition.NONE);
             }
