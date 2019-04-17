@@ -240,7 +240,7 @@ public class SaleFragment extends Fragment implements ISaleContract.IView, Order
     @Override
     public void payOrder(String billId) {
         try {
-            if (mPrefersManager.getIsLoginSuccess()) {
+            if (!mPrefersManager.getIsLoginSuccess()) {
                 Intent intent = new Intent();
                 intent.setClass(mContext, PayActivity.class);
                 intent.putExtra(AppConstants.EXTRA_BILL_ID, billId);
