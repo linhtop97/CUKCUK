@@ -11,12 +11,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.dao.IReportDataSource;
+import vn.com.misa.cukcuklite.data.dao.ReportDayItem;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.menu.MenuFragment;
@@ -47,6 +52,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mNavigator = new Navigator(this);
         initViews();
         initEvents();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        ArrayList<ReportDayItem> list =  IReportDataSource.getReportDetailDate("2019-04-10");
+
+        Log.d(TAG, "onResume: " + list.size() + list.toString());
     }
 
     /**

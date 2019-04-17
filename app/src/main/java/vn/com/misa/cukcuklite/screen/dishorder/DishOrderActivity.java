@@ -325,7 +325,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             case R.id.tvPay:
             case R.id.btnPay:
                 try {
-                    if (SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
+                    if (!SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
                         saveOrder(true);
                     } else {
                         int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());

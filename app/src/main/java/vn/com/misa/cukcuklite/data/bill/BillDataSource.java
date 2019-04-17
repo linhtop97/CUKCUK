@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -16,6 +17,7 @@ import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Order;
 import vn.com.misa.cukcuklite.utils.AppConstants;
+import vn.com.misa.cukcuklite.utils.DateUtil;
 
 import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.BILL_DETAIL_TBL_NAME;
 import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.COLUMN_BILL_DETAIL_ID;
@@ -29,9 +31,13 @@ import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtil
 public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils {
 
     private static final String TAG = "BillDataSource";
+
     private static BillDataSource sInstance;
+
     private SQLiteDBManager mSQLiteDBManager;
+
     private DishDataSource mDishDataSource;
+
     private HashMap<String, Order> orderHashMap;
 
     private BillDataSource() {
@@ -219,7 +225,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     @Override
     public int countBillWasPaid() {
         try {
-            String sql = String.format("select count(*) form %s where %s = '%s' ", BILL_TBL_NAME, COLUMN_STATE, AppConstants.PAID);
+            String sql = String.format("SELECT count(*) FROM %s WHERE %s = '%s' ", BILL_TBL_NAME, COLUMN_STATE, AppConstants.PAID);
             Cursor cursor = mSQLiteDBManager.getRecords(sql, null);
             return cursor == null ? 0 : cursor.getCount();
         } catch (Exception e) {
@@ -238,11 +244,13 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     public boolean payBill(Bill bill) {
         try {
             if (bill != null) {
+                Calendar calendar = Calendar.getInstance();
+
                 String billId = bill.getBillId();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_BILL_ID, billId);
                 contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
-                contentValues.put(COLUMN_DATE_CREATED, String.valueOf(bill.getDateCreated()));
+                contentValues.put(COLUMN_DATE_CREATED, DateUtil.getDateFormat(calendar.getTime()));
                 contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
                 contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
                 contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
