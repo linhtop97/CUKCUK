@@ -34,4 +34,7 @@ public final class AppConstants {
 
 
     public static final String EXTRA_BILL_ID = "EXTRA_BILL_ID";
+    public static final String EXTRA_REPORT_TOTAL = "EXTRA_REPORT_TOTAL";
+    public static final String DATE_FORMAT = "dd/MM/yyyy";
+    public static final String EXTRA_DATES = "EXTRA_DATES";
 }

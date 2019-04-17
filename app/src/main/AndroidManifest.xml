@@ -55,6 +55,9 @@
         <activity
             android:name=".screen.pay.PayActivity"
             android:screenOrientation="portrait" />
+        <activity
+            android:name=".screen.reportdetail.ReportDetailActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"

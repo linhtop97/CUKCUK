@@ -20,6 +20,7 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.menu.MenuFragment;
+import vn.com.misa.cukcuklite.screen.report.ReportFragment;
 import vn.com.misa.cukcuklite.screen.sale.SaleFragment;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -118,6 +119,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case R.id.navSale:
                 try {
+                    btnAdd.setClickable(true);
+                    btnAdd.setVisibility(View.VISIBLE);
                     tvTitle.setText(R.string.sale);
                     mIsSale = true;
                     mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
@@ -127,9 +130,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navMenu:
                 try {
+                    btnAdd.setClickable(true);
+                    btnAdd.setVisibility(View.VISIBLE);
                     tvTitle.setText(R.string.menu_title);
                     mIsSale = false;
                     mNavigator.addFragment(R.id.flMainContainer, MenuFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.navReport:
+                try {
+                    btnAdd.setClickable(false);
+                    btnAdd.setVisibility(View.INVISIBLE);
+                    tvTitle.setText(R.string.evenue);
+                    mNavigator.addFragment(R.id.flMainContainer, ReportFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -88,4 +88,17 @@
         <item name="windowNoTitle">true</item>
     </style>
 
+    <style name="DialogNegativeButtonStyle">
+        <item name="android:textColor">@drawable/selector_text_button_delete</item>
+        <item name="android:background">@drawable/selector_button_white</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
+
+    <style name="DialogPositiveButtonStyle">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:background">@drawable/selector_button_blue</item>
+        <item name="android:minWidth">0dp</item>
+        <item name="android:minHeight">0dp</item>
+    </style>
 </resources>

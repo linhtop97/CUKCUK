@@ -89,4 +89,19 @@
     <dimen name="item_order_default_height">140dp</dimen>
     <dimen name="size_icon_table_sale">64dp</dimen>
     <dimen name="padding_tv_image">-6dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="dp_200">200dp</dimen>
+    <dimen name="label_chart_size">10sp</dimen>
+    <dimen name="enter_size">28dp</dimen>
+    <dimen name="height_button_dialog">40dp</dimen>
+    <dimen name="btn_min_w">90dp</dimen>
+    <dimen name="check_size">16dp</dimen>
+    <dimen name="item_report_height">45dp</dimen>
+    <dimen name="icon_bg_report_size">40dp</dimen>
+    <dimen name="icon_report_size">24dp</dimen>
+    <dimen name="iv_drop_down_w">24dp</dimen>
+    <dimen name="icon_bg_report_detail_size">35dp</dimen>
+    <dimen name="iv_empty_report_w">80dp</dimen>
+    <dimen name="iv_empty_report_h">80dp</dimen>
+    <dimen name="view_button_size">40dp</dimen>
 </resources>

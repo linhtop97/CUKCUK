@@ -147,6 +147,29 @@
     <string name="the_amount_of_guest_money_must_not_be_less_than_the_amount_payable">số tiền khách đưa không được nhỏ hơn số tiền phải trả</string>
     <string name="pay_success">Đã thu tiền thành công, vui lòng chọn món mới</string>
     <string name="time">Thời gian</string>
+    <string name="vertical_label_chart">(Nghìn đồng)</string>
+    <string name="horizon_label_chart">(Ngày)</string>
+    <string name="title_dialog_pick_time">Thời gian</string>
+    <string name="from_date">Từ ngày</string>
+    <string name="to_date">Đến ngày</string>
+    <string name="ok">Đồng ý</string>
+
+    <string name="param_report_current">Gần đây</string>
+    <string name="param_report_last_month">Tháng trước</string>
+    <string name="param_report_last_week">Tuần trước</string>
+    <string name="param_report_last_year">Năm trước</string>
+    <string name="param_report_other">Khác</string>
+    <string name="param_report_this_month">Tháng này</string>
+    <string name="param_report_this_week">Tuần này</string>
+    <string name="param_report_this_year">Năm nay</string>
+    <string name="param_report_today">Hôm nay</string>
+    <string name="param_report_yesterday">Hôm qua</string>
+    <string name="report_sale_inventoryitem_title">Doanh thu theo mặt hàng</string>
+    <string name="msg_empty_report">Báo cáo doanh thu không có số liệu</string>
+    <string name="totalRevenue">Tổng doanh thu</string>
+    <string name="msg_dialog_pick_date">Giá trị Từ ngày phải nhỏ hơn hoặc bằng Đến ngày</string>
+    <string name="icon_fragment">icon_fragment</string>
+    <string name="evenue">Doanh thu</string>
 
 
     <string-array name="color_list">
@@ -183,4 +206,17 @@
         <item>"#607D8B"</item>
         <item>"#90A4AE"</item>
     </string-array>
+
+    <array name="color_report">
+        <item>#2a96f3</item>
+        <item>#4faa52</item>
+        <item>#ff582b</item>
+        <item>#ffc000</item>
+        <item>#4471c4</item>
+        <item>#245e91</item>
+        <item>#8E5DC7</item>
+        <item>#E53A29</item>
+        <item>#6D4C41</item>
+        <item>#a4a4a4</item>
+    </array>
 </resources>
