@@ -17,6 +17,13 @@ public class ReportTotal implements Serializable {
   private long amount;
   private ReportTotalEnum mType;
 
+  public ReportTotal(Builder builder) {
+    fromDate = builder.fromDate;
+    toDate = builder.toDate;
+    titleReportDetail = builder.titleReportDetail;
+    amount = builder.amount;
+    mType = builder.mType;
+  }
 
   public ReportTotal(ReportTotalEnum type) {
     mType = type;
@@ -60,5 +67,42 @@ public class ReportTotal implements Serializable {
 
   public void setAmount(long amount) {
     this.amount = amount;
+  }
+
+  public static class Builder{
+    private Date fromDate;
+    private Date toDate;
+    private String titleReportDetail;
+    private long amount;
+    private ReportTotalEnum mType;
+
+    public ReportTotal build(){
+      return new ReportTotal(this);
+    }
+
+    public Builder setFromDate(Date fromDate) {
+      this.fromDate = fromDate;
+      return this;
+    }
+
+    public Builder setToDate(Date toDate) {
+      this.toDate = toDate;
+      return this;
+    }
+
+    public Builder setTitleReportDetail(String titleReportDetail) {
+      this.titleReportDetail = titleReportDetail;
+      return this;
+    }
+
+    public Builder setAmount(long amount) {
+      this.amount = amount;
+      return this;
+    }
+
+    public Builder setType(ReportTotalEnum type) {
+      mType = type;
+      return this;
+    }
   }
 }

@@ -21,6 +21,15 @@ public class ReportCurrent {
   private ParamReportEnum paramType;
   private long amount;
 
+  public ReportCurrent(Builder builder) {
+    fromDate = builder.fromDate;
+    toDate = builder.toDate;
+    titleReportDetail = builder.titleReportDetail;
+    amount = builder.amount;
+    paramType = builder.paramType;
+    setData();
+  }
+
   public ReportCurrent(ParamReportEnum paramType) {
     this.paramType = paramType;
     setData();
@@ -97,5 +106,42 @@ public class ReportCurrent {
 
   public void setAmount(long amount) {
     this.amount = amount;
+  }
+
+  public static class Builder{
+    private Date fromDate;
+    private Date toDate;
+    private String titleReportDetail;
+    private ParamReportEnum paramType;
+    private long amount;
+
+    public ReportCurrent build(){
+      return new ReportCurrent(this);
+    }
+
+    public Builder setFromDate(Date fromDate) {
+      this.fromDate = fromDate;
+      return this;
+    }
+
+    public Builder setToDate(Date toDate) {
+      this.toDate = toDate;
+      return this;
+    }
+
+    public Builder setTitleReportDetail(String titleReportDetail) {
+      this.titleReportDetail = titleReportDetail;
+      return this;
+    }
+
+    public Builder setParamType(ParamReportEnum paramType) {
+      this.paramType = paramType;
+      return this;
+    }
+
+    public Builder setAmount(long amount) {
+      this.amount = amount;
+      return this;
+    }
   }
 }

@@ -3,10 +3,13 @@ package vn.com.misa.cukcuklite.screen.reportcurrent;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.util.Log;
+
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.ParamReportEnum;
+import vn.com.misa.cukcuklite.data.dao.IReportDataSource;
+import vn.com.misa.cukcuklite.data.dao.ReportDAO;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 
@@ -22,9 +25,12 @@ public class ReportCurrentPresenter implements IReportCurrentContract.IPresenter
   private IReportCurrentContract.IView mView;
   private Context mContext;
 
+  IReportDataSource mDataReportSource;
+
   public ReportCurrentPresenter(IReportCurrentContract.IView view, Context context) {
     mView = view;
     mContext = context;
+    mDataReportSource = new ReportDAO();
   }
 
   /**
@@ -38,20 +44,13 @@ public class ReportCurrentPresenter implements IReportCurrentContract.IPresenter
     new AsyncTask<Void, Void, List<ReportCurrent>>() {
       @Override
       protected List<ReportCurrent> doInBackground(Void... voids) {
-        List<ReportCurrent> reportCurrentList = new ArrayList<>();
-        reportCurrentList.add(new ReportCurrent(ParamReportEnum.YESTERDAY));
-        reportCurrentList.add(new ReportCurrent(ParamReportEnum.TODAY));
-        reportCurrentList.add(new ReportCurrent(ParamReportEnum.THIS_WEEK));
-        reportCurrentList.add(new ReportCurrent(ParamReportEnum.THIS_MONTH));
-        reportCurrentList.add(new ReportCurrent(ParamReportEnum.THIS_YEAR));
-        for (ReportCurrent current : reportCurrentList) {
-//          List<Bill> bills = DatabaseClient.getInstance(mContext)
-//              .getAppDatabase()
-//              .mBillDAO()
-//              .getBillBetweenDate(current.getFromDate(), current.getToDate());
-//          current.setAmount(getAmount(bills));
+        List<ReportCurrent> reportCurrentList = mDataReportSource.getOverviewReport();
+        Log.d(TAG, "doInBackground: " + reportCurrentList.size());
+        if(reportCurrentList != null && reportCurrentList.size() > 0){
+          return reportCurrentList;
+        }else{
+          return new ArrayList<>();
         }
-        return reportCurrentList;
       }
 
       @Override

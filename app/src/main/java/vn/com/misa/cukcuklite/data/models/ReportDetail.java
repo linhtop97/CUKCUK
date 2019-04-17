@@ -10,13 +10,33 @@ public class ReportDetail {
   private long mAmount;
   private int mQuantity;
   private String mUnit;
+  private String dateCreated;
+  private String dishId;
 
   public ReportDetail(Builder builder) {
     mName = builder.mName;
     mAmount = builder.mAmount;
     mQuantity = builder.mQuantity;
     mUnit = builder.mUnit;
+    dateCreated = builder.dateCreated;
+    dishId = builder.dishId;
 
+  }
+
+  public String getDateCreated() {
+    return dateCreated;
+  }
+
+  public void setDateCreated(String dateCreated) {
+    this.dateCreated = dateCreated;
+  }
+
+  public String getDishId() {
+    return dishId;
+  }
+
+  public void setDishId(String dishId) {
+    this.dishId = dishId;
   }
 
   public ReportDetail() {
@@ -68,6 +88,18 @@ public class ReportDetail {
     private long mAmount;
     private int mQuantity;
     private String mUnit;
+    private String dateCreated;
+    private String dishId;
+
+    public Builder setDateCreated(String dateCreated) {
+      this.dateCreated = dateCreated;
+      return this;
+    }
+
+    public Builder setDishId(String dishId) {
+      this.dishId = dishId;
+      return this;
+    }
 
     public Builder setName(String name) {
       mName = name;
