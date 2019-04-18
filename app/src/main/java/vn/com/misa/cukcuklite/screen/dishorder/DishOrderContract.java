@@ -7,6 +7,10 @@ import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 
+/**
+ * MVP interface cho màn hình thêm/sửa order
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public interface DishOrderContract {
     interface IView extends IBaseView {
 

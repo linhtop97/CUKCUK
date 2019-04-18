@@ -47,7 +47,7 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapte
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ReportDetail reportDetail = mReportDetails.get(position);
         holder.tvAmount.setText(NumberFormat.getNumberInstance(Locale.US)
-                .format(reportDetail.getAmount() * reportDetail.getQuantity()));
+                .format(reportDetail.getAmount()));
         holder.tvInventoryItemName.setText(reportDetail.getName());
         holder.tvNumber.setText(String.valueOf(position + 1));
         holder.tvQuantity

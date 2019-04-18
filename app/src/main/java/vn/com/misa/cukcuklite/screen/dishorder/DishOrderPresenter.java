@@ -9,6 +9,10 @@ import vn.com.misa.cukcuklite.data.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 
+/**
+ * Presenter cho màn hình thêm/sửa order
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class DishOrderPresenter implements DishOrderContract.IPresenter {
 
     private static final String TAG = "DishOrderPresenter";

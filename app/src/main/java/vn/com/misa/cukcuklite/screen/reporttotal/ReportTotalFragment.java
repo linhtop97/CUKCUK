@@ -30,7 +30,7 @@ import vn.com.misa.cukcuklite.data.models.ReportTotal;
 import vn.com.misa.cukcuklite.screen.reportdetail.ReportDetailActivity;
 
 /**
- * - Mục đích Class :Màn hình Báo cáo gần đây
+ * Mục đích Class :Màn hình Báo cáo gần đây
  * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportTotalFragment extends Fragment implements IReportTotalContract.IView,
@@ -172,10 +172,9 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
     }
 
     /**
-     * Mục đích method: Add data và adapter và cặp nhật lại LineChart khi load dữ liêu thành công
-     *
+     * Add data và adapter và cặp nhật lại LineChart khi load dữ liêu thành công
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      * @param reportTotals: Danh sách ReportTotal
-     * @created_by Hoàng Hiệp on 4/15/2019
      */
     @Override
     public void onLoadDataDone(List<ReportTotal> reportTotals) {

@@ -16,9 +16,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
@@ -110,7 +112,7 @@ public class OrderAdapter extends ListAdapter<Order> {
             if (order.getBillId() != null) {
                 Log.d(TAG, "bind: " + order.getTableNumber());
                 //Lấy danh sách tên món ăn chi tiết, số lượng, tổng tiền của
-                tvTotalMoney.setText(String.valueOf(order.getTotalMoney()));
+                tvTotalMoney.setText(NumberFormat.getNumberInstance(Locale.US).format(order.getTotalMoney()));
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     tvContent.setText(Html.fromHtml(order.getContent(), Html.FROM_HTML_MODE_COMPACT));
                 } else {

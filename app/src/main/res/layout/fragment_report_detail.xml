@@ -18,8 +18,7 @@
             android:layout_marginRight="@dimen/margin_normal"
             android:background="@drawable/bg_layout_white"
             android:gravity="center"
-            android:orientation="vertical"
-            android:padding="@dimen/margin_normal_small">
+            android:orientation="vertical">
 
             <com.github.mikephil.charting.charts.PieChart
                 android:id="@+id/pieChart"

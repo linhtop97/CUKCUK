@@ -13,6 +13,11 @@ public class ReportDetail {
   private String dateCreated;
   private String dishId;
 
+  public ReportDetail() {
+    mAmount = 0;
+    this.dateCreated = "";
+  }
+
   public ReportDetail(Builder builder) {
     mName = builder.mName;
     mAmount = builder.mAmount;
@@ -39,8 +44,6 @@ public class ReportDetail {
     this.dishId = dishId;
   }
 
-  public ReportDetail() {
-  }
 
   public long getAmount() {
     return mAmount;

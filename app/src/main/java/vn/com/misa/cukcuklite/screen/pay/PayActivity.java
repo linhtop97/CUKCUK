@@ -7,6 +7,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -14,8 +16,10 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.Bill;
@@ -97,6 +101,23 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
             tvDone.setOnClickListener(this);
             tvMoneyReturn.setOnClickListener(this);
             etMoneyGuestPay.setOnClickListener(this);
+            etMoneyGuestPay.addTextChangedListener(new TextWatcher() {
+                @Override
+                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+                }
+
+                @Override
+                public void onTextChanged(CharSequence s, int start, int before, int count) {
+                    if (s.toString().equals("")) {
+                    }
+                }
+
+                @Override
+                public void afterTextChanged(Editable s) {
+
+                }
+            });
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -136,19 +157,19 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
      */
     private void payBill() {
         try {
-            int moneyHaveToPay = Integer.parseInt(tvMoneyHaveToPay.getText().toString());
+            long moneyHaveToPay = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvMoneyHaveToPay.getText().toString());
             String moneyGuestPay = etMoneyGuestPay.getText().toString();
-            int moneyGuestPay2 = 0;
+            long moneyGuestPay2 = 0;
             if (!moneyGuestPay.equals("")) {
-                moneyGuestPay2 = Integer.parseInt(moneyGuestPay);
+                moneyGuestPay2 = (long) NumberFormat.getNumberInstance(Locale.US).parse(moneyGuestPay);
             }
             if (moneyHaveToPay > moneyGuestPay2) {
                 mNavigator.showToastOnTopScreen(R.string.the_amount_of_guest_money_must_not_be_less_than_the_amount_payable);
             } else {
-                mBill.setCustomerPay(moneyGuestPay2);
+                mBill.setCustomerPay((int) moneyGuestPay2);
                 mPresenter.pay(mBill);
             }
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -184,7 +205,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                 mBill = bill;
                 mBill.setBillNumber(billNumber + 1);
                 mAdapter.setListData(billDetailList);
-                String money = String.valueOf(bill.getTotalMoney());
+                String money = NumberFormat.getNumberInstance(Locale.US).format(bill.getTotalMoney());
                 tvMoneyHaveToPay.setText(money);
                 etMoneyGuestPay.setText(money);
                 DecimalFormat decimalFormat = new DecimalFormat("00000");

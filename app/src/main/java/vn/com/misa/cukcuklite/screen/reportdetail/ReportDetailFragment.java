@@ -31,7 +31,7 @@ import vn.com.misa.cukcuklite.utils.AppConstants;
 
 
 /**
- * - Mục đích Class :Màn báo cáo chi tiết
+ * Màn báo cáo chi tiết
  * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportDetailFragment extends Fragment implements IReportDetailContract.IView {
@@ -76,7 +76,7 @@ public class ReportDetailFragment extends Fragment implements IReportDetailContr
             long amount = 0;
             mPieChart.setUsePercentValues(true);
             mPieChart.setDescription(null);
-            float margin = 1;
+            float margin = 2;
             mPieChart.setExtraOffsets(margin, margin, margin, margin);
             mPieChart.setHoleRadius(65.0f);
             mPieChart.setDrawCenterText(true);
@@ -87,7 +87,7 @@ public class ReportDetailFragment extends Fragment implements IReportDetailContr
             List<PieEntry> entries = new ArrayList<>();
             for (ReportDetail reportDetail : reportDetails) {
                 PieEntry pieEntry = new PieEntry((float) reportDetail.getAmount());
-                amount += (reportDetail.getAmount() * reportDetail.getQuantity());
+                amount += (reportDetail.getAmount());
                 entries.add(pieEntry);
             }
             PieDataSet pieDataSet = new PieDataSet(entries, null);

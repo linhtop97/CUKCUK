@@ -1,48 +1,38 @@
 package vn.com.misa.cukcuklite.data.report;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
+import vn.com.misa.cukcuklite.data.models.ReportTotal;
 
 /**
  * Danh sách các phương thức cung cấp cho việc lấy báo cáo
- *
- * @created_by nblinh on 4/17/2019
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public interface  IReportDataSource {
-
     // Hôm nay
-    ArrayList<ReportDetail> getReportToday();
-
+    List<ReportDetail> getReportToday();
     // Hôm qua
-    ArrayList<ReportDetail> getReportYeaterday();
-
+    List<ReportDetail> getReportYeaterday();
     // Tuần này
-    ArrayList<ReportDetail> getReportThisWeek();
-
+    List<ReportTotal> getReportThisWeek();
     // Tuần trước
-    ArrayList<ReportDetail> getReportLastWeek();
-
+    List<ReportTotal> getReportLastWeek();
     // Tháng này
-    ArrayList<ReportDetail> getReportThisMonth();
-
+    List<ReportTotal> getReportThisMonth();
     // Tháng trước
-    ArrayList<ReportDetail> getReportLastMonth();
-
+    List<ReportTotal> getReportLastMonth();
     // Năm nay
-    ArrayList<ReportDetail> getReportThisYear();
-
+    List<ReportTotal> getReportThisYear();
     // Năm trước
-    ArrayList<ReportDetail> getReportLastYear();
-
+    List<ReportTotal> getReportLastYear();
     // Gần đây filter
-    ArrayList<ReportCurrent> getOverviewReport();
-
+    List<ReportCurrent> getOverviewReport();
     // Lấy thông tin báo cáo theo khoảng thời gian
-    ArrayList<ReportDetail> getReportByDate(String startDate, String endDate);
-
+    List<ReportTotal> getReportByDate(String startDate, String endDate);
+    List<ReportDetail> getReportDetailByDate(String startDate, String endDate);
     // Lấy thông tin báo cáo theo ngày xác định
-    ArrayList<ReportDetail> getReportDetailDate(String date);
+    List<ReportDetail> getReportDetailDate(String date);
 
 }

@@ -18,6 +18,7 @@ import vn.com.misa.cukcuklite.data.models.ReportTotal;
 
 /**
  * Adapter báo cáo gần đây
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportTotalAdapter extends RecyclerView.Adapter<ReportTotalAdapter.ViewHolder> {
 

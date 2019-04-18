@@ -22,11 +22,28 @@ import java.util.List;
  * Created_by Nguyễn Bá Linh on 02/04/2019
  */
 public final class CommonsUtils {
+
+    private static final String[] DAY_OF_WEEK = {"Chủ nhật", "Thứ hai", "Thứ ba", "Thứ tư", "Thứ năm", "Thứ sáu", "Thứ bảy"};
+
+    /**
+     * Phương thức xử lý: Lấy định dạng ngày trong tuần từ số
+     *
+     * @return Ngày trong tuần đã đổi sang dạng chuỗi
+     * @created_by lxphuoc on 4/10/2019
+     */
+    public static String getDayOfWeekString(int day) {
+        if (day < 0 || day > DAY_OF_WEEK.length) {
+            return "";
+        }
+        return DAY_OF_WEEK[day];
+    }
+
     /**
      * Phương thức sinh hash key cho ứng dụng
      *
      * @param context - context ứng dụng
      * @return - hash key
+     *
      */
     public static String printKeyHash(Activity context) {
         PackageInfo packageInfo;

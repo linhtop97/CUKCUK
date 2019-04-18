@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
@@ -130,6 +131,8 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
         try {
             mAdapter.clearData();
             tvTotalMoney.setText(R.string.price_default);
+            tvTable.setText("");
+            tvPerson.setText("");
             mIsEdit = false;
             mBill = new Bill();
             mPresenter = null;
@@ -210,7 +213,11 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      */
     @Override
     public void onItemClick(Integer data) {
-        tvTotalMoney.setText(String.valueOf(data));
+        try {
+            tvTotalMoney.setText(NumberFormat.getNumberInstance(Locale.US).format(data));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -330,7 +337,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                     if (SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
                         saveOrder(true);
                     } else {
-                        int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
+                        long totalMoney = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvTotalMoney.getText().toString());
                         if (totalMoney > 0) {
                             mNavigator.startActivity(LoginActivity.class);
                         } else {
@@ -353,22 +360,27 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
      * @param isPayNow - nếu isPayNow = true thì sẽ lưu và thanh toán, isPayNow = false sẽ chỉ lưu
      */
     private void saveOrder(boolean isPayNow) {
-        int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());
-        if (totalMoney > 0) {
-            mBill.setTotalMoney(totalMoney);
-            if (!tvTable.getText().toString().isEmpty()) {
-                mBill.setTableNumber(Integer.parseInt(tvTable.getText().toString()));
-            }
-            if (!tvPerson.getText().toString().isEmpty()) {
-                mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
-            }
-            if (mIsEdit) {
-                mPresenter.updateOrder(mBill, mAdapter.getListData(), isPayNow);
+        try {
+            long totalMoney = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvTotalMoney.getText().toString().trim());
+            if (totalMoney > 0) {
+                mBill.setTotalMoney((int) totalMoney);
+                mBill.setDateCreated(Calendar.getInstance().getTimeInMillis());
+                if (!tvTable.getText().toString().isEmpty()) {
+                    mBill.setTableNumber(Integer.parseInt(tvTable.getText().toString()));
+                }
+                if (!tvPerson.getText().toString().isEmpty()) {
+                    mBill.setNumberCustomer(Integer.parseInt(tvPerson.getText().toString()));
+                }
+                if (mIsEdit) {
+                    mPresenter.updateOrder(mBill, mAdapter.getListData(), isPayNow);
+                } else {
+                    mPresenter.saveOrder(mBill, mAdapter.getListData(), isPayNow);
+                }
             } else {
-                mPresenter.saveOrder(mBill, mAdapter.getListData(), isPayNow);
+                mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
             }
-        } else {
-            mNavigator.showToastOnTopScreen(R.string.you_have_not_select_dish_yet);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
     }

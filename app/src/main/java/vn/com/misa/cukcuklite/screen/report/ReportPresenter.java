@@ -6,6 +6,10 @@ import java.util.List;
 import vn.com.misa.cukcuklite.data.cukcukenum.ParamReportEnum;
 import vn.com.misa.cukcuklite.data.models.ParamReport;
 
+/**
+ * Presenter cho màn hình báo cáo
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class ReportPresenter implements IReportContract.IPresenter {
 
     private IReportContract.IView mView;

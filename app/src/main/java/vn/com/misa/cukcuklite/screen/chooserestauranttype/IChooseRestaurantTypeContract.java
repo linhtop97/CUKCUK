@@ -8,6 +8,10 @@ import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
 import vn.com.misa.cukcuklite.data.models.Unit;
 
+/**
+ * MVP interface cho màn hình lựa chọn quán ăn/nhà hàng
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public interface IChooseRestaurantTypeContract {
     interface IView extends IBaseView {
         void showListRestaurantType(List<RestaurantType> restaurantTypeList);

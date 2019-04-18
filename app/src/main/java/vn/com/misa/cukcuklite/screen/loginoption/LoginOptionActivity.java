@@ -40,9 +40,13 @@ public class LoginOptionActivity extends AppCompatActivity implements View.OnCli
      * Created_by Nguyễn Bá Linh on 03/04/2019
      */
     private void initEvents() {
-        ivBack.setOnClickListener(this);
-        llContinue.setOnClickListener(this);
-        tvLogin.setOnClickListener(this);
+        try {
+            ivBack.setOnClickListener(this);
+            llContinue.setOnClickListener(this);
+            tvLogin.setOnClickListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -50,9 +54,13 @@ public class LoginOptionActivity extends AppCompatActivity implements View.OnCli
      * Created_by Nguyễn Bá Linh on 03/04/2019
      */
     private void initViews() {
-        ivBack = findViewById(R.id.ivBack);
-        llContinue = findViewById(R.id.llContinue);
-        tvLogin = findViewById(R.id.tvLogin);
+        try {
+            ivBack = findViewById(R.id.ivBack);
+            llContinue = findViewById(R.id.llContinue);
+            tvLogin = findViewById(R.id.tvLogin);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

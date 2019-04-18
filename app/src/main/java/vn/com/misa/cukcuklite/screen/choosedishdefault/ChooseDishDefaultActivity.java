@@ -62,9 +62,13 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     private void initEvents() {
-        tvDone.setOnClickListener(this);
-        btnDone.setOnClickListener(this);
-        btnBack.setOnClickListener(this);
+        try {
+            tvDone.setOnClickListener(this);
+            btnDone.setOnClickListener(this);
+            btnBack.setOnClickListener(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -72,16 +76,19 @@ public class ChooseDishDefaultActivity extends AppCompatActivity implements View
      * Created_by Nguyễn Bá Linh on 09/04/2019
      */
     private void initViews() {
-        btnBack = findViewById(R.id.btnBack);
-        tvDone = findViewById(R.id.tvDone);
-        btnDone = findViewById(R.id.btnDone);
-        RecyclerView rvDish = findViewById(R.id.rvDish);
-        rvDish.setLayoutManager(new LinearLayoutManager(this));
-        mDishAdapter = new DishAdapter(this);
-        mDishAdapter.setItemClickListener(this);
-        rvDish.setAdapter(mDishAdapter);
-        initProgressBar();
-
+        try {
+            btnBack = findViewById(R.id.btnBack);
+            tvDone = findViewById(R.id.tvDone);
+            btnDone = findViewById(R.id.btnDone);
+            RecyclerView rvDish = findViewById(R.id.rvDish);
+            rvDish.setLayoutManager(new LinearLayoutManager(this));
+            mDishAdapter = new DishAdapter(this);
+            mDishAdapter.setItemClickListener(this);
+            rvDish.setAdapter(mDishAdapter);
+            initProgressBar();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
 

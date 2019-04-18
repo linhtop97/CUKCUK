@@ -1,7 +1,7 @@
 package vn.com.misa.cukcuklite.data.cukcukenum;
 
 /**
- * Enum của param report
+ * Enum của dialog lựa chọn khung thời gian cho báo cáo
  * Created_by Nguyễn Bá Linh on 17/04/2019
  */
 public enum ParamReportEnum {

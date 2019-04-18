@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.TextView;
@@ -70,53 +68,39 @@ public class ReportDetailActivity extends AppCompatActivity implements View.OnCl
         try {
             tvTitleReport = findViewById(R.id.tvTitleReport);
             ReportTotal reportTotal = (ReportTotal) getIntent().getSerializableExtra(AppConstants.EXTRA_REPORT_TOTAL);
-            Date[] dates = new Date[2];
-            dates[0] = reportTotal.getFromDate();
-            dates[1] = reportTotal.getToDate();
-            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(
-                    AppConstants.DATE_FORMAT);
-            if (reportTotal.getType() == ReportTotalEnum.YEAR) {
-                tvTitleReport.setText(
-                        String.valueOf(
-                                reportTotal.getTitleReportDetail() + " (" + dateFormat
-                                        .format(reportTotal.getFromDate())
-                                        + " - " + dateFormat.format(reportTotal.getToDate()) + ")"));
-            } else {
-                tvTitleReport.setText(
-                        String.valueOf(
-                                reportTotal.getTitleReportDetail() + " (" + dateFormat
-                                        .format(reportTotal.getFromDate())
-                                        + ")"));
+            if (reportTotal != null) {
+                Date[] dates = new Date[2];
+                dates[0] = reportTotal.getFromDate();
+                dates[1] = reportTotal.getToDate();
+                @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(
+                        AppConstants.DATE_FORMAT);
+                if (reportTotal.getType() == ReportTotalEnum.YEAR) {
+                    tvTitleReport.setText(
+                            String.valueOf(
+                                    reportTotal.getTitleReportDetail() + " (" + dateFormat
+                                            .format(reportTotal.getFromDate())
+                                            + " - " + dateFormat.format(reportTotal.getToDate()) + ")"));
+                } else {
+                    tvTitleReport.setText(
+                            String.valueOf(
+                                    reportTotal.getTitleReportDetail() + " (" + dateFormat
+                                            .format(reportTotal.getFromDate())
+                                            + ")"));
+                }
+                mNavigator.addFragment(R.id.rlContent, ReportDetailFragment.newInstance(dates),
+                        false, Navigator.NavigateAnim.NONE, ReportDetailFragment.class.getSimpleName());
             }
-            mNavigator.addFragment(R.id.rlContent, ReportDetailFragment.newInstance(dates),
-                    false, Navigator.NavigateAnim.NONE, ReportDetailFragment.class.getSimpleName());
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    
 
     /**
-     * Mục đích method: Replace Fragment
+     * Phương thức xử lý các sự kiện click cho các view được gắn sự kiện OnClick
      * Created_by Nguyễn Bá Linh on 18/04/2019
-     *
-     * @param fragment Fragment cần thay thế
-     */
-    private void loadFragment(Fragment fragment) {
-        try {
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-            transaction.replace(R.id.rlContent, fragment);
-            transaction.addToBackStack(null);
-            transaction.commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
-     * Mục đích method: Xử lý sự kiện
-     *
-     * @created_by Hoàng Hiệp on 3/27/2019
+     * @param v - view xảy ra sự kiện
      */
     @Override
     public void onClick(View v) {

@@ -45,6 +45,7 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".screen.adddish.AddDishActivity"
+            android:windowSoftInputMode="adjustResize"
             android:screenOrientation="portrait" />
         <activity
             android:name=".screen.selectunit.SelectUnitActivity"

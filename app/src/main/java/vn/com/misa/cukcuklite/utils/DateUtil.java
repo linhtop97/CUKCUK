@@ -2,6 +2,7 @@ package vn.com.misa.cukcuklite.utils;
 
 import android.annotation.SuppressLint;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -10,6 +11,15 @@ public class DateUtil {
 
     @SuppressLint("SimpleDateFormat")
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+    public static long getTimeMilisecondsFromDateString(String dateString){
+        try {
+            return dateFormat.parse(dateString).getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return System.currentTimeMillis();
+    }
 
     public static String getDateFormat(Date date) {
         return dateFormat.format(date);
@@ -115,7 +125,7 @@ public class DateUtil {
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         Date fromDate = calendar.getTime();
-        calendar.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        calendar.add(Calendar.DATE, 6);
         calendar.set(Calendar.HOUR_OF_DAY, 23);
         calendar.set(Calendar.MINUTE, 59);
         calendar.set(Calendar.SECOND, 59);

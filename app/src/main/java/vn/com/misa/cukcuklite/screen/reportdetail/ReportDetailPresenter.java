@@ -1,6 +1,7 @@
 package vn.com.misa.cukcuklite.screen.reportdetail;
 
 import android.annotation.SuppressLint;
+import android.os.AsyncTask;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,12 +9,28 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
+import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
+import vn.com.misa.cukcuklite.data.models.Unit;
+import vn.com.misa.cukcuklite.data.report.IReportDataSource;
+import vn.com.misa.cukcuklite.data.report.ReportDataSource;
+import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.utils.DateUtil;
 
 public class ReportDetailPresenter implements IReportDetailContract.IPresenter {
 
     private static final String TAG = "ReportDetailPresenter";
     private IReportDetailContract.IView mView;
+    private IReportDataSource mReportDataSource;
+    private DishDataSource mDishDataSource;
+    private UnitDataSource mUnitDataSource;
+
+    public ReportDetailPresenter() {
+        mReportDataSource = new ReportDataSource();
+        mUnitDataSource = UnitDataSource.getInstance();
+        mDishDataSource = DishDataSource.getInstance();
+    }
 
     /**
      * Load dữ liệu từ 2 mốc thời gian
@@ -24,6 +41,54 @@ public class ReportDetailPresenter implements IReportDetailContract.IPresenter {
     @SuppressLint("StaticFieldLeak")
     @Override
     public void loadData(final Date[] dates) {
+        try {
+            mView.showLoading();
+            new AsyncTask<Void, Void, List<ReportDetail>>() {
+                @Override
+                protected List<ReportDetail> doInBackground(Void... voids) {
+                    List<ReportDetail> reportDetails = mReportDataSource.getReportDetailByDate(DateUtil.getDateFormat(dates[0]),DateUtil.getDateFormat(dates[1]));
+                    if (reportDetails != null) {
+                        int size = reportDetails.size();
+                        List<Dish> dishes = mDishDataSource.getAllDish();
+                        List<Unit> units = mUnitDataSource.getAllUnit();
+                        int dishSize;
+                        int unitSize;
+                        if (dishes != null && units != null) {
+                            dishSize = dishes.size();
+                            unitSize = units.size();
+                            if (dishSize > 0 && unitSize > 0) {
+                                for (int i = 0; i < size; i++) {
+                                    String dishId = reportDetails.get(i).getDishId();
+                                    for (int j = 0; j < dishSize; j++) {
+                                        if (dishes.get(j).getDishId().equals(dishId)) {
+                                            reportDetails.get(i).setName(dishes.get(j).getDishName());
+                                            for (int k = 0; k < unitSize; k++) {
+                                                if (units.get(k).getUnitId().equals(dishes.get(j).getUnitId())) {
+                                                    reportDetails.get(i).setUnit(units.get(k).getUnitName());
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        return makeListBeautiful(reportDetails);
+                    } else {
+                        return new ArrayList<>();
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(List<ReportDetail> reportDetails) {
+                    super.onPostExecute(reportDetails);
+                    mView.onLoadDataDone(reportDetails);
+                    mView.hideLoading();
+                }
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -32,39 +97,14 @@ public class ReportDetailPresenter implements IReportDetailContract.IPresenter {
      *
      * @param reportDetails: mảng truyền vào
      */
-    private List<ReportDetail> makeListBeautiful(List<ReportDetail> reportDetails) {
-        List<ReportDetail> list = new ArrayList<>();
-        for (int i = 0; i < reportDetails.size(); i++) {
-            ReportDetail reportDetail = reportDetails.get(i);
-            if (i == 0) {
-                list.add(reportDetail);
-            } else {
-                boolean isExist = false;
-                for (ReportDetail detail : list) {
-                    if (reportDetail.getName().equals(detail.getName())) {
-                        isExist = true;
-                        detail.addQuantity(reportDetail.getQuantity());
-                    }
-                }
-                if (!isExist) {
-                    list.add(reportDetail);
-                }
-            }
-
-        }
-        Collections.sort(list, new Comparator<ReportDetail>() {
+    private List<ReportDetail> makeListBeautiful(final List<ReportDetail> reportDetails) {
+        Collections.sort(reportDetails, new Comparator<ReportDetail>() {
             @Override
             public int compare(ReportDetail o1, ReportDetail o2) {
-                if (o1.getAmount() < o2.getAmount()) {
-                    return 1;
-                }
-                if (o1.getAmount() > o2.getAmount()) {
-                    return -1;
-                }
-                return 0;
+                return (int) (o2.getAmount() - o1.getAmount());
             }
         });
-        return list;
+        return reportDetails;
     }
 
     /**

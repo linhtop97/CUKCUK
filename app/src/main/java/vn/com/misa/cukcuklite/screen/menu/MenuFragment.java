@@ -86,14 +86,18 @@ public class MenuFragment extends Fragment implements IMenuContract.IView, IOnIt
      * Created_by Nguyễn Bá Linh on 27/03/2019
      */
     private void initViews(View view) {
-        RecyclerView rvDish = view.findViewById(R.id.rvDish);
-        clWaterMark = view.findViewById(R.id.clWaterMark);
-        tvAddDish = view.findViewById(R.id.tvAddDish);
-        mAdapter = new DishAdapter(mContext);
-        mAdapter.setItemClickListener(this);
-        rvDish.setLayoutManager(new LinearLayoutManager(mContext));
-        rvDish.setAdapter(mAdapter);
-        initProgressBar();
+        try {
+            RecyclerView rvDish = view.findViewById(R.id.rvDish);
+            clWaterMark = view.findViewById(R.id.clWaterMark);
+            tvAddDish = view.findViewById(R.id.tvAddDish);
+            mAdapter = new DishAdapter(mContext);
+            mAdapter.setItemClickListener(this);
+            rvDish.setLayoutManager(new LinearLayoutManager(mContext));
+            rvDish.setAdapter(mAdapter);
+            initProgressBar();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

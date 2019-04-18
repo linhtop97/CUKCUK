@@ -2,12 +2,19 @@ package vn.com.misa.cukcuklite.screen.choosedishdefault;
 
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 
+/**
+ * Presenter xử lý logic cho màn hình lựa chọn món ăn mặc định
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class ChooseDishDefaultPresenter implements IChooseDishDefaultContract.IPresenter {
 
     private IChooseDishDefaultContract.IView mView;
     private DishDataSource mDishDataSource;
 
-
+    /**
+     * Phương thức khởi tạo lớp
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
     ChooseDishDefaultPresenter() {
         mDishDataSource = DishDataSource.getInstance();
     }

@@ -15,6 +15,10 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 
+/**
+ * Adapter cho danh sách hóa đơn chi tiết
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class BillDetailAdapter extends ListAdapter<BillDetail> {
 
     /**

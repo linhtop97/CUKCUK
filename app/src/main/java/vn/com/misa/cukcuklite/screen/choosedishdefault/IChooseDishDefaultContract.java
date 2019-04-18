@@ -6,6 +6,10 @@ import vn.com.misa.cukcuklite.base.IBasePresenter;
 import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.Dish;
 
+/**
+ * MVP interface cho màn hình lựa chọn món ăn mặc định
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public interface IChooseDishDefaultContract {
 
     interface IView extends IBaseView {

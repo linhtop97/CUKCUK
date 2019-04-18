@@ -5,6 +5,10 @@ import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
 
+/**
+ * MVP interface cho màn hình thêm món ăn
+ * Created_by Nguyễn Bá Linh on 9/04/2019
+ */
 public interface IAddDishContract {
     interface IView extends IBaseView {
 

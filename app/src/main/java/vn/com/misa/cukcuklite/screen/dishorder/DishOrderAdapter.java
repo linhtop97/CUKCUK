@@ -28,6 +28,10 @@ import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.utils.ImageUtils;
 
+/**
+ * Adapter cho danh sách món ăn
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class DishOrderAdapter extends ListAdapter<BillDetail> {
 
     private IOnItemClickListener<Integer> mOnItemClickListener;

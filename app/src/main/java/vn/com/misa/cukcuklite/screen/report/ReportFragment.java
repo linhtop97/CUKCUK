@@ -30,10 +30,13 @@ import vn.com.misa.cukcuklite.screen.reportcurrent.ReportCurrentFragment;
 import vn.com.misa.cukcuklite.screen.reportdetail.ReportDetailActivity;
 import vn.com.misa.cukcuklite.screen.reportdetail.ReportDetailFragment;
 import vn.com.misa.cukcuklite.screen.reporttotal.ReportTotalFragment;
+import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
-import static android.provider.Settings.System.DATE_FORMAT;
-
+/**
+ * Màn hình báo cáo
+ * Created_by Nguyễn Bá Linh on 18/04/2019
+ */
 public class ReportFragment extends Fragment implements IReportContract.IView, ReportCurrentFragment.OnClickCurrentReport, View.OnClickListener {
 
     private static final String TAG = "ReportFragment";
@@ -43,7 +46,6 @@ public class ReportFragment extends Fragment implements IReportContract.IView, R
     private ReportPresenter mPresenter;
     private Navigator mNavigator;
     private MainActivity mActivity;
-    private int lastParamSelected;
 
     public static ReportFragment newInstance() {
         return new ReportFragment();
@@ -117,7 +119,7 @@ public class ReportFragment extends Fragment implements IReportContract.IView, R
                                                 dates[1] = toDate;
                                                 loadFragment(ReportDetailFragment.newInstance(dates));
                                                 @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(
-                                                        DATE_FORMAT);
+                                                        AppConstants.DATE_FORMAT);
                                                 tvTimeValue
                                                         .setText(dateFormat.format(fromDate).concat("-").concat(dateFormat.format(toDate)));
                                                 setSelected(7, mParamReports);
@@ -203,9 +205,10 @@ public class ReportFragment extends Fragment implements IReportContract.IView, R
     private void setSelected(int position, List<ParamReport> mParamReports) {
         try {
             if (mParamReports != null && mParamReports.size() > 0) {
-                mParamReports.get(lastParamSelected).setSelected(false);
-                lastParamSelected = position;
-                mParamReports.get(lastParamSelected).setSelected(true);
+                for (ParamReport paramReport : mParamReports) {
+                    paramReport.setSelected(false);
+                }
+                mParamReports.get(position).setSelected(true);
             }
         } catch (Exception e) {
             e.printStackTrace();

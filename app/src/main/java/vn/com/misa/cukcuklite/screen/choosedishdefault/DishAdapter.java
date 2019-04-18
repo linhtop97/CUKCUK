@@ -93,17 +93,21 @@ public class DishAdapter extends ListAdapter<Dish> {
          * @param dish - món ăn
          */
         void bind(Dish dish) {
-            if (dish != null) {
-                if (dish.isSale()) {
-                    tvStopSale.setVisibility(View.GONE);
-                } else {
-                    tvStopSale.setVisibility(View.VISIBLE);
+            try {
+                if (dish != null) {
+                    if (dish.isSale()) {
+                        tvStopSale.setVisibility(View.GONE);
+                    } else {
+                        tvStopSale.setVisibility(View.VISIBLE);
+                    }
+                    tvDishName.setText(dish.getDishName());
+                    tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(dish.getPrice()));
+                    drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
+                    btnDish.setBackground(drawable);
+                    btnDish.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
                 }
-                tvDishName.setText(dish.getDishName());
-                tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(dish.getPrice()));
-                drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
-                btnDish.setBackground(drawable);
-                btnDish.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }
     }

@@ -18,15 +18,8 @@ import vn.com.misa.cukcuklite.data.models.Dish;
  * Created_by Nguyễn Bá Linh on 27/03/2019
  */
 public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils {
-
-    private static final String TAG = "DishDataSource";
-
     private static DishDataSource sInstance;
-
     private SQLiteDBManager mSQLiteDBManager;
-
-    private BillDataSource mBillDataSource;
-
     private List<Dish> mDishes;
 
     /**
@@ -87,18 +80,22 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public EnumResult addDishToDatabase(Dish dish) {
-        String dishName;
-        if (dish != null && !dish.getDishId().isEmpty() && dish.getDishId() != null) {
-            dishName = dish.getDishName();
-            //kiểm tra tên món ăn đã tồn tại hay chưa
-            if (isDishIfExists(dishName)) {
-                return EnumResult.Exists;
-            } else {
-                if (addDish(dish)) {
-                    mDishes.add(dish);
-                    return EnumResult.Success;
+        try {
+            String dishName;
+            if (dish != null && !dish.getDishId().isEmpty() && dish.getDishId() != null) {
+                dishName = dish.getDishName();
+                //kiểm tra tên món ăn đã tồn tại hay chưa
+                if (isDishIfExists(dishName)) {
+                    return EnumResult.Exists;
+                } else {
+                    if (addDish(dish)) {
+                        mDishes.add(dish);
+                        return EnumResult.Success;
+                    }
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return EnumResult.SomethingWentWrong;
     }
@@ -155,9 +152,9 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteDishById(String dishId) {
         try {
-            mBillDataSource = BillDataSource.getInstance();
+            BillDataSource billDataSource = BillDataSource.getInstance();
             boolean isUsing = false;
-            List<String> dishIdUsing = mBillDataSource.getAllDishIdFromAllBillDetail();
+            List<String> dishIdUsing = billDataSource.getAllDishIdFromAllBillDetail();
             if (dishIdUsing != null) {
                 int size = dishIdUsing.size();
                 if (size > 0) {
@@ -252,11 +249,12 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public List<Dish> getAllDish() {
-        if (mDishes != null && mDishes.size() > 0) {
-            return mDishes;
-        } else {
-            List<Dish> dishes = new ArrayList<>();
-            try {
+        try {
+            if (mDishes != null && mDishes.size() > 0) {
+                return mDishes;
+            } else {
+                List<Dish> dishes = new ArrayList<>();
+
                 Cursor cursor = mSQLiteDBManager.getRecords("select * from " + DISH_TBL_NAME + " where " + COLUMN_STATE + "=1", null);
                 cursor.moveToFirst();
                 while (!cursor.isAfterLast()) {
@@ -275,11 +273,11 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                 mDishes.clear();
                 mDishes.addAll(dishes);
                 return dishes;
-            } catch (Exception e) {
-                e.printStackTrace();
             }
-            return null;
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return null;
     }
 
     /**
@@ -322,8 +320,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     public boolean deleteAllDish() {
         try {
             if (mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null)) {
-                if(mDishes!=null){
-                mDishes.clear();
+                if (mDishes != null) {
+                    mDishes.clear();
                 }
                 return true;
             }
@@ -380,8 +378,8 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      */
     @Override
     public List<String> getAllDishId() {
-        List<String> dishIds = new ArrayList<>();
         try {
+            List<String> dishIds = new ArrayList<>();
             if (mDishes != null) {
                 for (Dish dish : mDishes) {
                     if (dish.isSale()) {
@@ -398,10 +396,10 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                 }
                 cursor.close();
             }
-
+            return dishIds;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return dishIds;
+        return null;
     }
 }

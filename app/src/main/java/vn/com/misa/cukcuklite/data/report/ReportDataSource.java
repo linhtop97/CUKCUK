@@ -4,13 +4,17 @@ import android.database.Cursor;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import vn.com.misa.cukcuklite.data.cukcukenum.ParamReportEnum;
+import vn.com.misa.cukcuklite.data.cukcukenum.ReportTotalEnum;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
+import vn.com.misa.cukcuklite.data.models.ReportTotal;
 import vn.com.misa.cukcuklite.utils.DateUtil;
 
 /**
@@ -19,44 +23,26 @@ import vn.com.misa.cukcuklite.utils.DateUtil;
  * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITableBillUtils, IReportDataSource {
+    private static final String TAG = "ReportDataSource";
 
     /**
-     * Phương thức xử lý: Lấy thống kê báo cáo theo khoảng thời gian
+     * Phương thức xử lý: Bóc dữ liệu báo cáo theo từng ngày
      * Created_by Nguyễn Bá Linh on 18/04/2019
      *
-     * @param startDate - ngày giờ bắt đầu
-     * @param endDate   - ngày giờ kết thúc
-     * @return - danh sách báo cáo thống kê theo từng ngày
+     * @param cursor - giá trị đối tượng lấy từ sqlite
+     * @return đối tượng báo cáo từng ngày
      */
-    private static ArrayList<ReportDetail> getReportOverViewByDate(String startDate, String endDate) {
+    private static ReportTotal parseCursorToReportTotal(Cursor cursor) {
+        if (cursor == null) {
+            return null;
+        }
         try {
-            ArrayList<ReportDetail> list = new ArrayList<>();
-
-            String sql = String.format("SELECT %s,%s,sum(%s.%s) as totalMoney FROM " + BILL_TBL_NAME + "," + BILL_DETAIL_TBL_NAME + " WHERE " +
-                            " %s.%s = %s.%s " + " AND " + COLUMN_STATE + " = '1' " + " AND " +
-                            " date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
-                            " GROUP BY " + COLUMN_DATE_CREATED,
-                    COLUMN_DATE_CREATED, COLUMN_DISH_ID, BILL_DETAIL_TBL_NAME, IDBUtils.ITableBillDetailUtils.COLUMN_TOTAL_MONEY,
-                    BILL_TBL_NAME, IDBUtils.ITableBillUtils.COLUMN_BILL_ID, BILL_DETAIL_TBL_NAME, IDBUtils.ITableBillDetailUtils.COLUMN_BILL_ID
-            );
-
-            Log.d("sql", "getReportByDate: " + sql);
-
-            Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-            if (cursor != null && cursor.getCount() > 0) {
-                cursor.moveToFirst();
-                while (!cursor.isAfterLast()) {
-                    list.add(parseCursorToReportDetail(cursor));
-                    cursor.moveToNext();
-                }
-                return list;
-            } else {
-                return null;
-            }
+            return new ReportTotal.Builder()
+                    .setAmount(cursor.getColumnIndex("totalMoney") > -1 ? (long) cursor.getInt(cursor.getColumnIndex("totalMoney")) : 0)
+                    .build();
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -93,15 +79,9 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
     private static int getReportTotalMoneyThisYear() {
         try {
             Date[] dates = DateUtil.getThisYear();
-
             String sql = "SELECT sum(" + IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY + ") FROM " + BILL_TBL_NAME +
                     " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'" + DateUtil.getDateFormat(dates[0]) + "'" + " AND " + "'" + DateUtil.getDateFormat(dates[1]) + "'";
-
-
-            Log.d("sql", "getReportTotalMoneyThisYear: " + sql);
-
             Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-
             if (cursor != null) {
                 cursor.moveToFirst();
                 return cursor.getInt(0);
@@ -111,7 +91,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -124,14 +103,10 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
     private static int getReportTotalMoneyThisMonth() {
         try {
             Date[] dates = DateUtil.getThisMonth();
-
             String sql = "SELECT sum(" + IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY + ") FROM " + BILL_TBL_NAME +
-                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'" + DateUtil.getDateFormat(dates[0]) + "'" + " AND " + "'" + DateUtil.getDateFormat(dates[1]) + "'";
-
-            Log.d("sql", "getReportTotalMoneyThisMonth: " + sql);
-
+                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'"
+                    + DateUtil.getDateFormat(dates[0]) + "'" + " AND " + "'" + DateUtil.getDateFormat(dates[1]) + "'";
             Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 return cursor.getInt(0);
@@ -141,7 +116,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -154,13 +128,10 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
     private static int getReportTotalMoneyThisWeek() {
         try {
             Date[] dates = DateUtil.getThisWeek();
-
             String sql = "SELECT sum(" + IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY + ") FROM " + BILL_TBL_NAME +
-                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'" + DateUtil.getDateFormat(dates[0]) + "'" + " AND " + "'" + DateUtil.getDateFormat(dates[1]) + "'";
-
-
+                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'"
+                    + DateUtil.getDateFormat(dates[0]) + "'" + " AND " + "'" + DateUtil.getDateFormat(dates[1]) + "'";
             Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 return cursor.getInt(0);
@@ -170,7 +141,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -183,14 +153,10 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
     private static int getReportTotalMoneyToday() {
         try {
             Date[] dates = DateUtil.getToday();
-
             String sql = "SELECT sum(" + IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY + ") FROM " + BILL_TBL_NAME +
-                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " = " + "'" + DateUtil.getDateFormat(dates[0]) + "'";
-
-            Log.d("sql", "getReportTotalMoneyToday: " + sql);
-
+                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " = " + "'"
+                    + DateUtil.getDateFormat(dates[0]) + "'";
             Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 return cursor.getInt(0);
@@ -200,7 +166,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -213,13 +178,10 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
     private static int getReportTotalMoneyYesterday() {
         try {
             Date[] dates = DateUtil.getYesterday();
-
             String sql = "SELECT sum(" + IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY + ") FROM " + BILL_TBL_NAME +
-                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " = " + "'" + DateUtil.getDateFormat(dates[0]) + "'";
-
-
+                    " WHERE " + COLUMN_STATE + " = '1' " + " AND " + "date(" + COLUMN_DATE_CREATED + ")" + " = " +
+                    "'" + DateUtil.getDateFormat(dates[0]) + "'";
             Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
-
             if (cursor != null && cursor.getCount() > 0) {
                 cursor.moveToFirst();
                 return cursor.getInt(0);
@@ -229,7 +191,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return 0;
     }
 
@@ -276,11 +237,39 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportThisWeek() {
+    public List<ReportTotal> getReportThisWeek() {
         Date[] dates = DateUtil.getThisWeek();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.WEEK);
+                Date from = calendar.getTime();
+                if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                    reportTotal.setTitleReportDetail("CN");
+                } else {
+                    reportTotal.setTitleReportDetail("Thứ " + calendar.get(Calendar.DAY_OF_WEEK));
+                }
+                calendar.add(Calendar.DATE, 1);
+                calendar.add(Calendar.SECOND, -1);
 
+                Date to = calendar.getTime();
+                List<ReportDetail> reportDetails = getReportDetailDate(DateUtil.getDateFormat(from));
+                if (reportDetails != null && reportDetails.size() > 0) {
+                    reportTotal.setAmount(this.getAmountDetail(reportDetails));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -294,11 +283,41 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportLastWeek() {
+    public List<ReportTotal> getReportLastWeek() {
+        Log.d(TAG, "getReportLastWeek: ");
         Date[] dates = DateUtil.getLastWeek();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.WEEK);
+                Date from = calendar.getTime();
+                if (calendar.get(Calendar.DAY_OF_WEEK) == 1) {
+                    reportTotal.setTitleReportDetail("CN");
+                } else {
+                    reportTotal.setTitleReportDetail("Thứ " + calendar.get(Calendar.DAY_OF_WEEK));
+                }
+                calendar.add(Calendar.DATE, 1);
+                calendar.add(Calendar.SECOND, -1);
 
+                Date to = calendar.getTime();
+                List<ReportDetail> reportDetails = getReportDetailDate(DateUtil.getDateFormat(from));
+                if (reportDetails != null && reportDetails.size() > 0) {
+                    reportTotal.setAmount(this.getAmountDetail(reportDetails));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            Log.d(TAG, "getReportLastWeek: " + reportTotals.size());
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -312,11 +331,38 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportThisMonth() {
+    public List<ReportTotal> getReportThisMonth() {
         Date[] dates = DateUtil.getThisMonth();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
 
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.MONTH);
+                Date from = calendar.getTime();
+                reportTotal.setTitleReportDetail("Ngày " + calendar.get(Calendar.DAY_OF_MONTH));
+
+                calendar.add(Calendar.DATE, 1);
+                calendar.add(Calendar.SECOND, -1);
+
+                Date to = calendar.getTime();
+
+                List<ReportDetail> reportDetails = getReportDetailDate(DateUtil.getDateFormat(from));
+                if (reportDetails != null && reportDetails.size() > 0) {
+                    reportTotal.setAmount(this.getAmountDetail(reportDetails));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -330,11 +376,38 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportLastMonth() {
+    public List<ReportTotal> getReportLastMonth() {
         Date[] dates = DateUtil.getLastMonth();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
 
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.MONTH);
+                Date from = calendar.getTime();
+                reportTotal.setTitleReportDetail("Ngày " + calendar.get(Calendar.DAY_OF_MONTH));
+
+                calendar.add(Calendar.DATE, 1);
+                calendar.add(Calendar.SECOND, -1);
+
+                Date to = calendar.getTime();
+
+                List<ReportDetail> reportDetails = getReportDetailDate(DateUtil.getDateFormat(from));
+                if (reportDetails != null && reportDetails.size() > 0) {
+                    reportTotal.setAmount(this.getAmountDetail(reportDetails));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -348,15 +421,85 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportThisYear() {
+    public List<ReportTotal> getReportThisYear() {
         Date[] dates = DateUtil.getThisYear();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
+
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.YEAR);
+                Date from = calendar.getTime();
+
+                reportTotal.setTitleReportDetail("Tháng " + (calendar.get(Calendar.MONTH) + 1));
+                calendar.add(Calendar.MONTH, 1);
+                calendar.add(Calendar.SECOND, -1);
+
+                Date to = calendar.getTime();
+
+                List<ReportTotal> reportTotals1 = getReportByDate(DateUtil.getDateFormat(from), DateUtil.getDateFormat(to));
+
+                if (reportTotals1 != null && reportTotals1.size() > 0) {
+                    reportTotal.setAmount(getAmountTotal(reportTotals1));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
+
+    /**
+     * Phương thức tính tổng tiền của báo cáo tổng thể
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param reporTotals - danh sách báo cáo chi tiết
+     * @return - tổng tiền
+     */
+    private long getAmountTotal(List<ReportTotal> reporTotals) {
+        try {
+            long total = 0;
+            for (ReportTotal report : reporTotals) {
+                total += report.getAmount();
+            }
+            return total;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    /**
+     * Phương thức tính tổng tiền của báo cáo chi tiết
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param reportDetails - danh sách báo cáo tổng thể
+     * @return - tổng tiền
+     */
+    private long getAmountDetail(List<ReportDetail> reportDetails) {
+        try {
+            long total = 0;
+            for (ReportDetail report : reportDetails) {
+                total += report.getAmount();
+            }
+            return total;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết năm trước
@@ -365,11 +508,39 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
      */
     @Override
-    public ArrayList<ReportDetail> getReportLastYear() {
+    public List<ReportTotal> getReportLastYear() {
         Date[] dates = DateUtil.getLastYear();
         try {
-            return getReportOverViewByDate(DateUtil.getDateFormat(dates[0]), DateUtil.getDateFormat(dates[1]));
+            Calendar calendar = Calendar.getInstance();
+            List<ReportTotal> reportTotals = new ArrayList<>();
+            calendar.setTime(dates[0]);
 
+            while (calendar.getTime().compareTo(dates[1]) < 0) {
+                ReportTotal reportTotal = new ReportTotal(ReportTotalEnum.YEAR);
+                Date from = calendar.getTime();
+
+                reportTotal.setTitleReportDetail("Tháng " + (calendar.get(Calendar.MONTH) + 1));
+                calendar.add(Calendar.MONTH, 1);
+                calendar.add(Calendar.SECOND, -1);
+
+                Date to = calendar.getTime();
+
+                List<ReportTotal> reportTotals1 = getReportByDate(DateUtil.getDateFormat(from), DateUtil.getDateFormat(to));
+
+                if (reportTotals1 != null && reportTotals1.size() > 0) {
+                    reportTotal.setAmount(getAmountTotal(reportTotals1));
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                } else {
+                    reportTotal.setAmount(0);
+                    reportTotal.setFromDate(from);
+                    reportTotal.setToDate(to);
+                    reportTotals.add(reportTotal);
+                }
+                calendar.add(Calendar.SECOND, 1);
+            }
+            return reportTotals;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -385,7 +556,40 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
      * @return - danh sách báo cáo thống kê theo từng ngày
      */
     @Override
-    public ArrayList<ReportDetail> getReportByDate(String startDate, String endDate) {
+    public List<ReportTotal> getReportByDate(String startDate, String endDate) {
+        try {
+            List<ReportTotal> list = new ArrayList<>();
+
+            String sql = String.format("SELECT %s,%s,sum(%s) as quantity,sum(%s.%s) as totalMoney FROM " + BILL_TBL_NAME + "," + BILL_DETAIL_TBL_NAME + " WHERE " +
+                            " %s.%s = %s.%s " + " AND " + COLUMN_STATE + " = '1' " + " AND " +
+                            " date(" + COLUMN_DATE_CREATED + ")" + " BETWEEN " + "'" + startDate + "'" + " AND " + "'" + endDate + "'" +
+                            " GROUP BY " + COLUMN_DISH_ID + "," + COLUMN_DATE_CREATED,
+                    COLUMN_DATE_CREATED, COLUMN_DISH_ID, COLUMN_QUANTITY, BILL_DETAIL_TBL_NAME, IDBUtils.ITableBillDetailUtils.COLUMN_TOTAL_MONEY,
+                    BILL_TBL_NAME, IDBUtils.ITableBillUtils.COLUMN_BILL_ID, BILL_DETAIL_TBL_NAME, IDBUtils.ITableBillDetailUtils.COLUMN_BILL_ID
+            );
+
+            Log.d("sql", "getReportByDate: " + sql);
+
+            Cursor cursor = SQLiteDBManager.getInstance().getRecords(sql, null);
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                while (!cursor.isAfterLast()) {
+                    list.add(parseCursorToReportTotal(cursor));
+                    cursor.moveToNext();
+                }
+                return list;
+            } else {
+                return null;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public List<ReportDetail> getReportDetailByDate(String startDate, String endDate) {
         try {
             ArrayList<ReportDetail> list = new ArrayList<>();
 
@@ -413,7 +617,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 
@@ -453,7 +656,6 @@ public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtil
         } catch (Exception e) {
             e.printStackTrace();
         }
-
         return null;
     }
 

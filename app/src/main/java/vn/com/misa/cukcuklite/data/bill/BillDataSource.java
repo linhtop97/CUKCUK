@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
+import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
@@ -29,23 +30,32 @@ import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtil
  * Created_by Nguyễn Bá Linh on 12/04/2019
  */
 public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils {
-
     private static final String TAG = "BillDataSource";
-
     private static BillDataSource sInstance;
-
     private SQLiteDBManager mSQLiteDBManager;
-
     private DishDataSource mDishDataSource;
-
     private HashMap<String, Order> orderHashMap;
 
+    /**
+     * Phương thức khởi tạo cho lớp
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
     private BillDataSource() {
-        mSQLiteDBManager = SQLiteDBManager.getInstance();
-        mDishDataSource = DishDataSource.getInstance();
-        orderHashMap = new HashMap<>();
+        try {
+            mSQLiteDBManager = SQLiteDBManager.getInstance();
+            mDishDataSource = DishDataSource.getInstance();
+            orderHashMap = new HashMap<>();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
+    /**
+     * Phương thức lấy Instance của lớp
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @return - Instance của lớp
+     */
     public static BillDataSource getInstance() {
         if (sInstance == null) {
             synchronized (BillDataSource.class) {
@@ -123,6 +133,13 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     }
 
 
+    /**
+     * Lấy hóa đơn thông qua id của hóa đơn
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param billId - id của hóa đơn
+     * @return - Hóa đơn
+     */
     @Override
     public Bill getBillById(String billId) {
         try {
@@ -134,7 +151,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                     .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
                     .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
                     .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))
-                    .setDateCreated(Long.parseLong(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
+                    .setDateCreated(DateUtil.getTimeMilisecondsFromDateString(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
                     .build();
             cursor.moveToNext();
             cursor.close();
@@ -171,6 +188,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                     //xóa hết bản ghi hóa đơn chi tiết cũ -> thêm bản ghi hóa đơn chi tiết mới
                     if (removeAllBillDetaiListByBillId(billId)) {
                         if (addBillDetailList(validBillDetailList)) {
+                            //thêm order vào cache
                             addOrderToCache(getOrderFromBill(bill));
                             return true;
                         } else {
@@ -243,7 +261,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      * Phương thức thanh toán hóa đơn
      * Created_by Nguyễn Bá Linh on 17/04/2019
      *
-     * @param bill
+     * @param bill - hóa đơn
      */
     @Override
     public boolean payBill(Bill bill) {
@@ -311,7 +329,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_BILL_ID, bill.getBillId());
                 contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
-                contentValues.put(COLUMN_DATE_CREATED, String.valueOf(bill.getDateCreated()));
+                contentValues.put(COLUMN_DATE_CREATED, DateUtil.getDateFormat(Calendar.getInstance().getTime()));
                 contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
                 contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
                 contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
@@ -452,26 +470,28 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      */
     @Override
     public List<Bill> getAllBillUnpaid() {
-        List<Bill> bills = new ArrayList<>();
         try {
+            List<Bill> bills = new ArrayList<>();
             Cursor cursor = mSQLiteDBManager.getRecords("select * from " + BILL_TBL_NAME + " where " + COLUMN_STATE + "=0", null);
             cursor.moveToFirst();
             while (!cursor.isAfterLast()) {
                 Bill bill = new Bill.Builder().setBillId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_ID)))
                         .setBillNumber(cursor.getInt(cursor.getColumnIndex(COLUMN_BILL_NUMBER)))
+                        .setState(EnumBillSate.UNPAID)
                         .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
                         .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
                         .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))
-                        .setDateCreated(Long.parseLong(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
+                        .setDateCreated(DateUtil.getTimeMilisecondsFromDateString(cursor.getString((cursor.getColumnIndex(COLUMN_DATE_CREATED)))))
                         .build();
                 bills.add(bill);
                 cursor.moveToNext();
             }
             cursor.close();
+            return bills;
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return bills;
+        return null;
     }
 
     /**
@@ -487,8 +507,10 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
                 return new ArrayList<>(orderHashMap.values());
             }
             List<Bill> bills = getAllBillUnpaid();
+            orderHashMap = new HashMap<>();
             if (bills != null) {
                 for (Bill bill : bills) {
+                    Log.d(TAG, "getAllOrder: " + bill.toString());
                     addOrderToCache(getOrderFromBill(bill));
                 }
                 return new ArrayList<>(orderHashMap.values());
@@ -527,6 +549,13 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     }
 
 
+    /**
+     * Phương thức hủy hóa đơn
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param billId - id của hóa đơn
+     * @return - hủy hóa đơn thành công/thất bại
+     */
     @Override
     public boolean cancelOrder(String billId) {
         try {
@@ -542,11 +571,6 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
             e.printStackTrace();
         }
         return false;
-    }
-
-    @Override
-    public void getOrderUnpaidByBillId(String billId) {
-
     }
 
     /**

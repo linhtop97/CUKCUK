@@ -13,7 +13,6 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
 
 public class LoginPresenter implements ILoginContract.IPresenter {
@@ -39,9 +38,9 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            mDishDataSource.deleteAllDish();
-                            mUnitDataSource.deleteAllUnit();
-                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
+//                            mDishDataSource.deleteAllDish();
+//                            mUnitDataSource.deleteAllUnit();
+//                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
                             mView.loginSuccess();
 
                         } else {
@@ -62,11 +61,19 @@ public class LoginPresenter implements ILoginContract.IPresenter {
         mView = view;
     }
 
+    /**
+     * Phương thức khởi chạy đầu tiên khi màn hình được hiển thị
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
     @Override
     public void onStart() {
 
     }
 
+    /**
+     * Phương thức giải phóng, lưu dữ liệu khi màn hình trong trạng thái không còn hoạt động với người dùng
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
     @Override
     public void onStop() {
 

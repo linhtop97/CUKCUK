@@ -85,7 +85,4 @@ public interface IDBUtils {
         String COLUMN_QUANTITY = "Quantity";
         String COLUMN_TOTAL_MONEY = "TotalMoney";
     }
-
-    //sql query
-    //select * FROM tblUnitDefault WHERE tblUnitDefault.PK_iUnitId in (select FK_iUnitId from tblRestaurantUnit WHERE tblRestaurantUnit.FK_iRestaurantId = 2)
 }
