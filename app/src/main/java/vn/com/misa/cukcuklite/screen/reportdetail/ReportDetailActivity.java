@@ -19,114 +19,115 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.cukcukenum.ReportTotalEnum;
 import vn.com.misa.cukcuklite.data.models.ReportTotal;
 import vn.com.misa.cukcuklite.utils.AppConstants;
+import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
- * - Mục đích Class : Màn hình Báo các chi tiết - @created_by Hoàng Hiệp on 4/15/2019
+ * Màn hình Báo các chi tiết
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
-  private TextView tvTitleReport;
+    private TextView tvTitleReport;
+    private Navigator mNavigator;
 
-  /**
-   * Mục đích method: Lấy intent
-   *
-   * @param context Context
-   * @param reportTotal Đối tượng báo cáo
-   * @return Trả về intent trỏ tới ReportDetailActivity
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  public static Intent getIntent(Context context, ReportTotal reportTotal) {
-    Intent intent = new Intent(context, ReportDetailActivity.class);
-    intent.putExtra(AppConstants.EXTRA_REPORT_TOTAL, reportTotal);
-    return intent;
-  }
-
-  @Override
-  protected void onCreate(@Nullable Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    setContentView(R.layout.activity_report_detail);
-    initView();
-    initListener();
-
-  }
-
-  /**
-   * Mục đích method: Bắt sự kiện
-   *
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  private void initListener() {
-    findViewById(R.id.ivBack).setOnClickListener(this);
-  }
-
-  /**
-   * Mục đích method: Khởi tạo, ánh xạ View và đổ dữ liệu mặc định cho View
-   *
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  private void initView() {
-    tvTitleReport = findViewById(R.id.tvTitleReport);
-    ReportTotal reportTotal = (ReportTotal) getIntent().getSerializableExtra(AppConstants.EXTRA_REPORT_TOTAL);
-    Date[] dates = new Date[2];
-    dates[0] = reportTotal.getFromDate();
-    dates[1] = reportTotal.getToDate();
-    @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(
-        AppConstants.DATE_FORMAT);
-    if (reportTotal.getType() == ReportTotalEnum.YEAR) {
-      tvTitleReport.setText(
-          String.valueOf(
-              reportTotal.getTitleReportDetail() + " (" + dateFormat
-                  .format(reportTotal.getFromDate())
-                  + " - " + dateFormat.format(reportTotal.getToDate()) + ")"));
-    } else {
-      tvTitleReport.setText(
-          String.valueOf(
-              reportTotal.getTitleReportDetail() + " (" + dateFormat
-                  .format(reportTotal.getFromDate())
-                  + ")"));
+    /**
+     * Mục đích method: Lấy intent
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param context     Context
+     * @param reportTotal Đối tượng báo cáo
+     * @return Trả về intent trỏ tới ReportDetailActivity
+     */
+    public static Intent getIntent(Context context, ReportTotal reportTotal) {
+        Intent intent = new Intent(context, ReportDetailActivity.class);
+        intent.putExtra(AppConstants.EXTRA_REPORT_TOTAL, reportTotal);
+        return intent;
     }
-    loadFragment(ReportDetailFragment.newInstance(dates));
-  }
 
-  /**
-   * Mục đích method: Replace Fragment
-   *
-   * @param fragment Fragment cần thay thế
-   * @created_by Hoàng Hiệp on 4/5/2019
-   */
-  private void loadFragment(Fragment fragment) {
-    try {
-      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-      transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
-      transaction.replace(R.id.rlContent, fragment);
-      transaction.addToBackStack(null);
-      transaction.commit();
-    } catch (Exception e) {
-      e.printStackTrace();
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_report_detail);
+        mNavigator = new Navigator(this);
+        initViews();
+        initEvents();
+
     }
-  }
 
-  /**
-   * Mục đích method: Xử lý sự kiện
-   *
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  @Override
-  public void onClick(View v) {
-    switch (v.getId()) {
-      case R.id.ivBack:
-        finish();
-        break;
+    /**
+     * Phương thức gắn sự kiện cho view
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    private void initEvents() {
+        findViewById(R.id.ivBack).setOnClickListener(this);
     }
-  }
 
-  /**
-   * Mục đích method: Xử lý xự kiện khi ấn nút back
-   *
-   * @created_by Hoàng Hiệp on 4/15/2019
-   */
-  @Override
-  public void onBackPressed() {
-    finish();
-  }
+    /**
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    private void initViews() {
+        try {
+            tvTitleReport = findViewById(R.id.tvTitleReport);
+            ReportTotal reportTotal = (ReportTotal) getIntent().getSerializableExtra(AppConstants.EXTRA_REPORT_TOTAL);
+            Date[] dates = new Date[2];
+            dates[0] = reportTotal.getFromDate();
+            dates[1] = reportTotal.getToDate();
+            @SuppressLint("SimpleDateFormat") DateFormat dateFormat = new SimpleDateFormat(
+                    AppConstants.DATE_FORMAT);
+            if (reportTotal.getType() == ReportTotalEnum.YEAR) {
+                tvTitleReport.setText(
+                        String.valueOf(
+                                reportTotal.getTitleReportDetail() + " (" + dateFormat
+                                        .format(reportTotal.getFromDate())
+                                        + " - " + dateFormat.format(reportTotal.getToDate()) + ")"));
+            } else {
+                tvTitleReport.setText(
+                        String.valueOf(
+                                reportTotal.getTitleReportDetail() + " (" + dateFormat
+                                        .format(reportTotal.getFromDate())
+                                        + ")"));
+            }
+            mNavigator.addFragment(R.id.rlContent, ReportDetailFragment.newInstance(dates),
+                    false, Navigator.NavigateAnim.NONE, ReportDetailFragment.class.getSimpleName());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Mục đích method: Replace Fragment
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param fragment Fragment cần thay thế
+     */
+    private void loadFragment(Fragment fragment) {
+        try {
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            transaction.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN);
+            transaction.replace(R.id.rlContent, fragment);
+            transaction.addToBackStack(null);
+            transaction.commit();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Mục đích method: Xử lý sự kiện
+     *
+     * @created_by Hoàng Hiệp on 3/27/2019
+     */
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ivBack:
+                try {
+                    finish();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+        }
+    }
 }

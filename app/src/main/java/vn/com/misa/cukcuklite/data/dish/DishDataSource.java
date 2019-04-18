@@ -321,7 +321,13 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     @Override
     public boolean deleteAllDish() {
         try {
-            return mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null);
+            if (mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null)) {
+                if(mDishes!=null){
+                mDishes.clear();
+                }
+                return true;
+            }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
             return false;

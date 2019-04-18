@@ -15,7 +15,9 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
@@ -267,7 +269,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                 mBill = bill;
                 tvTable.setText(bill.getTableNumber() > 0 ? String.valueOf(bill.getTableNumber()) : "");
                 tvPerson.setText(bill.getNumberCustomer() > 0 ? String.valueOf(bill.getNumberCustomer()) : "");
-                tvTotalMoney.setText(String.valueOf(bill.getTotalMoney()));
+                tvTotalMoney.setText(NumberFormat.getNumberInstance(Locale.US).format(bill.getTotalMoney()));
                 mPresenter.setListDishOrder(bill.getBillId());
             }
         } catch (Exception e) {
@@ -325,7 +327,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
             case R.id.tvPay:
             case R.id.btnPay:
                 try {
-                    if (!SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
+                    if (SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
                         saveOrder(true);
                     } else {
                         int totalMoney = Integer.parseInt(tvTotalMoney.getText().toString());

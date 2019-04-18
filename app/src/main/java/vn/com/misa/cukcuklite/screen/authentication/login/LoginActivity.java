@@ -43,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         mNavigator = new Navigator(this);
-        mPresenter = new LoginPresenter();
+        mPresenter = new LoginPresenter(this);
         mPresenter.setView(this);
         initViews();
         initEvents();

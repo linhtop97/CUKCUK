@@ -179,6 +179,7 @@ public class ConfirmAddEditUnitDialog extends DialogFragment implements View.OnC
                 } else {
                     mCallBack.onAddUnit(new Unit(UUID.randomUUID().toString(), unitName));
                 }
+                dismiss();
                 break;
         }
     }

@@ -227,7 +227,12 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         try {
             String sql = String.format("SELECT count(*) FROM %s WHERE %s = '%s' ", BILL_TBL_NAME, COLUMN_STATE, AppConstants.PAID);
             Cursor cursor = mSQLiteDBManager.getRecords(sql, null);
-            return cursor == null ? 0 : cursor.getCount();
+            if (cursor != null && cursor.getCount() > 0) {
+                cursor.moveToFirst();
+                return cursor.getInt(0);
+            } else {
+                return 0;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -302,6 +307,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
     public boolean addBill(Bill bill, List<BillDetail> billDetails) {
         try {
             if (bill != null) {
+                Log.d(TAG, "addBill: ");
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_BILL_ID, bill.getBillId());
                 contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());

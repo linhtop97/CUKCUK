@@ -15,7 +15,7 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.ParamReport;
 
 /**
- * Adapter của list khoảng thời gian
+ * Adapter của list lựa chọn thông báo cho khoảng thời gian
  * Created_by Nguyễn Bá Linh on 17/04/2019
  */
 public class ParamReportAdapter extends RecyclerView.Adapter<ParamReportAdapter.ViewHolder> {

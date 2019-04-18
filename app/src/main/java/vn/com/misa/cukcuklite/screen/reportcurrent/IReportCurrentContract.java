@@ -2,22 +2,23 @@ package vn.com.misa.cukcuklite.screen.reportcurrent;
 
 import java.util.List;
 
+import vn.com.misa.cukcuklite.base.IBasePresenter;
+import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 
 /**
- * ‐ Contract  trong mô hình MVP cho màn hình Báo cáo Gần đây
- * <p>
- * ‐ @created_by Hoàng Hiệp on 7/4/2019
+ * Contract  trong mô hình MVP cho màn hình Báo cáo Gần đây
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 interface IReportCurrentContract {
 
-  interface IView {
+    interface IView extends IBaseView {
 
-    void onLoadReportCurrentDone(List<ReportCurrent> reportCurrents);
-  }
+        void onLoadReportCurrentDone(List<ReportCurrent> reportCurrents);
+    }
 
-  interface IPresenter {
+    interface IPresenter extends IBasePresenter<IView> {
 
-    void getListReportCurrent();
-  }
+        void getListReportCurrent();
+    }
 }

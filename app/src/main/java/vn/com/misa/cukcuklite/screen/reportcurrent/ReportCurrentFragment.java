@@ -1,6 +1,5 @@
 package vn.com.misa.cukcuklite.screen.reportcurrent;
 
-import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -15,83 +14,130 @@ import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
-import vn.com.misa.cukcuklite.screen.report.ReportFragment;
 
 /**
- * - Mục đích Class :Màn hình Báo cáo gần đây - @created_by Hoàng Hiệp on 4/9/2019
+ * Màn hình Báo cáo gần đây
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportCurrentFragment extends Fragment implements IReportCurrentContract.IView,
-    ReportCurrentAdapter.OnCLickReport {
+        ReportCurrentAdapter.OnCLickReport {
 
-  private static final String TAG = ReportFragment.class.getName();
-  private IReportCurrentContract.IPresenter mPresenter;
-  private ReportCurrentAdapter mAdapter;
-  private OnClickCurrentReport mOnClickCurrentReport;
+    private static final String TAG = "ReportCurrentFragment";
+    private IReportCurrentContract.IPresenter mPresenter;
+    private ReportCurrentAdapter mAdapter;
+    private OnClickCurrentReport mOnClickCurrentReport;
 
-  public ReportCurrentFragment() {
-  }
+    public static ReportCurrentFragment newInstance() {
+        return new ReportCurrentFragment();
+    }
 
-  @SuppressLint("ValidFragment")
-  public ReportCurrentFragment(OnClickCurrentReport onClickCurrentReport) {
-    mOnClickCurrentReport = onClickCurrentReport;
-  }
+    /**
+     * Phương thức gán listener lắng nghe xử lý sự kiện cho item view
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param onClickCurrentReport - listener
+     */
+    public void setOnClickCurrentReport(OnClickCurrentReport onClickCurrentReport) {
+        try {
+            if(onClickCurrentReport!=null){
+            mOnClickCurrentReport = onClickCurrentReport;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-  public static ReportCurrentFragment newInstance(OnClickCurrentReport onClickCurrentReport) {
-    return new ReportCurrentFragment(onClickCurrentReport);
-  }
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        View v = inflater.inflate(R.layout.fragment_report_current, container, false);
+        initViews(v);
+        return v;
+    }
 
-  @Nullable
-  @Override
-  public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                           @Nullable Bundle savedInstanceState) {
-    View v = inflater.inflate(R.layout.fragment_report_current, container, false);
-    initView(v);
-    return v;
-  }
+    /**
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    private void initViews(View v) {
+        try {
+            mPresenter = new ReportCurrentPresenter();
+            mPresenter.setView(this);
+            mPresenter.getListReportCurrent();
+            mAdapter = new ReportCurrentAdapter(getContext());
+            mAdapter.setCLickReport(this);
+            RecyclerView rvReport = v.findViewById(R.id.rvReport);
+            rvReport.setAdapter(mAdapter);
+            rvReport.setLayoutManager(new LinearLayoutManager(getContext()));
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-  /**
-   * Mục đích method: Xử lý sự kiện
-   *
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  private void initView(View v) {
-    mPresenter = new ReportCurrentPresenter(this, getContext());
-    mPresenter.getListReportCurrent();
-    mAdapter = new ReportCurrentAdapter(getContext(), this);
-    RecyclerView rvReport = v.findViewById(R.id.rvReport);
-    rvReport.setAdapter(mAdapter);
-    rvReport.setLayoutManager(new LinearLayoutManager(getContext()));
-  }
+    /**
+     * Đổ dữ liệu lên adapter khi lấy xong
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param reportCurrents: danh sách ReportCurrent
+     */
+    @Override
+    public void onLoadReportCurrentDone(List<ReportCurrent> reportCurrents) {
+        try {
+            if (reportCurrents != null) {
+                mAdapter.setListData(reportCurrents);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
-  /**
-   * Mục đích method: Add data và Adapter khi load xong
-   *
-   * @param reportCurrents: danh sách ReportCurrent
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  @Override
-  public void onLoadReportCurrentDone(List<ReportCurrent> reportCurrents) {
-    mAdapter.setData(reportCurrents);
-  }
+    /**
+     * Xử li khi click vào item bất kì
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param reportCurrent: trả về ReportCurrent ở vị trí đó
+     */
+    @Override
+    public void onClick(ReportCurrent reportCurrent) {
+        mOnClickCurrentReport.onClick(reportCurrent);
+    }
 
-  /**
-   * Mục đích method: Xử li khi click vào item bất kì
-   *
-   * @param reportCurrent: trả về ReportCurrent ở vị trí đó
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  @Override
-  public void onClick(ReportCurrent reportCurrent) {
-    mOnClickCurrentReport.onClick(reportCurrent);
-  }
+    /**
+     * Phương thức nhận 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param message - thông điệp được nhận
+     */
+    @Override
+    public void receiveMessage(int message) {
 
-  /**
-   * Mục đích method: interface Callback khi click vào item
-   *
-   * @created_by Hoàng Hiệp on 3/27/2019
-   */
-  public interface OnClickCurrentReport {
+    }
 
-    void onClick(ReportCurrent reportCurrent);
-  }
+    /**
+     * Phương thức hiển thị 1 dialog chờ xử lý tác vụ với 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    @Override
+    public void showLoading() {
+
+    }
+
+    /**
+     * Phương thức ẩn/đóng dialog đang chờ xử lý khi thực hiện xong tác vụ
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    @Override
+    public void hideLoading() {
+
+    }
+
+    /**
+     * Mục đích method: interface Callback khi click vào item
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    public interface OnClickCurrentReport {
+
+        void onClick(ReportCurrent reportCurrent);
+    }
 }

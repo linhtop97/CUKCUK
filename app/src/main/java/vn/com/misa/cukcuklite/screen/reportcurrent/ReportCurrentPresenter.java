@@ -1,85 +1,90 @@
 package vn.com.misa.cukcuklite.screen.reportcurrent;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.os.AsyncTask;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.dao.IReportDataSource;
-import vn.com.misa.cukcuklite.data.dao.ReportDAO;
-import vn.com.misa.cukcuklite.data.models.Bill;
+import vn.com.misa.cukcuklite.data.report.IReportDataSource;
+import vn.com.misa.cukcuklite.data.report.ReportDataSource;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 
 /**
  * ‐ Presenter trong mô hình MVP cho màn hình Báo cáo
- * <p>
- * ‐ @created_by Hoàng Hiệp on 7/4/2019
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class ReportCurrentPresenter implements IReportCurrentContract.IPresenter {
 
-  private static final String TAG = ReportCurrentPresenter.class.getName();
+    private static final String TAG = ReportCurrentPresenter.class.getName();
+    IReportDataSource mDataReportSource;
+    private IReportCurrentContract.IView mView;
 
-  private IReportCurrentContract.IView mView;
-  private Context mContext;
-
-  IReportDataSource mDataReportSource;
-
-  public ReportCurrentPresenter(IReportCurrentContract.IView view, Context context) {
-    mView = view;
-    mContext = context;
-    mDataReportSource = new ReportDAO();
-  }
-
-  /**
-   * Mục đích method: Trả về danh sách ReportCurrent
-   *
-   * @created_by Hoàng Hiệp on 4/15/2019
-   */
-  @SuppressLint("StaticFieldLeak")
-  @Override
-  public void getListReportCurrent() {
-    new AsyncTask<Void, Void, List<ReportCurrent>>() {
-      @Override
-      protected List<ReportCurrent> doInBackground(Void... voids) {
-        List<ReportCurrent> reportCurrentList = mDataReportSource.getOverviewReport();
-        Log.d(TAG, "doInBackground: " + reportCurrentList.size());
-        if(reportCurrentList != null && reportCurrentList.size() > 0){
-          return reportCurrentList;
-        }else{
-          return new ArrayList<>();
-        }
-      }
-
-      @Override
-      protected void onPostExecute(List<ReportCurrent> reportCurrents) {
-        super.onPostExecute(reportCurrents);
-        mView.onLoadReportCurrentDone(reportCurrents);
-      }
-    }.execute();
-
-
-  }
-
-  /**
-   * Mục đích method: Tính tổng số tiền
-   *
-   * @param bills : danh sách hóa đơn
-   * @return amount: tổng só tiền của hóa đơn
-   * @created_by Hoàng Hiệp on 4/15/2019
-   */
-  private long getAmount(List<Bill> bills) {
-    try {
-      long amount = 0;
-      for (Bill bill : bills) {
-       amount += bill.getTotalMoney();
-      }
-      return amount;
-    } catch (Exception e) {
-      e.printStackTrace();
+    public ReportCurrentPresenter() {
+        mDataReportSource = new ReportDataSource();
     }
-    return 0;
-  }
+
+    /**
+     * Trả về danh sách ReportCurrent
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    @SuppressLint("StaticFieldLeak")
+    @Override
+    public void getListReportCurrent() {
+        try {
+            mView.showLoading();
+            new AsyncTask<Void, Void, List<ReportCurrent>>() {
+                @Override
+                protected List<ReportCurrent> doInBackground(Void... voids) {
+                    List<ReportCurrent> reportCurrentList = mDataReportSource.getOverviewReport();
+                    if (reportCurrentList != null && reportCurrentList.size() > 0) {
+                        return reportCurrentList;
+                    } else {
+                        return new ArrayList<>();
+                    }
+                }
+
+                @Override
+                protected void onPostExecute(List<ReportCurrent> reportCurrents) {
+                    super.onPostExecute(reportCurrents);
+                    mView.onLoadReportCurrentDone(reportCurrents);
+                    mView.hideLoading();
+                }
+            }.execute();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    /**
+     * Phương thức đặt view cho presenter
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
+     * @param view - view
+     */
+    @Override
+    public void setView(IReportCurrentContract.IView view) {
+        mView = view;
+    }
+
+    /**
+     * Phương thức khởi chạy đầu tiên khi màn hình được hiển thị
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    @Override
+    public void onStart() {
+
+    }
+
+    /**
+     * Phương thức giải phóng, lưu dữ liệu khi màn hình trong trạng thái không còn hoạt động với người dùng
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
+    @Override
+    public void onStop() {
+
+    }
 }

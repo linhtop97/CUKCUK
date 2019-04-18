@@ -15,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -23,7 +24,8 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 /**
- * - Mục đích Class :Dialog chọn từ ngày- đến ngày - @created_by Hoàng Hiệp on 4/12/2019
+ * Dialog chọn từ ngày - đến ngày
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
 public class FromToPickerDialog extends DialogFragment implements View.OnClickListener {
 
@@ -34,8 +36,8 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Set callback cho Dialog
-     *
-     * @created_by Hoàng Hiệp on 4/12/2019
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     public void setOnClickAcceptPickDate(OnClickAcceptPickDate onClickAcceptPickDate) {
         mOnClickAcceptPickDate = onClickAcceptPickDate;
@@ -57,8 +59,8 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Thay đổi kích cỡ dialog
-     *
-     * @created_by Hoàng Hiệp on 4/12/2019
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     @Override
     public void onResume() {
@@ -75,8 +77,8 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Khởi tạo giá trị mặc định
-     *
-     * @created_by Hoàng Hiệp on 4/12/2019
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     private void initDefDate() {
         try {
@@ -101,10 +103,10 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Format date về string
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @param date: ngày truyên vào
      * @return : dạng string format
-     * @created_by Hoàng Hiệp on 4/12/2019
      */
     private String formatDate(Date date) {
         return dateFormat.format(date);
@@ -112,8 +114,8 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Bắt sự kiện
-     *
-     * @created_by Hoàng Hiệp on 3/27/2019
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     private void initListener(View view) {
         view.findViewById(R.id.lnFromDate).setOnClickListener(this);
@@ -124,8 +126,8 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
 
     /**
      * Mục đích method: Khởi tạo, ánh xạ View và đổ dữ liệu mặc định cho View
-     *
-     * @created_by Hoàng Hiệp on 3/27/2019
+     * <p>
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     @SuppressLint("SimpleDateFormat")
     private void initView(View view) {
@@ -139,16 +141,17 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
     }
 
     /**
-     * Mục đích method: Xử lý sự kiện
+     * Phương thức xử lý các sự kiện click cho các view được gắn sự kiện OnClick
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
-     * @created_by Hoàng Hiệp on 3/27/2019
+     * @param v - view xảy ra sự kiện
      */
     @Override
     public void onClick(View v) {
-        try {
-            final Calendar calendar = Calendar.getInstance();
-            switch (v.getId()) {
-                case R.id.lnFromDate:
+        final Calendar calendar = Calendar.getInstance();
+        switch (v.getId()) {
+            case R.id.lnFromDate:
+                try {
                     calendar.setTime(dateFormat.parse(tvFromDateValue.getText().toString()));
                     DatePickerDialog dialogFromDate = new DatePickerDialog(getContext(),
                             new DatePickerDialog.OnDateSetListener() {
@@ -161,8 +164,12 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
                             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH));
                     dialogFromDate.show();
-                    break;
-                case R.id.lnToDate:
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                break;
+            case R.id.lnToDate:
+                try {
                     calendar.setTime(dateFormat.parse(tvToDateValue.getText().toString()));
                     DatePickerDialog dialogToDate = new DatePickerDialog(getContext(),
                             new DatePickerDialog.OnDateSetListener() {
@@ -175,8 +182,12 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
                             }, calendar.get(Calendar.YEAR), calendar.get(Calendar.MONTH),
                             calendar.get(Calendar.DAY_OF_MONTH));
                     dialogToDate.show();
-                    break;
-                case R.id.btnAcceptDialog:
+                } catch (ParseException e1) {
+                    e1.printStackTrace();
+                }
+                break;
+            case R.id.btnAcceptDialog:
+                try {
                     if (fromDate.compareTo(toDate) < 0) {
                         mOnClickAcceptPickDate.onPickDate(fromDate, toDate);
                         dismiss();
@@ -184,21 +195,19 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
                         Toast.makeText(getContext(), getString(R.string.msg_dialog_pick_date),
                                 Toast.LENGTH_SHORT).show();
                     }
-                    break;
-                case R.id.btnCancelDialog:
-                    dismiss();
-                    break;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
+                } catch (Exception e1) {
+                    e1.printStackTrace();
+                }
+                break;
+            case R.id.btnCancelDialog:
+                dismiss();
+                break;
         }
     }
 
     /**
      * Mục đích method: interface bắt sự kiện
-     *
-     * @return
-     * @created_by Hoàng Hiệp on 4/12/2019
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      */
     public interface OnClickAcceptPickDate {
 

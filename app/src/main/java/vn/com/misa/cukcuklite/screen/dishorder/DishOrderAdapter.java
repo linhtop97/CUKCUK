@@ -17,6 +17,9 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
@@ -238,7 +241,7 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                             tvQuantity.setText(R.string.price_default);
                             clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
                         }
-                        tvPrice.setText(String.valueOf(mPrice));
+                        tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(mPrice));
                     }
                 }
             } catch (Resources.NotFoundException e) {

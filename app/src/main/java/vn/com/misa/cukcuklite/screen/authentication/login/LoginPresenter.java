@@ -1,5 +1,6 @@
 package vn.com.misa.cukcuklite.screen.authentication.login;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 
 import com.facebook.AccessToken;
@@ -11,10 +12,22 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
 
 public class LoginPresenter implements ILoginContract.IPresenter {
 
     private ILoginContract.IView mView;
+    private Context mContext;
+    private DishDataSource mDishDataSource;
+    private UnitDataSource mUnitDataSource;
+
+    public LoginPresenter(Context context) {
+        mContext = context;
+        mDishDataSource = DishDataSource.getInstance();
+        mUnitDataSource = UnitDataSource.getInstance();
+    }
 
     @Override
     public void loginWithFacebook(AccessToken accessToken) {
@@ -26,6 +39,9 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            mDishDataSource.deleteAllDish();
+                            mUnitDataSource.deleteAllUnit();
+                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
                             mView.loginSuccess();
 
                         } else {

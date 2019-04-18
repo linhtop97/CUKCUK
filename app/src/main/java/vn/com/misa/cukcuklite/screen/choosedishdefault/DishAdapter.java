@@ -12,6 +12,9 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
@@ -97,7 +100,7 @@ public class DishAdapter extends ListAdapter<Dish> {
                     tvStopSale.setVisibility(View.VISIBLE);
                 }
                 tvDishName.setText(dish.getDishName());
-                tvPrice.setText(String.valueOf(dish.getPrice()));
+                tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(dish.getPrice()));
                 drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
                 btnDish.setBackground(drawable);
                 btnDish.setImageDrawable(ImageUtils.getDrawableFromImageAssets(mContext, dish.getIconPath()));

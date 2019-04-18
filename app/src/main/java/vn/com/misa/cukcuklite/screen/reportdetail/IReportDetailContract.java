@@ -3,20 +3,18 @@ package vn.com.misa.cukcuklite.screen.reportdetail;
 import java.util.Date;
 import java.util.List;
 
+import vn.com.misa.cukcuklite.base.IBasePresenter;
+import vn.com.misa.cukcuklite.base.IBaseView;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
 
-/**
- * ‐ Contract  trong mô hình MVP cho màn hình Báo cáo chi tiết ‐ @created_by Hoàng Hiệp on
- * 4/15/2019
- */
 interface IReportDetailContract {
 
-  interface IView {
+  interface IView extends IBaseView {
 
     void onLoadDataDone(List<ReportDetail> reportDetails);
   }
 
-  interface IPresenter {
+  interface IPresenter extends IBasePresenter<IView> {
 
     void loadData(Date[] dates);
   }

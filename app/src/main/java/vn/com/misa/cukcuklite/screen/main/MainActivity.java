@@ -129,7 +129,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     btnAdd.setVisibility(View.VISIBLE);
                     tvTitle.setText(R.string.sale);
                     mIsSale = true;
-                    mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                    mNavigator.addFragment(R.id.flMainContainer, SaleFragment.newInstance(),
+                            false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -140,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     btnAdd.setVisibility(View.VISIBLE);
                     tvTitle.setText(R.string.menu_title);
                     mIsSale = false;
-                    mNavigator.addFragment(R.id.flMainContainer, MenuFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                    mNavigator.addFragment(R.id.flMainContainer, MenuFragment.newInstance(),
+                            false, Navigator.NavigateAnim.NONE, MenuFragment.class.getSimpleName());
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -150,7 +152,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     btnAdd.setClickable(false);
                     btnAdd.setVisibility(View.INVISIBLE);
                     tvTitle.setText(R.string.evenue);
-                    mNavigator.addFragment(R.id.flMainContainer, ReportFragment.newInstance(), false, Navigator.NavigateAnim.NONE, SaleFragment.class.getSimpleName());
+                    mNavigator.addFragment(R.id.flMainContainer, ReportFragment.newInstance(),
+                            false, Navigator.NavigateAnim.NONE, "REPORT_TAG");
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

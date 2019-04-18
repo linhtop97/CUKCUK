@@ -343,8 +343,12 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
         try {
             deleteSuccess = mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME, null, null);
             if (deleteSuccess) {
-                mUnits = null;
+                if (mUnits != null) {
+                    mUnits.clear();
+                }
+                return true;
             }
+            return false;
         } catch (Exception e) {
             e.printStackTrace();
         }

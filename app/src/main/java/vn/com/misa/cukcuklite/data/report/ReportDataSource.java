@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.dao;
+package vn.com.misa.cukcuklite.data.report;
 
 import android.database.Cursor;
 import android.util.Log;
@@ -15,18 +15,18 @@ import vn.com.misa.cukcuklite.utils.DateUtil;
 
 /**
  * Class xử lý các truy vấn lấy báo cáo thống kê
- *
- * @created_by nblinh on 4/17/2019
+ * <p>
+ * Created_by Nguyễn Bá Linh on 18/04/2019
  */
-public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITableBillUtils, IReportDataSource {
+public class ReportDataSource implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITableBillUtils, IReportDataSource {
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo theo khoảng thời gian
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @param startDate - ngày giờ bắt đầu
      * @param endDate   - ngày giờ kết thúc
      * @return - danh sách báo cáo thống kê theo từng ngày
-     * @created_by nblinh on 4/17/2019
      */
     private static ArrayList<ReportDetail> getReportOverViewByDate(String startDate, String endDate) {
         try {
@@ -62,10 +62,10 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Bóc dữ liệu báo cáo theo từng ngày
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @param cursor - giá trị đối tượng lấy từ sqlite
      * @return đối tượng báo cáo từng ngày
-     * @created_by nblinh on 4/17/2019
      */
     private static ReportDetail parseCursorToReportDetail(Cursor cursor) {
         if (cursor == null) {
@@ -86,9 +86,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo tổng quan doanh thu trong năm nay
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return Giá trị tổng doanh thu trong năm nay
-     * @created_by nblinh on 4/17/2019
      */
     private static int getReportTotalMoneyThisYear() {
         try {
@@ -117,9 +117,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo tổng quan doanh thu trong tháng này
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return Giá trị tổng doanh thu trong tháng này
-     * @created_by nblinh on 4/17/2019
      */
     private static int getReportTotalMoneyThisMonth() {
         try {
@@ -147,9 +147,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo tổng quan doanh thu trong tuần này
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return Giá trị tổng doanh thu trong tuần này
-     * @created_by nblinh on 4/17/2019
      */
     private static int getReportTotalMoneyThisWeek() {
         try {
@@ -176,9 +176,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo tổng quan doanh thu trong hôm nay
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return Giá trị tổng doanh thu trong hôm nay
-     * @created_by nblinh on 4/17/2019
      */
     private static int getReportTotalMoneyToday() {
         try {
@@ -206,9 +206,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo tổng quan doanh thu trong hôm qua
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return Giá trị tổng doanh thu trong hôm qua
-     * @created_by nblinh on 4/17/2019
      */
     private static int getReportTotalMoneyYesterday() {
         try {
@@ -235,9 +235,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết hôm nay
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportToday() {
@@ -253,9 +253,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết hôm qua
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportYeaterday() {
@@ -271,9 +271,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết tuần này
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportThisWeek() {
@@ -289,9 +289,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết tuần trước
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportLastWeek() {
@@ -307,9 +307,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết tháng này
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportThisMonth() {
@@ -325,9 +325,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết tháng trước
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportLastMonth() {
@@ -343,9 +343,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết năm nay
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportThisYear() {
@@ -360,9 +360,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo chi tiết năm trước
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - Danh sách thông kê báo cáo theo từng món ăn - có thể trả về null khi có lỗi xảy ra
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportLastYear() {
@@ -378,11 +378,11 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo theo khoảng thời gian
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @param startDate - ngày giờ bắt đầu
      * @param endDate   - ngày giờ kết thúc
      * @return - danh sách báo cáo thống kê theo từng ngày
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportByDate(String startDate, String endDate) {
@@ -419,10 +419,10 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thống kê báo cáo theo khoảng thời gian
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @param date - ngày muốn lấy báo cáo - Định dạng là yyyy-MM-dd
      * @return - danh sách báo cáo thống kê theo từng ngày
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportDetail> getReportDetailDate(String date) {
@@ -459,9 +459,9 @@ public class ReportDAO implements IDBUtils.ITableBillDetailUtils, IDBUtils.ITabl
 
     /**
      * Phương thức xử lý: Lấy thông tin báo cáo tổng quan
+     * Created_by Nguyễn Bá Linh on 18/04/2019
      *
      * @return - báo cáo tổng quan doanh thu
-     * @created_by nblinh on 4/17/2019
      */
     @Override
     public ArrayList<ReportCurrent> getOverviewReport() {

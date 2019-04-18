@@ -8,6 +8,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
+
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
@@ -70,8 +73,8 @@ public class BillDetailAdapter extends ListAdapter<BillDetail> {
                 int quantity = billDetail.getQuantity();
                 int totalMoney = billDetail.getTotalMoney();
                 tvQuantity.setText(String.valueOf(quantity));
-                tvPrice.setText(String.valueOf(totalMoney / quantity));
-                tvTotalMoney.setText(String.valueOf(totalMoney));
+                tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(totalMoney / quantity));
+                tvTotalMoney.setText(NumberFormat.getNumberInstance(Locale.US).format(totalMoney));
             } catch (Exception e) {
                 e.printStackTrace();
             }

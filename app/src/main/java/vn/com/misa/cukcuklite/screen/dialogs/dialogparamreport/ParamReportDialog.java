@@ -74,7 +74,7 @@ public class ParamReportDialog extends DialogFragment implements ParamReportAdap
   /**
    * Mục đích method: Truyền vào Callback
    *
-   * @created_by Hoàng Hiệp on 4/12/2019
+   * Created_by Nguyễn Bá Linh on 18/04/2019
    */
   public void setCallBack(ParamCallBack callBack) {
     mCallBack = callBack;
@@ -83,7 +83,7 @@ public class ParamReportDialog extends DialogFragment implements ParamReportAdap
   /**
    * Mục đích method: Xử lý sự kiện
    *
-   * @created_by Hoàng Hiệp on 3/27/2019
+   * Created_by Nguyễn Bá Linh on 18/04/2019
    */
   @Override
   public void onClick(ParamReport paramReport) {
