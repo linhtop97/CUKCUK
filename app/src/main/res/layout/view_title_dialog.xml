@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/color_fragment_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/colorGrayLight">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextViewTitleWhite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorBluePrimary"
+        android:padding="@dimen/padding_normal"
+        android:text="@string/cukcuk_like"
+        app:layout_constraintRight_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageButton
+        android:id="@+id/btnClose"
+        android:layout_width="@dimen/action_height"
+        android:layout_height="@dimen/action_height"
+        android:layout_marginEnd="@dimen/margin_small"
+        android:background="@null"
+        android:padding="@dimen/padding_micro"
+        android:scaleType="fitXY"
+        android:contentDescription="@string/image_description"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitle"
+        app:layout_constraintRight_toRightOf="@id/tvTitle"
+        app:layout_constraintTop_toTopOf="@id/tvTitle"
+        app:srcCompat="@drawable/ic_close_white" />
+</android.support.constraint.ConstraintLayout>

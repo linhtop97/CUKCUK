@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -93,7 +92,7 @@
                 android:contentDescription="@string/image_description"
                 android:src="@drawable/ic_table_blue" />
 
-            <EditText
+            <TextView
                 android:id="@+id/tvTable"
                 style="@style/TextViewNormal"
                 android:layout_width="wrap_content"
@@ -101,10 +100,8 @@
                 android:layout_marginStart="@dimen/margin_small"
                 android:background="@drawable/selector_white_blue_with_radius"
                 android:gravity="center"
-                android:inputType="numberDecimal"
                 android:minWidth="@dimen/min_width_tv_number_select"
-                android:padding="@dimen/padding_small"
-                tools:ignore="Autofill,LabelFor" />
+                android:padding="@dimen/padding_small" />
 
             <ImageView
                 android:layout_width="@dimen/table_icon_size"
@@ -113,7 +110,7 @@
                 android:contentDescription="@string/image_description"
                 android:src="@drawable/ic_customer" />
 
-            <EditText
+            <TextView
                 android:id="@+id/tvPerson"
                 style="@style/TextViewNormal"
                 android:layout_width="wrap_content"
@@ -121,10 +118,8 @@
                 android:layout_marginStart="@dimen/margin_small"
                 android:background="@drawable/selector_white_blue_with_radius"
                 android:gravity="center"
-                android:inputType="numberDecimal"
                 android:minWidth="@dimen/min_width_tv_number_select"
-                android:padding="@dimen/padding_small"
-                tools:ignore="Autofill,LabelFor" />
+                android:padding="@dimen/padding_small" />
 
             <TextView
                 style="@style/TextViewNormal"

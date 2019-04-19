@@ -10,6 +10,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -42,6 +43,8 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
     private ReportTotalAdapter mAdapter;
     private ParamReport paramReport;
     private LineChart mLineChart;
+    private TextView tvXValDescription;
+
 
     /**
      * Mục đích method: Khởi tạo ReportTotalFragment;
@@ -85,7 +88,7 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
             ReportTotalEnum type = reportTotals.get(0).getType();
             ArrayList<Entry> list = new ArrayList<>();
             for (int i = 0; i < reportTotals.size(); i++) {
-                Entry entry = new Entry(i + 1, (float) reportTotals.get(i).getAmount());
+                Entry entry = new Entry(i + 1, (float) reportTotals.get(i).getAmount() / 1000);
                 list.add(entry);
             }
             LineDataSet dataSet = new LineDataSet(list, null);
@@ -104,6 +107,7 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
             xAxis.setDrawAxisLine(false);
             switch (type) {
                 case WEEK:
+                    tvXValDescription.setText(getString(R.string.day_of_week));
                     xAxis.setAxisMinimum(1f);
                     xAxis.setAxisMaximum(7f);
                     xAxis.setLabelCount(7, true);
@@ -118,6 +122,7 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
                     });
                     break;
                 case MONTH:
+                    tvXValDescription.setText(getString(R.string.day));
                     xAxis.setAxisMinimum(1f);
                     xAxis.setAxisMaximum(31f);
                     xAxis.setLabelCount(11, true);
@@ -129,6 +134,7 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
                     });
                     break;
                 case YEAR:
+                    tvXValDescription.setText(getString(R.string.month));
                     xAxis.setAxisMinimum(1f);
                     xAxis.setAxisMaximum(12f);
                     xAxis.setLabelCount(12, true);
@@ -154,16 +160,17 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
         }
     }
 
-   /**
-    * Phương thức tham chiếu, khởi tạo view
-    * Created_by Nguyễn Bá Linh on 18/04/2019
-    */
+    /**
+     * Phương thức tham chiếu, khởi tạo view
+     * Created_by Nguyễn Bá Linh on 18/04/2019
+     */
     private void initViews(View v) {
         try {
             mPresenter = new ReportTotalPresenter(this, getContext());
             mAdapter = new ReportTotalAdapter(getContext(), new ArrayList<ReportTotal>());
             mAdapter.setOnClickItemTotalReport(this);
             RecyclerView rvReport = v.findViewById(R.id.rvReport);
+            tvXValDescription = v.findViewById(R.id.tvXValDescription);
             rvReport.setAdapter(mAdapter);
             rvReport.setLayoutManager(new LinearLayoutManager(getContext()));
         } catch (Exception e) {
@@ -174,12 +181,13 @@ public class ReportTotalFragment extends Fragment implements IReportTotalContrac
     /**
      * Add data và adapter và cặp nhật lại LineChart khi load dữ liêu thành công
      * Created_by Nguyễn Bá Linh on 18/04/2019
+     *
      * @param reportTotals: Danh sách ReportTotal
      */
     @Override
     public void onLoadDataDone(List<ReportTotal> reportTotals) {
         try {
-            if(reportTotals!=null){
+            if (reportTotals != null) {
                 setupLineChart(reportTotals);
                 mAdapter.setData(reportTotals);
             }

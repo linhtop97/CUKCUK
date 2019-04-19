@@ -268,7 +268,6 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         try {
             if (bill != null) {
                 Calendar calendar = Calendar.getInstance();
-
                 String billId = bill.getBillId();
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(COLUMN_BILL_ID, billId);

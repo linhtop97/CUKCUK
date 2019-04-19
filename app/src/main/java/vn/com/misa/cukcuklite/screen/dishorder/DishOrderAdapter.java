@@ -7,7 +7,9 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +17,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.Locale;
@@ -26,6 +27,7 @@ import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Dish;
+import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
 import vn.com.misa.cukcuklite.utils.ImageUtils;
 
 /**
@@ -81,6 +83,26 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                 totalMoney += mListData.get(i).getTotalMoney();
             }
             mOnItemClickListener.onItemClick(totalMoney);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * HIển thị dialog nhập số
+     * Created_by Nguyễn Bá Linh on 19/04/2019
+     *
+     * @param flag           - cờ cho title dialog
+     * @param input          - text từ edittext bàn phím
+     * @param dialogCallBack - callback cho dialog
+     */
+    private void showDialogNumber(int flag, CharSequence input,
+                                  InputNumberDialog.DialogCallBack dialogCallBack) {
+        try {
+            InputNumberDialog inputNumberDialog = new InputNumberDialog(flag, dialogCallBack,
+                    input);
+            FragmentManager fm = ((DishOrderActivity) mContext).getSupportFragmentManager();
+            inputNumberDialog.show(fm, InputNumberDialog.NUMBER_INPUT_DIALOG);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -159,7 +181,32 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                     break;
                 case R.id.tvQuantity:
                     try {
-                        Toast.makeText(mContext, "nothing", Toast.LENGTH_SHORT).show();
+                        showDialogNumber(InputNumberDialog.FLAG_QUANTITY, String.valueOf(quantity), new InputNumberDialog.DialogCallBack() {
+                            @Override
+                            public void setAmount(String amount) {
+                                try {
+                                    if (TextUtils.isEmpty(amount)) {
+                                        amount = "0";
+                                    }
+                                    int quantity = Integer.parseInt(amount);
+                                    mBillDetail.setQuantity(quantity);
+                                    mBillDetail.setTotalMoney(quantity * mPrice);
+                                    mListData.set(getAdapterPosition(), mBillDetail);
+                                    tvQuantity.setText(amount);
+                                    if (quantity == 0) {
+                                        ivICon.setVisibility(View.VISIBLE);
+                                        ivDefault.setVisibility(View.GONE);
+                                        lnQuantity.setVisibility(View.GONE);
+                                        clDishOrder.setBackground(mContext.getResources().getDrawable(R.drawable.selector_dish));
+                                    }
+                                    totalMoney();
+                                } catch (NumberFormatException e) {
+                                    e.printStackTrace();
+                                } catch (Resources.NotFoundException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -252,5 +299,6 @@ public class DishOrderAdapter extends ListAdapter<BillDetail> {
                 e.printStackTrace();
             }
         }
+
     }
 }

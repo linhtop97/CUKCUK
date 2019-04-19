@@ -20,6 +20,7 @@ import java.util.Collections;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
+import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
@@ -213,7 +214,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             SharedPrefersManager.getInstance(this).setIsLoginSuccess(true);
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-            intent.setClass(this, ChooseRestaurantTypeActivity.class);
+            if (SharedPrefersManager.getInstance(this).getIsAlreadyHasData()) {
+                intent.setClass(this, MainActivity.class);
+            } else {
+                intent.setClass(this, ChooseRestaurantTypeActivity.class);
+            }
             intent.putExtra(AppConstants.EXTRA_LOGIN_SUCCESS, true);
             mNavigator.startActivity(intent, Navigator.ActivityTransition.NONE);
             finish();

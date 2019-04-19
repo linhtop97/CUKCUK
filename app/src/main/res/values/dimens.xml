@@ -104,4 +104,7 @@
     <dimen name="iv_empty_report_w">80dp</dimen>
     <dimen name="iv_empty_report_h">80dp</dimen>
     <dimen name="view_button_size">40dp</dimen>
+    <dimen name="height_keyboard">48dp</dimen>
+    <dimen name="margin_keyboard">7dp</dimen>
+    <dimen name="padding_dialog_key_10">10dp</dimen>
 </resources>

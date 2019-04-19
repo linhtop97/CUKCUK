@@ -17,7 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
+import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.menu.MenuFragment;
 import vn.com.misa.cukcuklite.screen.report.ReportFragment;
@@ -149,11 +151,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navReport:
                 try {
-                    btnAdd.setClickable(false);
-                    btnAdd.setVisibility(View.INVISIBLE);
-                    tvTitle.setText(R.string.evenue);
-                    mNavigator.addFragment(R.id.flMainContainer, ReportFragment.newInstance(),
-                            false, Navigator.NavigateAnim.NONE, "REPORT_TAG");
+                    if (SharedPrefersManager.getInstance(this).getIsLoginSuccess()) {
+                        btnAdd.setClickable(false);
+                        btnAdd.setVisibility(View.INVISIBLE);
+                        tvTitle.setText(R.string.evenue);
+                        mNavigator.addFragment(R.id.flMainContainer, ReportFragment.newInstance(),
+                                false, Navigator.NavigateAnim.NONE, "REPORT_TAG");
+                    } else {
+                        mNavigator.startActivity(LoginActivity.class);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

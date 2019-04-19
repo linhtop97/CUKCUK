@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,10 +67,12 @@ public class FromToPickerDialog extends DialogFragment implements View.OnClickLi
     public void onResume() {
         super.onResume();
         try {
-            ViewGroup.LayoutParams params = getDialog().getWindow().getAttributes();
-            params.width = ViewGroup.LayoutParams.MATCH_PARENT;
-            params.height = ViewGroup.LayoutParams.WRAP_CONTENT;
-            getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+            Window window = getDialog().getWindow();
+            int width = getResources().getDimensionPixelSize(R.dimen.color_dialog_width);
+            int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            assert window != null;
+            window.setLayout(width, height);
+            window.setGravity(Gravity.CENTER);
         } catch (Exception e) {
             e.printStackTrace();
         }

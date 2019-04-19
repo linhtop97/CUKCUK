@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 
 import java.util.Objects;
@@ -33,7 +34,8 @@ import vn.com.misa.cukcuklite.utils.AppConstants;
  */
 public class ConfirmAddEditUnitDialog extends DialogFragment implements View.OnClickListener {
     private TextView tvTitle;
-    private Button btnClose, btnYes, btnNo;
+    private  Button btnYes, btnNo;
+    private ImageButton btnClose;
     private EditText etUnitName;
     private boolean isEdit;
     private Unit mUnit;

@@ -170,6 +170,13 @@
     <string name="msg_dialog_pick_date">Giá trị Từ ngày phải nhỏ hơn hoặc bằng Đến ngày</string>
     <string name="icon_fragment">icon_fragment</string>
     <string name="evenue">Doanh thu</string>
+    <string name="keyClear">C</string>
+    <string name="title_table">Nhập số bàn</string>
+    <string name="title_person">Nhập số người</string>
+    <string name="title_quantiy">Nhập số lượng</string>
+    <string name="month">Tháng</string>
+    <string name="day">Ngày</string>
+    <string name="day_of_week">Thứ</string>
 
 
     <string-array name="color_list">

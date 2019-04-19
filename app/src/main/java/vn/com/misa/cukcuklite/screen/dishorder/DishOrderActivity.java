@@ -6,12 +6,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -26,6 +26,7 @@ import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
+import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.screen.pay.PayActivity;
 import vn.com.misa.cukcuklite.screen.sale.SaleFragment;
@@ -42,8 +43,7 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
     private ProgressDialog mDialog;
     private Navigator mNavigator;
     private DishOrderAdapter mAdapter;
-    private TextView tvTotalMoney, tvPay;
-    private EditText tvTable, tvPerson;
+    private TextView tvTotalMoney, tvPay, tvTable, tvPerson;
     private ImageButton btnBack;
     private ConstraintLayout clWaterMark;
     private Button btnSave, btnPay;
@@ -320,8 +320,28 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                 }
                 break;
             case R.id.tvPerson:
+                try {
+                    showDialogNumber(InputNumberDialog.FLAG_PERSON, tvPerson.getText(), new InputNumberDialog.DialogCallBack() {
+                        @Override
+                        public void setAmount(String amount) {
+                            tvPerson.setText(amount);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.tvTable:
+                try {
+                    showDialogNumber(InputNumberDialog.FLAG_TABLE, tvTable.getText(), new InputNumberDialog.DialogCallBack() {
+                        @Override
+                        public void setAmount(String amount) {
+                            tvTable.setText(amount);
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.btnBack:
                 try {
@@ -427,6 +447,26 @@ public class DishOrderActivity extends AppCompatActivity implements DishOrderCon
                     mIsEdit = true;
                 }
             }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * HIển thị dialog nhập số
+     * Created_by Nguyễn Bá Linh on 19/04/2019
+     *
+     * @param flag           - cờ cho title dialog
+     * @param input          - text từ edittext bàn phím
+     * @param dialogCallBack - callback cho dialog
+     */
+    private void showDialogNumber(int flag, CharSequence input,
+                                  InputNumberDialog.DialogCallBack dialogCallBack) {
+        try {
+            InputNumberDialog inputNumberDialog = new InputNumberDialog(flag, dialogCallBack,
+                    input);
+            FragmentManager fm = getSupportFragmentManager();
+            inputNumberDialog.show(fm, InputNumberDialog.NUMBER_INPUT_DIALOG);
         } catch (Exception e) {
             e.printStackTrace();
         }

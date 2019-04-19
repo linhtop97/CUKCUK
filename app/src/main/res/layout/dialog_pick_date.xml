@@ -15,7 +15,7 @@
 
         <TextView
             android:id="@+id/tv_title"
-            style="@style/TextViewNormal"
+            style="@style/TextViewTitleWhite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/margin_normal_small"
@@ -90,7 +90,7 @@
             <TextView
                 android:id="@+id/tvToDateValue"
                 style="@style/TextViewNormal"
-                android:layout_width="@dimen/dp_0"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1.0"
                 android:gravity="end" />

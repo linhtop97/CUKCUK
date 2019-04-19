@@ -103,6 +103,7 @@
                 tools:ignore="UnusedAttribute" />
 
             <View
+                android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/line_height"
                 android:background="@color/colorGray"
@@ -117,16 +118,16 @@
                 android:gravity="center"
                 android:text="@string/price"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvDishName" />
+                app:layout_constraintTop_toBottomOf="@id/line1" />
 
-            <EditText
+            <TextView
                 android:id="@+id/tvPrice"
                 style="@style/TextViewNormalBlack"
                 android:layout_width="@dimen/dp_0"
                 android:layout_height="@dimen/item_dish_height"
                 android:layout_marginStart="@dimen/margin_normal"
+                android:background="@drawable/selector_dish"
                 android:gravity="center_vertical"
-                android:inputType="number"
                 android:singleLine="true"
                 android:text="@string/price_default"
                 android:textAlignment="textEnd"
@@ -134,7 +135,7 @@
                 android:textColorHint="@color/colorTextGray"
                 app:layout_constraintLeft_toRightOf="@id/tvPriceTitle"
                 app:layout_constraintRight_toLeftOf="@id/ivSelectPrice"
-                app:layout_constraintTop_toBottomOf="@id/tvDishName"
+                app:layout_constraintTop_toTopOf="@id/tvPriceTitle"
                 tools:ignore="Autofill,LabelFor,RtlCompat" />
 
             <ImageView

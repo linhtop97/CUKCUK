@@ -207,15 +207,14 @@
                         android:text="@string/guest_pay"
                         android:textColor="@color/colorBluePrimary" />
 
-                    <EditText
-                        android:id="@+id/etMoneyGuestPay"
+                    <TextView
+                        android:id="@+id/tvMoneyGuestPay"
                         style="@style/TextViewNormal"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="@dimen/margin_small"
                         android:layout_weight="1"
-                        android:background="@null"
-                        android:inputType="number"
+                        android:background="@drawable/selector_dish"
                         android:padding="@dimen/padding_micro"
                         android:singleLine="true"
                         android:textAlignment="textEnd"

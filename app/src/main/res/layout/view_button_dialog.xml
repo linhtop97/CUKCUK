@@ -19,7 +19,7 @@
             android:id="@+id/btnCancelDialog"
             style="@style/DialogNegativeButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/view_button_size"
+            android:layout_height="@dimen/action_height"
             android:layout_marginEnd="@dimen/margin_small"
             android:minWidth="@dimen/btn_min_w"
             android:text="@string/cancel" />
@@ -28,7 +28,7 @@
             android:id="@+id/btnAcceptDialog"
             style="@style/DialogPositiveButtonStyle"
             android:layout_width="wrap_content"
-            android:layout_height="@dimen/view_button_size"
+            android:layout_height="@dimen/action_height"
             android:layout_marginEnd="@dimen/margin_small"
             android:minWidth="@dimen/btn_min_w"
             android:text="@string/ok" />

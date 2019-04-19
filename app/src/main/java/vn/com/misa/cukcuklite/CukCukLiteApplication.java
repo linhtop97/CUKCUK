@@ -33,7 +33,6 @@ public class CukCukLiteApplication extends Application {
             sInstance = this;
             SQLiteDBManager.getInstance(this);
             initDatabaseStructure();
-//            initDataCache();
             //cho phép đặt nguồn ảnh là vector
             AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
             //đặt font chữ mặc định cho thư viện
@@ -71,15 +70,4 @@ public class CukCukLiteApplication extends Application {
         //Cài mutil dex cho ứng dụng
         MultiDex.install(this);
     }
-
-
-//    /**
-//     * Phương thức khởi tạo dữ liệu cache cho ứng dụng
-//     * Created_by Nguyễn Bá Linh on 13/04/2019
-//     */
-//    private void initDataCache() {
-//        SQLiteDBManager.getInstance(this);
-//        DishDataSource.getInstance().getAllDish();
-//        UnitDataSource.getInstance().getAllUnit();
-//    }
 }

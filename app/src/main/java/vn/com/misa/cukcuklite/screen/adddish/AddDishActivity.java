@@ -5,13 +5,16 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Resources;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -20,12 +23,15 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.text.NumberFormat;
+import java.util.Locale;
 import java.util.UUID;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
+import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
 import vn.com.misa.cukcuklite.screen.dialogs.color.ColorSelectorDialog;
 import vn.com.misa.cukcuklite.screen.dialogs.delete.ConfirmDeleteDialog;
 import vn.com.misa.cukcuklite.screen.dialogs.icon.DishIconSelectorDialog;
@@ -46,8 +52,8 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
     private static final String DISH_ICON_DIALOG = "DISH_ICON_DIALOG";
     private static final String DELETE_DIALOG = "DELETE_DIALOG";
     private ImageButton btnBack;
-    private TextView tvTitle, tvSave, tvUnit, tvStateTitle;
-    private EditText etDishName, tvPrice;
+    private TextView tvTitle, tvSave, tvUnit, tvStateTitle, tvPrice;
+    private EditText etDishName;
     private ImageView ivSelectUnit, ivSelectPrice, ivColor, ivIcon;
     private CheckBox cbState;
     private Button btnDelete, btnSave;
@@ -180,17 +186,21 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
      * @param dish - món ăn
      */
     private void setUpView(Dish dish) {
-        if (dish != null) {
-            mDish = dish;
-            cbState.setChecked(!dish.isSale());
-            etDishName.setText(dish.getDishName());
-            tvPrice.setText(String.valueOf(dish.getPrice()));
-            tvUnit.setText(mPresenter.getUnitName(dish.getUnitId()));
-            Drawable drawable = getResources().getDrawable(R.drawable.background_dish_icon);
-            drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
-            ivColor.setBackground(drawable);
-            ivIcon.setBackground(drawable);
-            ivIcon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(this, dish.getIconPath()));
+        try {
+            if (dish != null) {
+                mDish = dish;
+                cbState.setChecked(!dish.isSale());
+                etDishName.setText(dish.getDishName());
+                tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format((long) (dish.getPrice())));
+                tvUnit.setText(mPresenter.getUnitName(dish.getUnitId()));
+                Drawable drawable = getResources().getDrawable(R.drawable.background_dish_icon);
+                drawable.setColorFilter(Color.parseColor(dish.getColorCode()), PorterDuff.Mode.SRC);
+                ivColor.setBackground(drawable);
+                ivIcon.setBackground(drawable);
+                ivIcon.setImageDrawable(ImageUtils.getDrawableFromImageAssets(this, dish.getIconPath()));
+            }
+        } catch (Resources.NotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -374,7 +384,19 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
                 break;
             case R.id.ivSelectPrice:
             case R.id.tvPrice:
-                //   showCalculator();
+                try {
+                    showDialogNumber(InputNumberDialog.FLAG_PRICE, NumberFormat.getNumberInstance(Locale.US).parse(tvPrice.getText().toString()).toString(), new InputNumberDialog.DialogCallBack() {
+                        @Override
+                        public void setAmount(String amount) {
+                            if (TextUtils.isEmpty(amount)) {
+                                amount = "0";
+                            }
+                            tvPrice.setText(NumberFormat.getNumberInstance(Locale.US).format(Long.parseLong(amount)));
+                        }
+                    });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
             case R.id.ivSelectUnit:
             case R.id.tvUnit:
@@ -432,10 +454,10 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         try {
             mDish.setDishId(UUID.randomUUID().toString());
             mDish.setDishName(etDishName.getText().toString().trim());
-            mDish.setPrice(Integer.parseInt(tvPrice.getText().toString().trim()));
+            mDish.setPrice((int) ((long) NumberFormat.getNumberInstance(Locale.US).parse(tvPrice.getText().toString().trim())));
             mDish.setSale(!cbState.isChecked());
             mPresenter.addDish(mDish);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -447,10 +469,10 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
     private void updateDish() {
         try {
             mDish.setDishName(etDishName.getText().toString().trim());
-            mDish.setPrice(Integer.parseInt(tvPrice.getText().toString().trim()));
+            mDish.setPrice((int) ((long) NumberFormat.getNumberInstance(Locale.US).parse(tvPrice.getText().toString().trim())));
             mDish.setSale(!cbState.isChecked());
             mPresenter.updateDish(mDish);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -537,10 +559,34 @@ public class AddDishActivity extends AppCompatActivity implements IAddDishContra
         }
     }
 
+    /**
+     * Xác nhận việc xóa món ăn
+     * Created_by Nguyễn Bá Linh on 4/04/2019
+     */
     @Override
     public void acceptDelete() {
         try {
             mPresenter.deleteDish(mDish.getDishId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * HIển thị dialog nhập số
+     * Created_by Nguyễn Bá Linh on 19/04/2019
+     *
+     * @param flag           - cờ cho title dialog
+     * @param input          - text từ edittext bàn phím
+     * @param dialogCallBack - callback cho dialog
+     */
+    private void showDialogNumber(int flag, CharSequence input,
+                                  InputNumberDialog.DialogCallBack dialogCallBack) {
+        try {
+            InputNumberDialog inputNumberDialog = new InputNumberDialog(flag, dialogCallBack,
+                    input);
+            FragmentManager fm = getSupportFragmentManager();
+            inputNumberDialog.show(fm, InputNumberDialog.NUMBER_INPUT_DIALOG);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -24,6 +23,7 @@ import java.util.Locale;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
+import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.Navigator;
 import vn.com.misa.cukcuklite.utils.StringUtils;
@@ -35,8 +35,7 @@ import vn.com.misa.cukcuklite.utils.StringUtils;
 public class PayActivity extends AppCompatActivity implements View.OnClickListener, IPayContract.IView {
     private ImageButton btnBack;
     private Button btnDone;
-    private TextView tvMoneyHaveToPay, tvBillNumber, tvDone, tvDateCreated, tvMoneyReturn;
-    private EditText etMoneyGuestPay;
+    private TextView tvMoneyHaveToPay, tvBillNumber, tvDone, tvDateCreated, tvMoneyReturn, tvMoneyGuestPay;
     private RecyclerView rvBill;
     private PayPresenter mPresenter;
     private BillDetailAdapter mAdapter;
@@ -65,7 +64,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
             tvDone = findViewById(R.id.tvDone);
             tvDateCreated = findViewById(R.id.tvDateCreated);
             tvMoneyReturn = findViewById(R.id.tvMoneyReturn);
-            etMoneyGuestPay = findViewById(R.id.etMoneyGuestPay);
+            tvMoneyGuestPay = findViewById(R.id.tvMoneyGuestPay);
             rvBill = findViewById(R.id.rvBill);
             rvBill.setLayoutManager(new LinearLayoutManager(this));
             mAdapter = new BillDetailAdapter(this);
@@ -100,24 +99,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
             btnDone.setOnClickListener(this);
             tvDone.setOnClickListener(this);
             tvMoneyReturn.setOnClickListener(this);
-            etMoneyGuestPay.setOnClickListener(this);
-            etMoneyGuestPay.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (s.toString().equals("")) {
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-
-                }
-            });
+            tvMoneyGuestPay.setOnClickListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -140,6 +122,29 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                     e.printStackTrace();
                 }
                 break;
+            case R.id.tvMoneyGuestPay:
+                try {
+                    showDialogNumber(InputNumberDialog.FLAG_MONEY_GUEST_PAY,
+                            NumberFormat.getNumberInstance(Locale.US).parse(tvMoneyGuestPay.getText().toString()).toString(), new InputNumberDialog.DialogCallBack() {
+                                @Override
+                                public void setAmount(String amount) {
+                                    if (TextUtils.isEmpty(amount)) {
+                                        amount = "0";
+                                    }
+                                    tvMoneyGuestPay.setText(NumberFormat.getNumberInstance(Locale.US).format(Long.parseLong(amount)));
+                                    try {
+                                        long moneyHavePay = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvMoneyHaveToPay.getText().toString());
+                                        long moneyGuestPay = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvMoneyGuestPay.getText().toString());
+                                        tvMoneyReturn.setText(NumberFormat.getNumberInstance(Locale.US).format(moneyGuestPay - moneyHavePay));
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                            });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
             case R.id.tvDone:
             case R.id.btnDone:
                 try {
@@ -148,6 +153,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                     e.printStackTrace();
                 }
                 break;
+
         }
     }
 
@@ -158,7 +164,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     private void payBill() {
         try {
             long moneyHaveToPay = (long) NumberFormat.getNumberInstance(Locale.US).parse(tvMoneyHaveToPay.getText().toString());
-            String moneyGuestPay = etMoneyGuestPay.getText().toString();
+            String moneyGuestPay = tvMoneyGuestPay.getText().toString();
             long moneyGuestPay2 = 0;
             if (!moneyGuestPay.equals("")) {
                 moneyGuestPay2 = (long) NumberFormat.getNumberInstance(Locale.US).parse(moneyGuestPay);
@@ -207,7 +213,7 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
                 mAdapter.setListData(billDetailList);
                 String money = NumberFormat.getNumberInstance(Locale.US).format(bill.getTotalMoney());
                 tvMoneyHaveToPay.setText(money);
-                etMoneyGuestPay.setText(money);
+                tvMoneyGuestPay.setText(money);
                 DecimalFormat decimalFormat = new DecimalFormat("00000");
                 tvBillNumber.setText(decimalFormat.format(billNumber + 1));
                 long dateCreated = Calendar.getInstance().getTimeInMillis();
@@ -258,5 +264,25 @@ public class PayActivity extends AppCompatActivity implements View.OnClickListen
     public void onBackPressed() {
         setResult(Activity.RESULT_CANCELED);
         super.onBackPressed();
+    }
+
+    /**
+     * HIển thị dialog nhập số
+     * Created_by Nguyễn Bá Linh on 19/04/2019
+     *
+     * @param flag           - cờ cho title dialog
+     * @param input          - text từ edittext bàn phím
+     * @param dialogCallBack - callback cho dialog
+     */
+    private void showDialogNumber(int flag, CharSequence input,
+                                  InputNumberDialog.DialogCallBack dialogCallBack) {
+        try {
+            InputNumberDialog inputNumberDialog = new InputNumberDialog(flag, dialogCallBack,
+                    input);
+            FragmentManager fm = getSupportFragmentManager();
+            inputNumberDialog.show(fm, InputNumberDialog.NUMBER_INPUT_DIALOG);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }
