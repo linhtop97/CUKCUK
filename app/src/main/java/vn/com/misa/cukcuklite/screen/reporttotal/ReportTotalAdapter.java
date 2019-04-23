@@ -50,6 +50,12 @@ public class ReportTotalAdapter extends RecyclerView.Adapter<ReportTotalAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
         try {
+            int size = mReportTotals.size();
+            if(position== --size){
+                holder.lineBottom.setVisibility(View.INVISIBLE);
+            }else {
+                holder.lineBottom.setVisibility(View.VISIBLE);
+            }
             final ReportTotal reportTotal = mReportTotals.get(position);
             holder.tvTitle.setText(reportTotal.getTitleReportDetail());
             holder.tvAmount
@@ -93,12 +99,14 @@ public class ReportTotalAdapter extends RecyclerView.Adapter<ReportTotalAdapter.
 
         private LinearLayout lnContent;
         private TextView tvTitle, tvAmount;
+        private View lineBottom;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             lnContent = itemView.findViewById(R.id.lnContent);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            lineBottom = itemView.findViewById(R.id.lineBottom);
         }
     }
 }

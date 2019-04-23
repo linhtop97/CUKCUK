@@ -13,6 +13,10 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
 
+/**
+ * Adapter cho danh sách quán ăn
+ * Created_by Nguyễn Bá Linh on 19/04/2019
+ */
 public class RestaurantTypeAdapter extends ListAdapter<RestaurantType> {
 
     private int mLastPositionSelected;
@@ -47,6 +51,12 @@ public class RestaurantTypeAdapter extends ListAdapter<RestaurantType> {
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder viewHolder, int i) {
         try {
             RestaurantTypeHolder holder = (RestaurantTypeHolder) viewHolder;
+            int size = mListData.size();
+            if(i == --size){
+                holder.lineBottom.setVisibility(View.INVISIBLE);
+            }else {
+                holder.lineBottom.setVisibility(View.VISIBLE);
+            }
             holder.bind(mListData.get(i));
             if (i == mLastPositionSelected) {
                 holder.ivSelected.setImageResource(R.drawable.ic_check_blue);
@@ -65,11 +75,13 @@ public class RestaurantTypeAdapter extends ListAdapter<RestaurantType> {
     public class RestaurantTypeHolder extends RecyclerView.ViewHolder {
         private TextView tvRestaurantType;
         private ImageView ivSelected;
+        private View lineBottom;
 
         public RestaurantTypeHolder(@NonNull View itemView) {
             super(itemView);
             tvRestaurantType = itemView.findViewById(R.id.tvRestaurantType);
             ivSelected = itemView.findViewById(R.id.ivSelected);
+            lineBottom = itemView.findViewById(R.id.lineBottom);
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {

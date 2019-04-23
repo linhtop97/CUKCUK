@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 import vn.com.misa.cukcuklite.R;
 
+/**
+ * Dialog nhập số cho các trường nhập liệu
+ * Created_by Nguyễn Bá Linh on 19/04/2019
+ */
 public class InputNumberDialog extends DialogFragment implements View.OnClickListener {
 
     public static final int FLAG_TABLE = 0;
@@ -177,9 +181,13 @@ public class InputNumberDialog extends DialogFragment implements View.OnClickLis
                     showResult(getString(R.string._9));
                     break;
                 case R.id.btnKeyBack:
-                    if (textInput.length() > 0) {
-                        textInput = textInput.substring(0, textInput.length() - 1);
-                        showResult();
+                    try {
+                        if (textInput.length() > 0) {
+                            textInput = textInput.substring(0, textInput.length() - 1);
+                            showResult();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                     break;
                 case R.id.btnKeyAccept:
@@ -199,14 +207,18 @@ public class InputNumberDialog extends DialogFragment implements View.OnClickLis
                     showResult();
                     break;
                 case R.id.btnKeyPlus:
-                    if (TextUtils.isEmpty(textInput)) {
-                        textInput = "1";
-                    } else {
-                        number = Integer.parseInt(textInput);
-                        number++;
-                        textInput = number + "";
+                    try {
+                        if (TextUtils.isEmpty(textInput)) {
+                            textInput = "1";
+                        } else {
+                            number = Integer.parseInt(textInput);
+                            number++;
+                            textInput = number + "";
+                        }
+                        showResult();
+                    } catch (NumberFormatException e) {
+                        e.printStackTrace();
                     }
-                    showResult();
                     break;
                 case R.id.btnKeyClear:
                     textInput = "";

@@ -81,6 +81,12 @@ public class ReportCurrentAdapter extends ListAdapter<ReportCurrent> {
                 Glide.with(mContext).load(R.drawable.ic_calendar_month).into(reportHolder.ivIcon);
                 break;
         }
+        int  size = mListData.size();
+        if(i== --size){
+            reportHolder.lineBottom.setVisibility(View.INVISIBLE);
+        }else {
+            reportHolder.lineBottom.setVisibility(View.VISIBLE);
+        }
         reportHolder.ivBackgroundColor.setBackground(drawableBg);
         reportHolder.lnContent.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +113,7 @@ public class ReportCurrentAdapter extends ListAdapter<ReportCurrent> {
         private LinearLayout lnContent;
         private ImageView ivBackgroundColor, ivIcon;
         private TextView tvTitle, tvAmount;
+        private View lineBottom;
 
         public ReportHolder(@NonNull View itemView) {
             super(itemView);
@@ -115,6 +122,7 @@ public class ReportCurrentAdapter extends ListAdapter<ReportCurrent> {
             ivIcon = itemView.findViewById(R.id.ivIcon);
             tvTitle = itemView.findViewById(R.id.tvTitle);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            lineBottom = itemView.findViewById(R.id.lineBottom);
         }
     }
 }

@@ -2,10 +2,12 @@ package vn.com.misa.cukcuklite.screen.main;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -15,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
@@ -160,6 +164,43 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     } else {
                         mNavigator.startActivity(LoginActivity.class);
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+
+            case R.id.navShare:
+                try {
+                    ShareCompat.IntentBuilder.from(this)
+                            .setType("text/plain")
+                            .setChooserTitle(getString(R.string.share_app))
+                            .setText("market://details?id=vn.com.misa.android_cukcuklite")
+                            .startChooser();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.navRate:
+                try {
+                    Uri myUri = Uri.parse("market://details?id=vn.com.misa.android_cukcuklite");
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(myUri);
+                    startActivity(intent);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.navInfo:
+
+                break;
+            case R.id.navLogout:
+                try {
+                    //đăng xuất gg firebase và facebook
+                    FirebaseAuth.getInstance().signOut();
+                    SharedPrefersManager.getInstance(this).setIsLoginSuccess(false);
+                    SharedPrefersManager.getInstance(this).setAlreadyHasData(false);
+                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                    finish();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

@@ -18,6 +18,10 @@ import vn.com.misa.cukcuklite.data.models.Unit;
 import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.utils.CommonsUtils;
 
+/**
+ * Presenter cho màn hình chọn nhà hàng mặc định
+ * Created_by Nguyễn Bá Linh on 19/04/2019
+ */
 public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContract.IPresenter {
 
     private IChooseRestaurantTypeContract.IView mView;

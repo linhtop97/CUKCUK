@@ -6,6 +6,10 @@ import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
 import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
 
+/**
+ * Presenter màn hình thêm món ăn
+ * Created_by Nguyễn Bá Linh on 19/04/2019
+ */
 public class AddDishPresenter implements IAddDishContract.IPresenter {
     private IAddDishContract.IView mView;
     private DishDataSource mDishDataSource;

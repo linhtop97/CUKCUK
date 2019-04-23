@@ -3,8 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:baselineAligned="false"
-    android:orientation="horizontal">
+    android:layout_marginRight="@dimen/dp_1"
+    android:layout_marginLeft="@dimen/dp_1"
+    android:orientation="horizontal"
+    android:baselineAligned="false">
 
     <RelativeLayout
         android:id="@+id/rlIcon"
@@ -76,7 +78,7 @@
         </LinearLayout>
 
         <View
-            android:id="@+id/vSparator"
+            android:id="@+id/lineBottom"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
             android:background="@color/dividerColorGray" />

@@ -89,7 +89,6 @@
     <dimen name="item_order_default_height">140dp</dimen>
     <dimen name="size_icon_table_sale">64dp</dimen>
     <dimen name="padding_tv_image">-6dp</dimen>
-    <dimen name="dp_1">1dp</dimen>
     <dimen name="dp_200">200dp</dimen>
     <dimen name="label_chart_size">10sp</dimen>
     <dimen name="enter_size">28dp</dimen>
@@ -107,4 +106,7 @@
     <dimen name="height_keyboard">48dp</dimen>
     <dimen name="margin_keyboard">7dp</dimen>
     <dimen name="padding_dialog_key_10">10dp</dimen>
+    <dimen name="pie_chart_height">220dp</dimen>
+    <dimen name="dp_1">1dp</dimen>
+    <dimen name="line_chart_height">300dp</dimen>
 </resources>

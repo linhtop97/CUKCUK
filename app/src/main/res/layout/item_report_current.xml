@@ -5,6 +5,8 @@
     android:id="@+id/lnContent"
     android:layout_width="match_parent"
     android:layout_height="@dimen/item_report_height"
+    android:layout_marginLeft="@dimen/dp_1"
+    android:layout_marginRight="@dimen/dp_1"
     android:background="@drawable/selector_dish"
     android:baselineAligned="false"
     android:orientation="horizontal"
@@ -74,6 +76,7 @@
         </LinearLayout>
 
         <View
+            android:id="@+id/lineBottom"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
             android:background="@color/dividerColorGray" />

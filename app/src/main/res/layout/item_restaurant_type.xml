@@ -32,6 +32,7 @@
         app:srcCompat="@drawable/ic_check_blue" />
 
     <View
+        android:id="@+id/lineBottom"
         android:layout_width="match_parent"
         android:layout_height="@dimen/diliver_height"
         android:layout_alignParentBottom="true"

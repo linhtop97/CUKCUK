@@ -86,8 +86,8 @@ public class ReportDetailFragment extends Fragment implements IReportDetailContr
 
             List<PieEntry> entries = new ArrayList<>();
             for (ReportDetail reportDetail : reportDetails) {
-                PieEntry pieEntry = new PieEntry((float) reportDetail.getAmount());
                 amount += (reportDetail.getAmount());
+                PieEntry pieEntry = new PieEntry((float) reportDetail.getAmount());
                 entries.add(pieEntry);
             }
             PieDataSet pieDataSet = new PieDataSet(entries, null);
@@ -163,12 +163,64 @@ public class ReportDetailFragment extends Fragment implements IReportDetailContr
     public void onLoadDataDone(List<ReportDetail> reportDetails) {
         try {
             if (reportDetails != null) {
-                mAdapter.setData(reportDetails);
-                setupPieChart(reportDetails);
+                List<ReportDetail> reportDetailsValid = getValidReportDetail(reportDetails);
+                if (reportDetailsValid != null) {
+                    mAdapter.setData(reportDetailsValid);
+                    setupPieChart(reportDetailsValid);
+                }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Phương thức lấy danh sách hợp lệ. Đối với các món ăn được bán
+     * nhỏ hơn 3% tổng tiền đã bán đươc thì sẽ gom lại thành 1 loại.
+     * Created_by Nguyễn Bá Linh on 23/04/2019
+     *
+     * @param reportDetails - danh sách món ăn hợp lệ
+     */
+    private List<ReportDetail> getValidReportDetail(List<ReportDetail> reportDetails) {
+        try {
+            long amount = 0;
+            for (ReportDetail reportDetail : reportDetails) {
+                amount += (reportDetail.getAmount());
+            }
+            long threePercent = 3 * (amount / 100);
+            int size = reportDetails.size();
+            List<ReportDetail> reportDetailsValid = new ArrayList<>();
+            List<ReportDetail> reportDetailsInvalid = new ArrayList<>();
+            for (int i = 0; i < size; i++) {
+                long amountItem = reportDetails.get(i).getAmount();
+                if (amountItem < threePercent) {
+                    reportDetailsInvalid.add(reportDetails.get(i));
+                } else {
+                    reportDetailsValid.add(reportDetails.get(i));
+                }
+            }
+            ReportDetail reportDetail = new ReportDetail();
+            int sizeInvalid = reportDetailsInvalid.size();
+            String name = AppConstants.DIFFERENT;
+            long amountDiff = 0;
+            int quantity = 0;
+            String unit = AppConstants.UNIT;
+            if (sizeInvalid > 1) {
+                for (ReportDetail r : reportDetailsInvalid) {
+                    amountDiff += r.getAmount();
+                    quantity += r.getQuantity();
+                }
+                reportDetail.setName(name);
+                reportDetail.setAmount(amountDiff);
+                reportDetail.setQuantity(quantity);
+                reportDetail.setUnit(unit);
+                reportDetailsValid.add(reportDetail);
+            }
+            return reportDetailsValid;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     /**
@@ -179,7 +231,7 @@ public class ReportDetailFragment extends Fragment implements IReportDetailContr
      */
     @Override
     public void receiveMessage(int message) {
-        
+
     }
 
     /**

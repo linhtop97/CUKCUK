@@ -37,4 +37,7 @@ public final class AppConstants {
     public static final String EXTRA_REPORT_TOTAL = "EXTRA_REPORT_TOTAL";
     public static final String DATE_FORMAT = "dd/MM/yyyy";
     public static final String EXTRA_DATES = "EXTRA_DATES";
+
+    public static final String DIFFERENT = "Các loại khác";
+    public static final String UNIT = "đơn vị";
 }

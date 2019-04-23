@@ -177,6 +177,7 @@
     <string name="month">Tháng</string>
     <string name="day">Ngày</string>
     <string name="day_of_week">Thứ</string>
+    <string name="share_app">Chia sẻ ứng dụng</string>
 
 
     <string-array name="color_list">

@@ -47,6 +47,7 @@
                 android:contentDescription="@string/image_description" />
         </LinearLayout>
         <View
+            android:id="@+id/lineBottom"
             android:layout_width="match_parent"
             android:layout_height="0.6dp"
             android:background="@color/dividerColorGray" />

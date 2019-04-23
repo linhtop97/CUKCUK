@@ -91,6 +91,10 @@ public class ParamReportAdapter extends RecyclerView.Adapter<ParamReportAdapter.
         void onClick(ParamReport paramReport);
     }
 
+    /**
+     * Holder cho các trường báo
+     * Created_by Nguyễn Bá Linh on 19/04/2019
+     */
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         private TextView tvName;

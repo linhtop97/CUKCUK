@@ -45,6 +45,12 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapte
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        int size = mReportDetails.size();
+        if(position== --size){
+            holder.lineBottom.setVisibility(View.INVISIBLE);
+        }else {
+            holder.lineBottom.setVisibility(View.VISIBLE);
+        }
         ReportDetail reportDetail = mReportDetails.get(position);
         holder.tvAmount.setText(NumberFormat.getNumberInstance(Locale.US)
                 .format(reportDetail.getAmount()));
@@ -75,6 +81,7 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapte
 
         private ImageView ivBackgroundColor;
         private TextView tvNumber, tvInventoryItemName, tvQuantity, tvAmount;
+        private View lineBottom;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -83,6 +90,7 @@ public class ReportDetailAdapter extends RecyclerView.Adapter<ReportDetailAdapte
             tvInventoryItemName = itemView.findViewById(R.id.tvInventoryItemName);
             tvQuantity = itemView.findViewById(R.id.tvQuantity);
             tvAmount = itemView.findViewById(R.id.tvAmount);
+            lineBottom = itemView.findViewById(R.id.lineBottom);
         }
     }
 }
