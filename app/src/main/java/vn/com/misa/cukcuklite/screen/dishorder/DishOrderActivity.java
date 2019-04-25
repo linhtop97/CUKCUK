@@ -24,7 +24,7 @@ import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;

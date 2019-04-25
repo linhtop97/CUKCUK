@@ -1,8 +1,8 @@
-package vn.com.misa.cukcuklite.data.unit;
+package vn.com.misa.cukcuklite.data.local.unit;
 
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
 import vn.com.misa.cukcuklite.data.models.Unit;
 
 /**
@@ -12,13 +12,13 @@ import vn.com.misa.cukcuklite.data.models.Unit;
 public interface IUnitDataSource {
     boolean addUnit(Unit unit);
 
-    EnumResult addUnitToDatabase(Unit unit);
+    ResultEnum addUnitToDatabase(Unit unit);
 
     boolean deleteUnitById(String unitId);
 
     boolean updateUnit(Unit unit);
 
-    EnumResult updateUnitToDatabase(Unit unit);
+    ResultEnum updateUnitToDatabase(Unit unit);
 
     List<String> getAllUnitName();
 

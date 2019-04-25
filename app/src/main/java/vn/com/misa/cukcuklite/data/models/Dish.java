@@ -10,26 +10,6 @@ import android.support.annotation.NonNull;
  */
 public class Dish implements Parcelable {
 
-    private String DishId;
-    private String DishName;
-    private int Price;
-    private String UnitId;
-    private String ColorCode;
-    private String IconPath;
-    private boolean IsSale;
-    private boolean State;
-
-    protected Dish(Parcel in) {
-        DishId = in.readString();
-        DishName = in.readString();
-        Price = in.readInt();
-        UnitId = in.readString();
-        ColorCode = in.readString();
-        IconPath = in.readString();
-        IsSale = in.readByte() != 0;
-        State = in.readByte() != 0;
-    }
-
     public static final Creator<Dish> CREATOR = new Creator<Dish>() {
         @Override
         public Dish createFromParcel(Parcel in) {
@@ -41,13 +21,28 @@ public class Dish implements Parcelable {
             return new Dish[size];
         }
     };
+    private String DishId;
+    private String DishName;
+    private int Price;
+    private String UnitId;
+    private String ColorCode;
+    private String IconPath;
+    private boolean IsSale;
+    private boolean State;
 
-    public boolean isState() {
-        return State;
+    public Dish() {
+
     }
 
-    public void setState(boolean state) {
-        State = state;
+    protected Dish(Parcel in) {
+        DishId = in.readString();
+        DishName = in.readString();
+        Price = in.readInt();
+        UnitId = in.readString();
+        ColorCode = in.readString();
+        IconPath = in.readString();
+        IsSale = in.readByte() != 0;
+        State = in.readByte() != 0;
     }
 
     public Dish(Builder builder) {
@@ -61,6 +56,13 @@ public class Dish implements Parcelable {
         State = builder.State;
     }
 
+    public boolean isState() {
+        return State;
+    }
+
+    public void setState(boolean state) {
+        State = state;
+    }
 
     @NonNull
     @Override

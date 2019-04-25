@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.unit;
+package vn.com.misa.cukcuklite.data.local.unit;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,9 +6,9 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.Unit;
 
 /**
@@ -74,19 +74,19 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
      * @return - thêm mới đơn vị món ăn thành công, thất bại hay đã tồn tại đơn vị
      */
     @Override
-    public EnumResult addUnitToDatabase(Unit unit) {
+    public ResultEnum addUnitToDatabase(Unit unit) {
         if (unit != null) {
             //kiểm tra tên đơn vị đã tồn tại hay chưa
             if (isUnitIfExists(unit.getUnitName())) {
-                return EnumResult.Exists;
+                return ResultEnum.Exists;
             } else {
                 if (addUnit(unit)) {
                     mUnits.add(unit);
-                    return EnumResult.Success;
+                    return ResultEnum.Success;
                 }
             }
         }
-        return EnumResult.SomethingWentWrong;
+        return ResultEnum.SomethingWentWrong;
     }
 
     /**
@@ -145,7 +145,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
      * @return - cập nhật đơn vị thành công, thất bại
      */
     @Override
-    public EnumResult updateUnitToDatabase(Unit unit) {
+    public ResultEnum updateUnitToDatabase(Unit unit) {
         try {
             if (mUnits != null) {
                 int size = mUnits.size();
@@ -158,7 +158,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
                     }
                 }
                 if (unitNameIsExists) {
-                    return EnumResult.Exists;
+                    return ResultEnum.Exists;
                 } else {
                     if (updateUnit(unit)) {
                         for (int i = 0; i < size; i++) {
@@ -167,15 +167,15 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
                                 break;
                             }
                         }
-                        return EnumResult.Success;
+                        return ResultEnum.Success;
                     }
                 }
-                return EnumResult.SomethingWentWrong;
+                return ResultEnum.SomethingWentWrong;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return EnumResult.SomethingWentWrong;
+        return ResultEnum.SomethingWentWrong;
     }
 
     /**

@@ -18,9 +18,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.models.Order;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.dialogs.delete.ConfirmDeleteDialog;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;

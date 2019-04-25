@@ -2,9 +2,9 @@ package vn.com.misa.cukcuklite.screen.splash;
 
 import android.content.Context;
 
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
-import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 
 public class SplashPresenter implements ISplashContract.IPresenter {
 

@@ -12,7 +12,7 @@ import java.util.List;
 import vn.com.misa.cukcuklite.data.models.ParamReport;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
 import vn.com.misa.cukcuklite.data.models.ReportTotal;
-import vn.com.misa.cukcuklite.data.report.ReportDataSource;
+import vn.com.misa.cukcuklite.data.local.report.ReportDataSource;
 
 /**
  * ‐ Presenter trong mô hình MVP cho màn hình Báo cáo Số lượng

@@ -12,11 +12,17 @@ import vn.com.misa.cukcuklite.base.IBaseView;
 public interface ILoginContract {
     interface IView extends IBaseView {
         void loginSuccess();
+
+        void goToChooseRestaurentType();
     }
 
     interface IPresenter extends IBasePresenter<IView> {
         void loginWithFacebook(AccessToken accessToken);
 
+        void getAllDataFromFireBase();
+
         void login(String emailPhone, String password);
+
+        void checkUserHasDataBefore();
     }
 }

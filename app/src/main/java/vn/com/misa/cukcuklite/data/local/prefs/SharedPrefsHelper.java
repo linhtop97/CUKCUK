@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.prefs;
+package vn.com.misa.cukcuklite.data.local.prefs;
 
 import android.content.Context;
 import android.content.SharedPreferences;

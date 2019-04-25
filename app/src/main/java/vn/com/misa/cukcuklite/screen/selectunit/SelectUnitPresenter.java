@@ -3,10 +3,10 @@ package vn.com.misa.cukcuklite.screen.selectunit;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 
 
 /**

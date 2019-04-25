@@ -11,4 +11,8 @@ public class StringUtils {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy (hh:mm a)");
         return dateFormat.format(time).replace("PM", "CH").replace("AM", "SA");
     }
+
+    public static  String getCollectionPath(){
+        return null;
+    }
 }

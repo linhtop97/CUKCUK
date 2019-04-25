@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.prefs;
+package vn.com.misa.cukcuklite.data.local.prefs;
 
 /**
  * Lớp khai báo các Key cho các giá trị chứa trong sharePreferences

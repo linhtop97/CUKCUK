@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.bill;
+package vn.com.misa.cukcuklite.data.local.bill;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -10,20 +10,20 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.cukcukenum.BillSateEnum;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Order;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 import vn.com.misa.cukcuklite.utils.DateUtil;
 
-import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.BILL_DETAIL_TBL_NAME;
-import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.COLUMN_BILL_DETAIL_ID;
-import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.COLUMN_DISH_ID;
-import static vn.com.misa.cukcuklite.data.database.IDBUtils.ITableBillDetailUtils.COLUMN_QUANTITY;
+import static vn.com.misa.cukcuklite.data.local.database.IDBUtils.ITableBillDetailUtils.BILL_DETAIL_TBL_NAME;
+import static vn.com.misa.cukcuklite.data.local.database.IDBUtils.ITableBillDetailUtils.COLUMN_BILL_DETAIL_ID;
+import static vn.com.misa.cukcuklite.data.local.database.IDBUtils.ITableBillDetailUtils.COLUMN_DISH_ID;
+import static vn.com.misa.cukcuklite.data.local.database.IDBUtils.ITableBillDetailUtils.COLUMN_QUANTITY;
 
 /**
  * Lớp thao tác truy xuất hóa đơn và hóa đơn chi tiết trong cơ sở dữ liệu
@@ -477,7 +477,7 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
             while (!cursor.isAfterLast()) {
                 Bill bill = new Bill.Builder().setBillId(cursor.getString(cursor.getColumnIndex(COLUMN_BILL_ID)))
                         .setBillNumber(cursor.getInt(cursor.getColumnIndex(COLUMN_BILL_NUMBER)))
-                        .setState(EnumBillSate.UNPAID)
+                        .setState(BillSateEnum.UNPAID)
                         .setTotalMoney(cursor.getInt((cursor.getColumnIndex(COLUMN_TOTAL_MONEY))))
                         .setNumberCustomer(cursor.getInt((cursor.getColumnIndex(COLUMN_NUMBER_CUSTOMER))))
                         .setTableNumber(cursor.getInt((cursor.getColumnIndex(COLUMN_TABLE_NUMBER))))

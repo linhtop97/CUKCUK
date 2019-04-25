@@ -8,9 +8,9 @@ import android.support.v7.app.AppCompatDelegate;
 import java.io.File;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyConfig;
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
 
-import static vn.com.misa.cukcuklite.data.database.IDBUtils.DB_NAME;
+import static vn.com.misa.cukcuklite.data.local.database.IDBUtils.DB_NAME;
 
 public class CukCukLiteApplication extends Application {
 

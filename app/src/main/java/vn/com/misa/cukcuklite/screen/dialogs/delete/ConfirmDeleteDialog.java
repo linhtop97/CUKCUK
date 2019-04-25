@@ -22,7 +22,7 @@ import android.widget.TextView;
 import java.util.Objects;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 /**

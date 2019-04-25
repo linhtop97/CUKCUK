@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.report;
+package vn.com.misa.cukcuklite.data.local.report;
 
 import java.util.List;
 

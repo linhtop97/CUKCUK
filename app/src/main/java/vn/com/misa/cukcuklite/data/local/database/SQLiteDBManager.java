@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.database;
+package vn.com.misa.cukcuklite.data.local.database;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -224,6 +224,27 @@ public class SQLiteDBManager extends SQLiteOpenHelper implements IDBUtils {
         try {
             openDataBase();
             mSQLiteDatabase.delete(table, whereClause, whereArgs);
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /**
+     * Phương thức xóa hết dữ liệu trong database
+     * Created_by Nguyễn Bá Linh on 24/04/2019
+     *
+     * @return xóa thành công, thất bại
+     */
+    public boolean clearDatabase() {
+        try {
+            openDataBase();
+            mSQLiteDatabase.execSQL("delete from " + ITableBillDetailUtils.BILL_DETAIL_TBL_NAME);
+            mSQLiteDatabase.execSQL("delete from " + ITableBillUtils.BILL_TBL_NAME);
+            mSQLiteDatabase.execSQL("delete from " + ITableDishUtils.DISH_TBL_NAME);
+            mSQLiteDatabase.execSQL("delete from " + ITableUnitUtils.UNIT_TBL_NAME);
+            mSQLiteDatabase.execSQL("delete from " + ITableDataCacheUtils.DATA_CACHE_TBL_NAME);
             return true;
         } catch (Exception e) {
             e.printStackTrace();

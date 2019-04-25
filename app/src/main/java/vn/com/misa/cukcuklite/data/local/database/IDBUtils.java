@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.database;
+package vn.com.misa.cukcuklite.data.local.database;
 
 /**
  * Lớp chứa định danh cho bảng và cột dữ liệu cho database
@@ -84,5 +84,16 @@ public interface IDBUtils {
         String COLUMN_DISH_ID = "DishId";
         String COLUMN_QUANTITY = "Quantity";
         String COLUMN_TOTAL_MONEY = "TotalMoney";
+    }
+
+    /**
+     * Tên bảng, trường của bảng dữ liệu lưu trữ
+     * Created_by Nguyễn Bá Linh on 24/04/2019
+     */
+    interface ITableDataCacheUtils {
+        String DATA_CACHE_TBL_NAME = "tblDataCache";
+        String COLUMN_DATA_CACHE_ID = "Id";
+        String COLUMN_TYPE = "Type";
+        String COLUMN_DATA = "Data";
     }
 }

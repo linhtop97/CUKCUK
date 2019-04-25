@@ -16,8 +16,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.choosedishdefault.ChooseDishDefaultActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;

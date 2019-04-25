@@ -6,8 +6,8 @@ import android.os.AsyncTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.report.IReportDataSource;
-import vn.com.misa.cukcuklite.data.report.ReportDataSource;
+import vn.com.misa.cukcuklite.data.local.report.IReportDataSource;
+import vn.com.misa.cukcuklite.data.local.report.ReportDataSource;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 
 /**

@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.bill;
+package vn.com.misa.cukcuklite.data.local.bill;
 
 import java.util.List;
 

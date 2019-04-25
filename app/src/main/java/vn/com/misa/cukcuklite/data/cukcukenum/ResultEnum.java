@@ -4,7 +4,7 @@ package vn.com.misa.cukcuklite.data.cukcukenum;
  * Enum cho thao tác với database
  * Created_by Nguyễn Bá Linh on 04/04/2019
  */
-public enum EnumResult {
+public enum ResultEnum {
     Success, //thành công
     Failed, //thất bại
     Exists, //đã tồn tại

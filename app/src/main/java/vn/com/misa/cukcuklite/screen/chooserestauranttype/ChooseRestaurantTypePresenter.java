@@ -10,12 +10,15 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.FirebaseManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.IFirebaseRealTime;
 import vn.com.misa.cukcuklite.utils.CommonsUtils;
 
 /**
@@ -28,11 +31,15 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
     private Context mContext;
     private UnitDataSource mUnitDataSource;
     private DishDataSource mDishDataSource;
+    private FireStoreManager mFireStoreManager;
+    private FirebaseManager mFirebaseManager;
 
     ChooseRestaurantTypePresenter(Context context) {
         mContext = context;
         mUnitDataSource = UnitDataSource.getInstance();
         mDishDataSource = DishDataSource.getInstance();
+        mFireStoreManager = FireStoreManager.getInstance();
+        mFirebaseManager = FirebaseManager.getInstance();
     }
 
     /**
@@ -86,7 +93,20 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
             if (units != null) {
                 if (mUnitDataSource.deleteAllUnit()) {
                     int unitSize = units.size();
+                    //mFirebaseManager.clearAllDataOfUser();
+                    mFirebaseManager.addUnitsToFirebase(units, new IFirebaseRealTime.IFirebaseDataCallBack() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailed() {
+
+                        }
+                    });
                     for (int i = 0; i < unitSize; i++) {
+                        //thêm vào sql local
                         if (!mUnitDataSource.addUnit(units.get(i))) {
                             mView.receiveMessage(R.string.something_went_wrong);
                             break;
@@ -116,11 +136,22 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
             if (mDishDataSource.deleteAllDish()) {
                 int size = dishes.size();
                 if (size > 0) {
+                    mFirebaseManager.addDishesToFirebase(dishes, new IFirebaseRealTime.IFirebaseDataCallBack() {
+                        @Override
+                        public void onSuccess() {
+
+                        }
+
+                        @Override
+                        public void onFailed() {
+
+                        }
+                    });
                     //Thêm các món ăn váo cơ sở dữ liệu
                     for (int i = 0; i < size; i++) {
-                        EnumResult result = mDishDataSource.addDishToDatabase(dishes.get(i));
-                        if (EnumResult.Failed == result
-                                || EnumResult.SomethingWentWrong == result) {
+                        ResultEnum result = mDishDataSource.addDishToDatabase(dishes.get(i));
+                        if (ResultEnum.Failed == result
+                                || ResultEnum.SomethingWentWrong == result) {
                             mView.receiveMessage(R.string.something_went_wrong);
                             insertSuccess = false;
                             break;

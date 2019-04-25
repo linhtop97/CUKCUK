@@ -17,7 +17,7 @@ import java.util.List;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
 import vn.com.misa.cukcuklite.data.models.Dish;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;

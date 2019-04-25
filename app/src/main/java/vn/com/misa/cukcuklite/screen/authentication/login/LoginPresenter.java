@@ -2,6 +2,7 @@ package vn.com.misa.cukcuklite.screen.authentication.login;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.widget.Toast;
 
 import com.facebook.AccessToken;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -12,20 +13,28 @@ import com.google.firebase.auth.FacebookAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
-import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.FirebaseManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.IFirebaseRealTime;
 
 public class LoginPresenter implements ILoginContract.IPresenter {
 
     private ILoginContract.IView mView;
     private Context mContext;
-    private DishDataSource mDishDataSource;
+    private FirebaseManager mFirebaseManager;
+    private SQLiteDBManager mSQLiteDBManager;
     private UnitDataSource mUnitDataSource;
+    private DishDataSource mDishDataSource;
+    private BillDataSource mBillDataSource;
 
     public LoginPresenter(Context context) {
         mContext = context;
-        mDishDataSource = DishDataSource.getInstance();
-        mUnitDataSource = UnitDataSource.getInstance();
+        mFirebaseManager = FirebaseManager.getInstance();
+        mSQLiteDBManager = SQLiteDBManager.getInstance();
     }
 
     @Override
@@ -38,9 +47,8 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-//                            mDishDataSource.deleteAllDish();
-//                            mUnitDataSource.deleteAllUnit();
-//                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
+                            //mSQLiteDBManager.clearDatabase();
+                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
                             mView.loginSuccess();
 
                         } else {
@@ -51,9 +59,34 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                 });
     }
 
+
+    /**
+     * Phương thức lấy toàn bộ dữ liệu từ fire base về local
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     */
+    @Override
+    public void getAllDataFromFireBase() {
+    }
+
     @Override
     public void login(String emailPhone, String password) {
 
+    }
+
+    @Override
+    public void checkUserHasDataBefore() {
+        mFirebaseManager.userHasData(new IFirebaseRealTime.IFirebaseDataCallBack() {
+            @Override
+            public void onSuccess() {
+                getAllDataFromFireBase();
+                Toast.makeText(mContext, "Có dl rồi", Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onFailed() {
+                mView.loginSuccess();
+            }
+        });
     }
 
     @Override

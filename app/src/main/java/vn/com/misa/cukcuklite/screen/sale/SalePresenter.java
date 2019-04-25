@@ -1,7 +1,7 @@
 package vn.com.misa.cukcuklite.screen.sale;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
 
 public class SalePresenter implements ISaleContract.IPresenter {
 

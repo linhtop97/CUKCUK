@@ -3,7 +3,7 @@ package vn.com.misa.cukcuklite.data.models;
 import java.util.Calendar;
 import java.util.UUID;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumBillSate;
+import vn.com.misa.cukcuklite.data.cukcukenum.BillSateEnum;
 
 /**
  * Lớp hóa đơn
@@ -13,7 +13,7 @@ public class Bill {
     private String BillId;
     private int BillNumber;
     private long DateCreated;
-    private EnumBillSate State;
+    private BillSateEnum State;
     private int TableNumber;
     private int NumberCustomer;
     private int TotalMoney;
@@ -59,11 +59,11 @@ public class Bill {
         DateCreated = dateCreated;
     }
 
-    public EnumBillSate getState() {
+    public BillSateEnum getState() {
         return State;
     }
 
-    public void setState(EnumBillSate state) {
+    public void setState(BillSateEnum state) {
         State = state;
     }
 
@@ -103,7 +103,7 @@ public class Bill {
         private String BillId;
         private int BillNumber;
         private long DateCreated;
-        private EnumBillSate State;
+        private BillSateEnum State;
         private int TableNumber;
         private int NumberCustomer;
         private int TotalMoney;
@@ -124,7 +124,7 @@ public class Bill {
             return this;
         }
 
-        public Builder setState(EnumBillSate state) {
+        public Builder setState(BillSateEnum state) {
             State = state;
             return this;
         }

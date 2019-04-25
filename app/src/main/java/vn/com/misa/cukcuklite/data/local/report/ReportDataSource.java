@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.report;
+package vn.com.misa.cukcuklite.data.local.report;
 
 import android.database.Cursor;
 import android.util.Log;
@@ -10,8 +10,8 @@ import java.util.List;
 
 import vn.com.misa.cukcuklite.data.cukcukenum.ParamReportEnum;
 import vn.com.misa.cukcuklite.data.cukcukenum.ReportTotalEnum;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.ReportCurrent;
 import vn.com.misa.cukcuklite.data.models.ReportDetail;
 import vn.com.misa.cukcuklite.data.models.ReportTotal;

@@ -3,7 +3,7 @@ package vn.com.misa.cukcuklite.screen.pay;
 import java.util.List;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 

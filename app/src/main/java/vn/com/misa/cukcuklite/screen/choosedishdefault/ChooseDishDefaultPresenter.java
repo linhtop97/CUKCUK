@@ -1,6 +1,6 @@
 package vn.com.misa.cukcuklite.screen.choosedishdefault;
 
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 
 /**
  * Presenter xử lý logic cho màn hình lựa chọn món ăn mặc định

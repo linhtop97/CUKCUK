@@ -1,8 +1,8 @@
-package vn.com.misa.cukcuklite.data.dish;
+package vn.com.misa.cukcuklite.data.local.dish;
 
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
+import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
 import vn.com.misa.cukcuklite.data.models.Dish;
 
 /**
@@ -12,9 +12,9 @@ import vn.com.misa.cukcuklite.data.models.Dish;
 public interface IDishDataSource {
     boolean addDish(Dish dish);
 
-    EnumResult addDishToDatabase(Dish dish);
+    ResultEnum addDishToDatabase(Dish dish);
 
-    EnumResult updateDishToDatabase(Dish dish);
+    ResultEnum updateDishToDatabase(Dish dish);
 
     boolean deleteDishById(String dishId);
 

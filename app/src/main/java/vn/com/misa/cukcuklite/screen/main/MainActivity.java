@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.google.firebase.auth.FirebaseAuth;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
 import vn.com.misa.cukcuklite.screen.authentication.login.LoginActivity;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;

@@ -7,7 +7,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
 import vn.com.misa.cukcuklite.screen.dishorder.DishOrderActivity;
 import vn.com.misa.cukcuklite.screen.introduction.IntroductionActivity;

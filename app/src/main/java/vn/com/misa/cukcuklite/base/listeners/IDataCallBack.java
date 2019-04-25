@@ -22,5 +22,5 @@ public interface IDataCallBack<T> {
      *
      * @param msg là thông điệp muốn trả về để xử lý
      */
-    void onDataFailed(String msg);
+    void onDataFailed(int msg);
 }

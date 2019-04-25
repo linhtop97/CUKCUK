@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.dish;
+package vn.com.misa.cukcuklite.data.local.dish;
 
 import android.content.ContentValues;
 import android.database.Cursor;
@@ -6,10 +6,10 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.bill.BillDataSource;
-import vn.com.misa.cukcuklite.data.cukcukenum.EnumResult;
-import vn.com.misa.cukcuklite.data.database.IDBUtils;
-import vn.com.misa.cukcuklite.data.database.SQLiteDBManager;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
+import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
+import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.Dish;
 
 
@@ -79,25 +79,25 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      * @return - thêm món ăn thành công, thất bại, hay món ăn đã tồn tại trong thực đơn
      */
     @Override
-    public EnumResult addDishToDatabase(Dish dish) {
+    public ResultEnum addDishToDatabase(Dish dish) {
         try {
             String dishName;
             if (dish != null && !dish.getDishId().isEmpty() && dish.getDishId() != null) {
                 dishName = dish.getDishName();
                 //kiểm tra tên món ăn đã tồn tại hay chưa
                 if (isDishIfExists(dishName)) {
-                    return EnumResult.Exists;
+                    return ResultEnum.Exists;
                 } else {
                     if (addDish(dish)) {
                         mDishes.add(dish);
-                        return EnumResult.Success;
+                        return ResultEnum.Success;
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return EnumResult.SomethingWentWrong;
+        return ResultEnum.SomethingWentWrong;
     }
 
     /**
@@ -107,7 +107,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
      * @return - cập nhật món ăn thành công, thất bại
      */
     @Override
-    public EnumResult updateDishToDatabase(Dish dish) {
+    public ResultEnum updateDishToDatabase(Dish dish) {
         try {
             if (mDishes != null) {
                 int size = mDishes.size();
@@ -120,7 +120,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                     }
                 }
                 if (dishNameIsExists) {
-                    return EnumResult.Exists;
+                    return ResultEnum.Exists;
                 } else {
                     if (updateDish(dish)) {
                         for (int i = 0; i < size; i++) {
@@ -129,16 +129,16 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
                                 break;
                             }
                         }
-                        return EnumResult.Success;
+                        return ResultEnum.Success;
                     } else {
-                        return EnumResult.SomethingWentWrong;
+                        return ResultEnum.SomethingWentWrong;
                     }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return EnumResult.SomethingWentWrong;
+        return ResultEnum.SomethingWentWrong;
     }
 
     /**

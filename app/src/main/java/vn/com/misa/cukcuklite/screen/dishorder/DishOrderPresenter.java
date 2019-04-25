@@ -5,7 +5,7 @@ import android.support.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.bill.BillDataSource;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 

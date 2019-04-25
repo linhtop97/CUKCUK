@@ -1,19 +1,22 @@
 package vn.com.misa.cukcuklite.screen.adddish;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.unit.UnitDataSource;
+import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
 
 /**
  * Presenter màn hình thêm món ăn
  * Created_by Nguyễn Bá Linh on 19/04/2019
  */
 public class AddDishPresenter implements IAddDishContract.IPresenter {
+    private static final String TAG = "AddDishPresenter";
     private IAddDishContract.IView mView;
     private DishDataSource mDishDataSource;
     private UnitDataSource mUnitDataSource;
+    private FireStoreManager mFireStoreManager;
 
     /**
      * Phương thức khởi tạo AddDishPresenter
@@ -22,6 +25,7 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     AddDishPresenter() {
         mDishDataSource = DishDataSource.getInstance();
         mUnitDataSource = UnitDataSource.getInstance();
+        mFireStoreManager = FireStoreManager.getInstance();
     }
 
     /**
@@ -43,8 +47,19 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
                         mView.addDishFailed(R.string.dish_name_is_exists);
                         break;
                     case Success:
-
                         mView.addDishSuccess();
+//                        mFireStoreManager.addDocument("users/" + FirebaseAuth.getInstance().getUid()
+//                                + "/dish", dish.getDishId(), dish, new IFirebaseResponse.IComplete() {
+//                            @Override
+//                            public void onSuccess(String documentId) {
+//                                Log.d(TAG, "onSuccess: ");
+//                            }
+//
+//                            @Override
+//                            public void onFailed() {
+//                                Log.d(TAG, "onFailed: ");
+//                            }
+//                        });
                         break;
                     case SomethingWentWrong:
                         mView.addDishFailed(R.string.something_went_wrong);
@@ -100,6 +115,18 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     @Override
     public void deleteDish(String dishId) {
         if (mDishDataSource.deleteDishById(dishId)) {
+//            mFireStoreManager.removeDocument("users/" + FirebaseAuth.getInstance().getUid()
+//                    + "/dish", dishId, new IFirebaseResponse.IComplete() {
+//                @Override
+//                public void onSuccess(String documentId) {
+//
+//                }
+//
+//                @Override
+//                public void onFailed() {
+//
+//                }
+//            });
             mView.deleteDishSuccess();
         } else {
             mView.receiveMessage(R.string.dish_is_using);

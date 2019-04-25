@@ -18,7 +18,7 @@ import com.facebook.login.LoginResult;
 import java.util.Collections;
 
 import vn.com.misa.cukcuklite.R;
-import vn.com.misa.cukcuklite.data.prefs.SharedPrefersManager;
+import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
@@ -212,6 +212,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     public void loginSuccess() {
         try {
             SharedPrefersManager.getInstance(this).setIsLoginSuccess(true);
+            //check user has data before
+            mPresenter.checkUserHasDataBefore();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void goToChooseRestaurentType() {
+
+        try {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
             if (SharedPrefersManager.getInstance(this).getIsAlreadyHasData()) {

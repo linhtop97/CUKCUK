@@ -24,7 +24,7 @@ import java.util.Locale;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.base.adapters.ListAdapter;
 import vn.com.misa.cukcuklite.base.listeners.IOnItemClickListener;
-import vn.com.misa.cukcuklite.data.dish.DishDataSource;
+import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.screen.dialogs.caculator.InputNumberDialog;
