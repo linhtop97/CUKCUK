@@ -11,8 +11,8 @@ import java.util.List;
 
 import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
-import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
-import vn.com.misa.cukcuklite.data.remote.firebase.IFirebaseResponse;
+import vn.com.misa.cukcuklite.data.remote.firebase.firestore.FireStoreManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firestore.IFirebaseResponse;
 
 /**
  * Presenter cho màn hình menu

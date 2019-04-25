@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Base64;
 import android.util.Log;
 
@@ -27,9 +29,9 @@ public final class CommonsUtils {
 
     /**
      * Phương thức xử lý: Lấy định dạng ngày trong tuần từ số
+     * Created_by Nguyễn Bá Linh on 25/04/2019
      *
      * @return Ngày trong tuần đã đổi sang dạng chuỗi
-     * @created_by lxphuoc on 4/10/2019
      */
     public static String getDayOfWeekString(int day) {
         if (day < 0 || day > DAY_OF_WEEK.length) {
@@ -43,7 +45,6 @@ public final class CommonsUtils {
      *
      * @param context - context ứng dụng
      * @return - hash key
-     *
      */
     public static String printKeyHash(Activity context) {
         PackageInfo packageInfo;
@@ -117,5 +118,23 @@ public final class CommonsUtils {
         Type collectionType = new TypeToken<List<Object>>() {
         }.getType();
         return gson.fromJson(jsonRestaurantType, collectionType);
+    }
+
+    /**
+     * Phương thức kiểm tra tra có kết nối mạng không
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     *
+     * @return - thiết bị đang có kết nối mạng hay không
+     */
+    public static boolean isNetworkAvailable(Context context) {
+        try {
+            ConnectivityManager connectivityManager
+                    = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+            return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

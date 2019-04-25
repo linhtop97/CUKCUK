@@ -18,8 +18,6 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.firebase.auth.FirebaseAuth;
-
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.adddish.AddDishActivity;
@@ -34,7 +32,7 @@ import vn.com.misa.cukcuklite.utils.Navigator;
  * Màn hình khởi động ứng dụng có chức năng giới thiệu ứng dụng, tải dữ liệu, thông tin cho ứng dụng
  * Created_by Nguyễn Bá Linh on 01/04/2019
  */
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements IMainContract.IView, NavigationView.OnNavigationItemSelectedListener {
 
     private static final String TAG = "MainActivity";
     private Navigator mNavigator;
@@ -45,12 +43,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView tvTitle;
     private ImageView btnAdd;
     private boolean mIsSale;
+    private MainPresenter mPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mNavigator = new Navigator(this);
+        mPresenter = new MainPresenter(this);
+        mPresenter.setView(this);
         initViews();
         initEvents();
     }
@@ -195,12 +196,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.navLogout:
                 try {
-                    //đăng xuất gg firebase và facebook
-                    FirebaseAuth.getInstance().signOut();
-                    SharedPrefersManager.getInstance(this).setIsLoginSuccess(false);
-                    SharedPrefersManager.getInstance(this).setAlreadyHasData(false);
-                    startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                    finish();
+                    mPresenter.clearData();
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -218,5 +214,44 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (requestCode == SaleFragment.REQUEST_PAY && resultCode == Activity.RESULT_OK) {
             mNavigator.startActivity(DishOrderActivity.class);
         }
+    }
+
+    @Override
+    public void goToLoginScreen() {
+        try {
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Phương thức nhận 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     *
+     * @param message - thông điệp được nhận
+     */
+    @Override
+    public void receiveMessage(int message) {
+        mNavigator.showToastOnTopScreen(message);
+    }
+
+    /**
+     * Phương thức hiển thị 1 dialog chờ xử lý tác vụ với 1 thông điệp
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     */
+    @Override
+    public void showLoading() {
+
+    }
+
+    /**
+     * Phương thức ẩn/đóng dialog đang chờ xử lý khi thực hiện xong tác vụ
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     */
+    @Override
+    public void hideLoading() {
+
     }
 }

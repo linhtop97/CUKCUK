@@ -22,6 +22,7 @@ import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
 import vn.com.misa.cukcuklite.screen.chooserestauranttype.ChooseRestaurantTypeActivity;
 import vn.com.misa.cukcuklite.screen.main.MainActivity;
 import vn.com.misa.cukcuklite.utils.AppConstants;
+import vn.com.misa.cukcuklite.utils.CommonsUtils;
 import vn.com.misa.cukcuklite.utils.Navigator;
 
 /**
@@ -141,7 +142,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 finish();
                 break;
             case R.id.llFacebookLogin:
-                loginWithFacebook();
+                try {
+                    if (CommonsUtils.isNetworkAvailable(this)) {
+                        loginWithFacebook();
+                    } else {
+                        mNavigator.showToastOnTopScreen(R.string.device_currently_has_no_network_available);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }
@@ -211,9 +220,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void loginSuccess() {
         try {
-            SharedPrefersManager.getInstance(this).setIsLoginSuccess(true);
             //check user has data before
             mPresenter.checkUserHasDataBefore();
+            // goToChooseRestaurentType();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -236,5 +245,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Phương thức khởi chạy màn hình chính ứng dụng
+     * Created_by Nguyễn Bá Linh on 25/04/2019
+     */
+    @Override
+    public void goToMainScreen() {
+        mNavigator.startActivity(MainActivity.class);
     }
 }

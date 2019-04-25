@@ -343,9 +343,7 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
         try {
             deleteSuccess = mSQLiteDBManager.deleteRecord(UNIT_TBL_NAME, null, null);
             if (deleteSuccess) {
-                if (mUnits != null) {
-                    mUnits.clear();
-                }
+                removeAllCache();
                 return true;
             }
             return false;
@@ -353,5 +351,15 @@ public class UnitDataSource implements IUnitDataSource, IDBUtils.ITableUnitUtils
             e.printStackTrace();
         }
         return deleteSuccess;
+    }
+
+    public void removeAllCache() {
+        try {
+            if (mUnits != null) {
+                mUnits.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

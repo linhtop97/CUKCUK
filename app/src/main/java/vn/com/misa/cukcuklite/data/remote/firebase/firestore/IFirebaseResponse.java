@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.remote.firebase;
+package vn.com.misa.cukcuklite.data.remote.firebase.firestore;
 
 import com.google.firebase.firestore.DocumentSnapshot;
 

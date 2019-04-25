@@ -14,6 +14,8 @@ public interface ILoginContract {
         void loginSuccess();
 
         void goToChooseRestaurentType();
+
+        void goToMainScreen();
     }
 
     interface IPresenter extends IBasePresenter<IView> {

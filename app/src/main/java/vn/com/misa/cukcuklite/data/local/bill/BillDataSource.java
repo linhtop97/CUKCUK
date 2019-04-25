@@ -354,6 +354,41 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
         return false;
     }
 
+    /**
+     * Thêm hóa đơn vào cơ sở dữ liệu
+     * Created_by Nguyễn Bá Linh on 12/04/2019
+     *
+     * @param bill - hóa đơn
+     * @return - thêm hóa đơn thành công/thất bại
+     */
+    @Override
+    public boolean addBill(Bill bill) {
+        try {
+            if (bill != null) {
+                Log.d(TAG, "addBill: ");
+                ContentValues contentValues = new ContentValues();
+                contentValues.put(COLUMN_BILL_ID, bill.getBillId());
+                contentValues.put(COLUMN_BILL_NUMBER, bill.getBillNumber());
+                contentValues.put(COLUMN_DATE_CREATED, DateUtil.getDateFormat(Calendar.getInstance().getTime()));
+                contentValues.put(COLUMN_TABLE_NUMBER, bill.getTableNumber());
+                contentValues.put(COLUMN_NUMBER_CUSTOMER, bill.getNumberCustomer());
+                contentValues.put(COLUMN_TOTAL_MONEY, bill.getTotalMoney());
+                contentValues.put(COLUMN_CUSTOMER_PAY, bill.getCustomerPay());
+                contentValues.put(COLUMN_STATE, AppConstants.UN_PAID);
+                if (mSQLiteDBManager.addNewRecord(BILL_TBL_NAME, contentValues)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
     private void addOrderToCache(Order order) {
         orderHashMap.put(order.getBillId(), order);
     }
@@ -580,8 +615,22 @@ public class BillDataSource implements IBillDataSource, IDBUtils.ITableBillUtils
      * @param billId - hóa đơn id
      */
     private void removeOrderInCache(String billId) {
-        if (orderHashMap != null && orderHashMap.size() > 0) {
-            orderHashMap.remove(billId);
+        try {
+            if (orderHashMap != null && orderHashMap.size() > 0) {
+                orderHashMap.remove(billId);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void removeAllCache() {
+        try {
+            if (orderHashMap != null && orderHashMap.size() > 0) {
+                orderHashMap.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

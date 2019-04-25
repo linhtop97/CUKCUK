@@ -1,4 +1,4 @@
-package vn.com.misa.cukcuklite.data.remote.firebase;
+package vn.com.misa.cukcuklite.data.remote.firebase.firestore;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;

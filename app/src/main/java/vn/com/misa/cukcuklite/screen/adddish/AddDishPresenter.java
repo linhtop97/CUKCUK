@@ -1,11 +1,14 @@
 package vn.com.misa.cukcuklite.screen.adddish;
 
+import vn.com.misa.cukcuklite.CukCukLiteApplication;
 import vn.com.misa.cukcuklite.R;
 import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
 import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.FirebaseManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.IFirebaseRealTime;
+import vn.com.misa.cukcuklite.utils.CommonsUtils;
 
 /**
  * Presenter màn hình thêm món ăn
@@ -16,7 +19,7 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     private IAddDishContract.IView mView;
     private DishDataSource mDishDataSource;
     private UnitDataSource mUnitDataSource;
-    private FireStoreManager mFireStoreManager;
+    private FirebaseManager mFirebaseManager;
 
     /**
      * Phương thức khởi tạo AddDishPresenter
@@ -25,7 +28,7 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     AddDishPresenter() {
         mDishDataSource = DishDataSource.getInstance();
         mUnitDataSource = UnitDataSource.getInstance();
-        mFireStoreManager = FireStoreManager.getInstance();
+        mFirebaseManager = FirebaseManager.getInstance();
     }
 
     /**
@@ -48,18 +51,21 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
                         break;
                     case Success:
                         mView.addDishSuccess();
-//                        mFireStoreManager.addDocument("users/" + FirebaseAuth.getInstance().getUid()
-//                                + "/dish", dish.getDishId(), dish, new IFirebaseResponse.IComplete() {
-//                            @Override
-//                            public void onSuccess(String documentId) {
-//                                Log.d(TAG, "onSuccess: ");
-//                            }
-//
-//                            @Override
-//                            public void onFailed() {
-//                                Log.d(TAG, "onFailed: ");
-//                            }
-//                        });
+                        if (CommonsUtils.isNetworkAvailable(CukCukLiteApplication.getInstance())) {
+                            mFirebaseManager.setDishToFirebase(dish, new IFirebaseRealTime.IFirebaseDataCallBack() {
+                                @Override
+                                public void onSuccess() {
+                                    //
+                                }
+
+                                @Override
+                                public void onFailed() {
+                                    //
+                                }
+                            });
+                        } else {
+                            //lưu dữ liệu vào bảng dữ liệu lưu trữ
+                        }
                         break;
                     case SomethingWentWrong:
                         mView.addDishFailed(R.string.something_went_wrong);
@@ -93,6 +99,21 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
                         break;
                     case Success:
                         mView.upDateDishSuccess();
+                        if (CommonsUtils.isNetworkAvailable(CukCukLiteApplication.getInstance())) {
+                            mFirebaseManager.setDishToFirebase(dish, new IFirebaseRealTime.IFirebaseDataCallBack() {
+                                @Override
+                                public void onSuccess() {
+                                    //
+                                }
+
+                                @Override
+                                public void onFailed() {
+                                    //
+                                }
+                            });
+                        } else {
+                            //lưu dữ liệu vào bảng dữ liệu lưu trữ
+                        }
                         break;
                     case SomethingWentWrong:
                         mView.receiveMessage(R.string.something_went_wrong);
@@ -115,6 +136,21 @@ public class AddDishPresenter implements IAddDishContract.IPresenter {
     @Override
     public void deleteDish(String dishId) {
         if (mDishDataSource.deleteDishById(dishId)) {
+            if (CommonsUtils.isNetworkAvailable(CukCukLiteApplication.getInstance())) {
+                mFirebaseManager.removeDishAtFirebase(dishId, new IFirebaseRealTime.IFirebaseDataCallBack() {
+                    @Override
+                    public void onSuccess() {
+                        //
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        //
+                    }
+                });
+            } else {
+                //lưu dữ liệu vào bảng dữ liệu lưu trữ
+            }
 //            mFireStoreManager.removeDocument("users/" + FirebaseAuth.getInstance().getUid()
 //                    + "/dish", dishId, new IFirebaseResponse.IComplete() {
 //                @Override

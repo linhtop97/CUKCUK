@@ -16,6 +16,8 @@ public interface IBillDataSource {
 
     boolean addBill(Bill bill, List<BillDetail> billDetails);
 
+    boolean addBill(Bill bill);
+
     boolean addBillDetail(BillDetail billDetail);
 
     boolean addBillDetailList(List<BillDetail> billDetails);

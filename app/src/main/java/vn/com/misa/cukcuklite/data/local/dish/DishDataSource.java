@@ -6,8 +6,8 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.cukcukenum.ResultEnum;
+import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
 import vn.com.misa.cukcuklite.data.local.database.IDBUtils;
 import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
 import vn.com.misa.cukcuklite.data.models.Dish;
@@ -320,9 +320,7 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
     public boolean deleteAllDish() {
         try {
             if (mSQLiteDBManager.deleteRecord(DISH_TBL_NAME, null, null)) {
-                if (mDishes != null) {
-                    mDishes.clear();
-                }
+                removeAllCache();
                 return true;
             }
             return false;
@@ -401,5 +399,15 @@ public class DishDataSource implements IDishDataSource, IDBUtils.ITableDishUtils
             e.printStackTrace();
         }
         return null;
+    }
+
+    public void removeAllCache() {
+        try {
+            if (mDishes != null) {
+                mDishes.clear();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

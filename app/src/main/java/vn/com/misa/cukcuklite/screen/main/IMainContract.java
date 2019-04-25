@@ -9,9 +9,10 @@ import vn.com.misa.cukcuklite.base.IBaseView;
  */
 public interface IMainContract {
     interface IView extends IBaseView {
+        void goToLoginScreen();
     }
 
     interface IPresenter extends IBasePresenter<IView> {
-
+        void clearData();
     }
 }

@@ -21,7 +21,7 @@ import vn.com.misa.cukcuklite.data.models.Bill;
 import vn.com.misa.cukcuklite.data.models.BillDetail;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
+import vn.com.misa.cukcuklite.data.remote.firebase.firestore.FireStoreManager;
 import vn.com.misa.cukcuklite.utils.AppConstants;
 
 public class FirebaseManager {
@@ -54,22 +54,30 @@ public class FirebaseManager {
     }
 
     public void userHasData(final IFirebaseRealTime.IFirebaseDataCallBack callBack) {
-        DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference();
-        rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                if (dataSnapshot.hasChild(uuid)) {
-                    callBack.onSuccess();
-                } else {
-                    callBack.onFailed();
-                }
-            }
+        try {
+            uuid = FirebaseAuth.getInstance().getUid();
+            if (uuid != null) {
+                DatabaseReference rootRef = FirebaseDatabase.getInstance().getReference().child(USERS).child(uuid);
+                rootRef.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if (dataSnapshot.getValue() != null) {
+                            callBack.onSuccess();
+                        } else {
+                            callBack.onFailed();
+                        }
+                    }
 
-            @Override
-            public void onCancelled(@NonNull DatabaseError databaseError) {
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
 
+                    }
+                });
             }
-        });
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
@@ -142,7 +150,7 @@ public class FirebaseManager {
      * @param dishId   - id của món ăn
      * @param callBack - callback lắng nghe sự kiện xóa món ăn thành công - thất bại
      */
-    private void removeDishAtFirebase(String dishId, final IFirebaseRealTime.IFirebaseDataCallBack callBack) {
+    public void removeDishAtFirebase(String dishId, final IFirebaseRealTime.IFirebaseDataCallBack callBack) {
         try {
             if (dishId != null) {
                 mDatabaseReference.child(USERS).child(uuid).child(DISHES).child(dishId).setValue(null, new DatabaseReference.CompletionListener() {
@@ -380,14 +388,14 @@ public class FirebaseManager {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                         Dish dish = new Dish.Builder()
-                                .setDishId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_DISH_ID).getValue()))
-                                .setDishName(String.valueOf(childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_DISH_NAME).getValue()))
-                                .setPrice((Integer) childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_PRICE).getValue())
-                                .setUnitId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_UNIT_ID).getValue()))
-                                .setColorCode(String.valueOf(childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_COLOR_CODE).getValue()))
-                                .setIconPath(String.valueOf(childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_ICON_PATH).getValue()))
-                                .setSale((Boolean) childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_IS_SALE).getValue())
-                                .setState((Boolean) childDataSnapshot.child(IDBUtils.ITableDishUtils.COLUMN_STATE).getValue())
+                                .setDishId(String.valueOf(childDataSnapshot.child("dishId").getValue()))
+                                .setDishName(String.valueOf(childDataSnapshot.child("dishName").getValue()))
+                                .setPrice((int) (long) childDataSnapshot.child("price").getValue())
+                                .setUnitId(String.valueOf(childDataSnapshot.child("unitId").getValue()))
+                                .setColorCode(String.valueOf(childDataSnapshot.child("colorCode").getValue()))
+                                .setIconPath(String.valueOf(childDataSnapshot.child("iconPath").getValue()))
+                                .setSale((boolean) childDataSnapshot.child("state").getValue())
+                                .setState((boolean) childDataSnapshot.child("sale").getValue())
                                 .build();
                         dishes.add(dish);
                     }
@@ -419,8 +427,8 @@ public class FirebaseManager {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
-                        Unit unit = new Unit(String.valueOf(childDataSnapshot.child(IDBUtils.ITableUnitUtils.COLUMN_UNIT_ID).getValue()),
-                                String.valueOf(childDataSnapshot.child(IDBUtils.ITableUnitUtils.COLUMN_UNIT_NAME).getValue()));
+                        Unit unit = new Unit(String.valueOf(childDataSnapshot.child("unitId").getValue()),
+                                String.valueOf(childDataSnapshot.child("unitName").getValue()));
                         units.add(unit);
                     }
                     callback.onDataSuccess(units);
@@ -451,12 +459,12 @@ public class FirebaseManager {
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     for (DataSnapshot childDataSnapshot : dataSnapshot.getChildren()) {
                         Bill bill = new Bill.Builder()
-                                .setBillId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_BILL_ID).getValue()))
-                                .setDateCreated((long) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_DATE_CREATED).getValue())
-                                .setTotalMoney((int) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_TOTAL_MONEY).getValue())
-                                .setCustomerPay((int) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_CUSTOMER_PAY).getValue())
-                                .setTableNumber((int) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_TABLE_NUMBER).getValue())
-                                .setNumberCustomer((int) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_NUMBER_CUSTOMER).getValue())
+                                .setBillId(String.valueOf(childDataSnapshot.child("billId").getValue()))
+                                .setDateCreated((long) childDataSnapshot.child("dateCreated").getValue())
+                                .setTotalMoney((int) (long) childDataSnapshot.child("totalMoney").getValue())
+                                .setCustomerPay((int) (long) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_CUSTOMER_PAY).getValue())
+                                .setTableNumber((int) (long) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_TABLE_NUMBER).getValue())
+                                .setNumberCustomer((int) (long) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_NUMBER_CUSTOMER).getValue())
                                 .build();
                         switch ((int) childDataSnapshot.child(IDBUtils.ITableBillUtils.COLUMN_STATE).getValue()) {
                             case AppConstants
@@ -505,8 +513,8 @@ public class FirebaseManager {
                                 .setBillDetailId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_BILL_DETAIL_ID).getValue()))
                                 .setBillId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_BILL_ID).getValue()))
                                 .setDishId(String.valueOf(childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_DISH_ID).getValue()))
-                                .setQuantity((int) childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_QUANTITY).getValue())
-                                .setTotalMoney((int) childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_TOTAL_MONEY).getValue())
+                                .setQuantity((int) (long) childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_QUANTITY).getValue())
+                                .setTotalMoney((int) (long) childDataSnapshot.child(IDBUtils.ITableBillDetailUtils.COLUMN_TOTAL_MONEY).getValue())
                                 .build();
                         billDetails.add(billDetail);
                     }

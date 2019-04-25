@@ -16,7 +16,6 @@ import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
 import vn.com.misa.cukcuklite.data.models.Dish;
 import vn.com.misa.cukcuklite.data.models.RestaurantType;
 import vn.com.misa.cukcuklite.data.models.Unit;
-import vn.com.misa.cukcuklite.data.remote.firebase.FireStoreManager;
 import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.FirebaseManager;
 import vn.com.misa.cukcuklite.data.remote.firebase.firebaserealtime.IFirebaseRealTime;
 import vn.com.misa.cukcuklite.utils.CommonsUtils;
@@ -31,14 +30,12 @@ public class ChooseRestaurantTypePresenter implements IChooseRestaurantTypeContr
     private Context mContext;
     private UnitDataSource mUnitDataSource;
     private DishDataSource mDishDataSource;
-    private FireStoreManager mFireStoreManager;
     private FirebaseManager mFirebaseManager;
 
     ChooseRestaurantTypePresenter(Context context) {
         mContext = context;
         mUnitDataSource = UnitDataSource.getInstance();
         mDishDataSource = DishDataSource.getInstance();
-        mFireStoreManager = FireStoreManager.getInstance();
         mFirebaseManager = FirebaseManager.getInstance();
     }
 

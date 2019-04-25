@@ -178,6 +178,7 @@
     <string name="day">Ngày</string>
     <string name="day_of_week">Thứ</string>
     <string name="share_app">Chia sẻ ứng dụng</string>
+    <string name="device_currently_has_no_network_available">Thiết bị hiện tại không có kết nối mạng, xin vui lòng thử lại</string>
 
 
     <string-array name="color_list">
