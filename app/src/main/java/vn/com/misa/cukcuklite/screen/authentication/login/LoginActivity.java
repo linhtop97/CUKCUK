@@ -222,7 +222,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         try {
             //check user has data before
             mPresenter.checkUserHasDataBefore();
-            // goToChooseRestaurentType();
+            goToChooseRestaurentType();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -230,7 +230,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     public void goToChooseRestaurentType() {
-
         try {
             Intent intent = new Intent();
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);

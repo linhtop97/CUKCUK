@@ -4,12 +4,6 @@ import android.content.Context;
 
 import com.google.firebase.auth.FirebaseAuth;
 
-import vn.com.misa.cukcuklite.data.local.bill.BillDataSource;
-import vn.com.misa.cukcuklite.data.local.database.SQLiteDBManager;
-import vn.com.misa.cukcuklite.data.local.dish.DishDataSource;
-import vn.com.misa.cukcuklite.data.local.prefs.SharedPrefersManager;
-import vn.com.misa.cukcuklite.data.local.unit.UnitDataSource;
-
 public class MainPresenter implements IMainContract.IPresenter {
 
     private IMainContract.IView mView;
@@ -27,12 +21,12 @@ public class MainPresenter implements IMainContract.IPresenter {
     public void clearData() {
         try {
             FirebaseAuth.getInstance().signOut();
-            SharedPrefersManager.getInstance(mContext).setIsLoginSuccess(false);
-            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
-            SQLiteDBManager.getInstance().clearDatabase();
-            UnitDataSource.getInstance().removeAllCache();
-            DishDataSource.getInstance().removeAllCache();
-            BillDataSource.getInstance().removeAllCache();
+//            SharedPrefersManager.getInstance(mContext).setIsLoginSuccess(false);
+//            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
+//            SQLiteDBManager.getInstance().clearDatabase();
+//            UnitDataSource.getInstance().removeAllCache();
+//            DishDataSource.getInstance().removeAllCache();
+//            BillDataSource.getInstance().removeAllCache();
             mView.goToLoginScreen();
         } catch (Exception e) {
             e.printStackTrace();

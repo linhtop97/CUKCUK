@@ -55,6 +55,7 @@ public class LoginPresenter implements ILoginContract.IPresenter {
     /**
      * Phương thức đăng nhập với facebook
      * Created_by Nguyễn Bá Linh on 05/04/2019
+     *
      * @param accessToken
      */
     @Override
@@ -67,12 +68,12 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
-                            mSQLiteDBManager.clearDatabase();
-                            mUnitDataSource.removeAllCache();
-                            mDishDataSource.removeAllCache();
-                            mBillDataSource.removeAllCache();
+//                            mSQLiteDBManager.clearDatabase();
+//                            mUnitDataSource.removeAllCache();
+//                            mDishDataSource.removeAllCache();
+//                            mBillDataSource.removeAllCache();
+                            //SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
                             SharedPrefersManager.getInstance(CukCukLiteApplication.getInstance()).setIsLoginSuccess(true);
-                            SharedPrefersManager.getInstance(mContext).setAlreadyHasData(false);
                             mView.loginSuccess();
 
                         } else {
@@ -114,23 +115,23 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                                                             mBills = data;
                                                         }
                                                     }
-    
+
                                                     @Override
                                                     public void onDataFailed(int msg) {
-    
+
                                                     }
                                                 });
                                             }
                                         }
-    
+
                                         @Override
                                         public void onDataFailed(int msg) {
-    
+
                                         }
                                     });
                                 }
                             }
-    
+
                             @Override
                             public void onDataFailed(int msg) {
                                 mView.receiveMessage(R.string.something_went_wrong);
@@ -138,7 +139,7 @@ public class LoginPresenter implements ILoginContract.IPresenter {
                         });
                     }
                 }
-    
+
                 @Override
                 public void onDataFailed(int msg) {
                     mView.receiveMessage(R.string.something_went_wrong);
@@ -146,7 +147,7 @@ public class LoginPresenter implements ILoginContract.IPresenter {
             });
             insertAllDataToDBLocal();
         } catch (Exception e) {
-             
+
         }
     }
 
